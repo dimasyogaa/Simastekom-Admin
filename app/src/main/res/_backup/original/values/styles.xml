@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Custom - Rounded Style  -->
+    <style name="rounded">
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="rounded.circle">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <!-- Custom - Divider  -->
+<!--    <style name="ThemeOverlay.App.NavigationView" parent="">-->
+<!--        <item name="colorOutline">@color/md_theme_outlineVariant</item>-->
+<!--    </style>-->
+
+</resources>

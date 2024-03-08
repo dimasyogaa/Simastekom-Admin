@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main_navigation"
+    app:startDestination="@id/kelasFragment">
+
+    <fragment
+        android:id="@+id/kelasFragment"
+        android:name="com.yogadimas.simastekom.ui.kelas.KelasFragment"
+        android:label="@string/title_classes"
+        tools:layout="@layout/fragment_kelas" />
+    <fragment
+        android:id="@+id/profilFragment"
+        android:name="com.yogadimas.simastekom.ui.profil.ProfilFragment"
+        android:label="@string/title_profile"
+        tools:layout="@layout/fragment_profil" />
+</navigation>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Custom - Rounded Style  -->
+    <style name="rounded">
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="rounded.circle">
+        <item name="cornerSize">50%</item>
+    </style>
+
+
+    <!-- Custom - Navigation Drawer - Divider  -->
+    <style name="Widget.App.NavigationView" parent="Widget.Material3.NavigationView">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+    <style name="ThemeOverlay.App.NavigationView" parent="">
+        <item name="colorOutline">@color/md_theme_outlineVariant</item>
+    </style>
+
+    <!-- Custom - Toolbar   -->
+    <style name="Widget.App.Toolbar" parent="Widget.Material3.Toolbar">
+        <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
+    </style>
+
+
+    <style name="ThemeOverlay.App.Toolbar" parent="">
+        <item name="titleTextColor">?attr/colorOnSurface</item>
+        <item name="colorControlNormal">?attr/colorOnSurface</item>
+        <item name="colorPrimary">?attr/colorSurface</item>
+
+    </style>
+
+
+</resources>
