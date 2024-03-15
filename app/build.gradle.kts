@@ -15,6 +15,10 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        buildConfigField("boolean", "DEBUG", "true")
+
+        buildConfigField("String", "BASE_URL_API", "\"http://192.168.216.106:8000/\"")
     }
 
     buildTypes {
@@ -29,6 +33,7 @@ android {
 
     buildFeatures {
         viewBinding = true
+        buildConfig = true
     }
 
     compileOptions {
@@ -41,6 +46,14 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation(libs.logging.interceptor)
+
+    implementation(libs.androidx.lifecycle.viewmodel.ktx)
+    implementation(libs.androidx.lifecycle.livedata.ktx)
+    implementation(libs.androidx.activity.ktx)
 
     implementation(libs.glide)
 

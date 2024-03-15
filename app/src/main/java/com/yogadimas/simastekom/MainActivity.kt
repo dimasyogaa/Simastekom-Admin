@@ -60,6 +60,8 @@ class MainActivity : AppCompatActivity() {
 
         onBackPressedDispatcher.addCallback(this, onBackPressedCallback)
 
+        onBackPressedCallback.isEnabled = false
+
         binding.drawerLayout.addDrawerListener(object : DrawerLayout.SimpleDrawerListener() {
 
             override fun onDrawerOpened(drawerView: View) {
@@ -73,6 +75,8 @@ class MainActivity : AppCompatActivity() {
 
             }
         })
+
+
 
 
 

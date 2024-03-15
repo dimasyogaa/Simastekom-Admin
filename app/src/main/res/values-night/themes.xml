@@ -65,6 +65,9 @@
         <item name="colorCustomColor1Container">@color/colorCustomColor1Container</item>
         <item name="colorOnCustomColor1Container">@color/colorOnCustomColor1Container</item>
 
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+
         <item name="navigationViewStyle">@style/Widget.App.NavigationView</item>
 
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>

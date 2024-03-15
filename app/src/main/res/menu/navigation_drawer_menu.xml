@@ -5,7 +5,7 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/kelasFragment"
-            android:icon="@drawable/ic_a_kelas_outline"
+            android:icon="@drawable/z_ic_kelas"
             android:title="@string/title_classes"
             app:showAsAction="ifRoom" />
 

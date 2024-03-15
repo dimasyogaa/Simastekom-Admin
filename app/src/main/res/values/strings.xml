@@ -1,7 +1,17 @@
 <resources>
-    <string name="app_name">Simastekom</string>
+    <string name="app_name">Simastekom - Admin</string>
 
     <string name="title_classes">Kelas</string>
     <string name="title_profile">Profil</string>
 
+    <string name="text_label_password">Password</string>
+    <string name="text_hint_password">Masukkan password anda...</string>
+
+    <string name="btn_text_login">Login</string>
+
+    <string name="text_label_id_username">Nama Pengguna</string>
+    <string name="text_hint_id_username">Masukkan nama pengguna anda...</string>
+    <string name="title_admin">Admin</string>
+
+    <string name="empty_field">Masukkan %s anda</string>
 </resources>
