@@ -1,82 +1,78 @@
 package com.yogadimas.simastekom.ui.login
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
-import androidx.lifecycle.lifecycleScope
+import androidx.core.content.ContextCompat
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
-import com.yogadimas.simastekom.Helper.onTextChange
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityLoginBinding
-import com.yogadimas.simastekom.viewmodel.AdminLoginViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.helper.onTextChange
+import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.ui.forgotpassword.ForgotPasswordActivity
+import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
+import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
+import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
+import java.net.URLEncoder
+import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    private val adminLoginViewModel: AdminLoginViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModels()
 
-    private var isDoneProgress = false
+    private val authViewModel: AuthViewModel by viewModels {
+        AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
+    }
+
     private var isLoading = false
+
+    private var dialog: AlertDialog? = null
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         binding = ActivityLoginBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        adminLoginViewModel.isLoading.observe(this) {
-
+        adminViewModel.isLoading.observe(this) {
             isLoading = it
-            if (isLoading) binding.progressBar.visibility = View.VISIBLE
+            showLoading(binding.progressBar, it)
+        }
 
-            if (isDoneProgress) {
-                lifecycleScope.launch {
-                    withContext(Dispatchers.Main) {
-                        delay(1000)
-                        binding.progressBar.visibility = View.GONE
-                        binding.progressBar.progress = 0
-                        isDoneProgress = false
-                    }
+        adminViewModel.adminData.observe(this) { eventData ->
+            eventData.getContentIfNotHandled()?.let {
+                authViewModel.saveUser(it.token, it.userId, it.userType)
+                val intent = Intent(this, MainActivity::class.java)
+                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                startActivity(intent)
+            }
+        }
+
+
+        adminViewModel.errors.observe(this) { eventError ->
+            eventError.getContentIfNotHandled()?.let { data ->
+                if (data.errors != null) {
+                    val listMessage = data.errors.message.orEmpty()
+                    showAlertDialog(listMessage[0])
                 }
             }
-
         }
 
-
-        adminLoginViewModel.data.observe(this) {
-            Log.e("TAG", "onCreate data: $it")
-        }
-
-        adminLoginViewModel.errors.observe(this) {
-            if (it != null) {
-                if (it.errors != null) {
-                    val listMessage = it.errors.message.orEmpty()
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            delay(1000)
-                            showAlertDialog(listMessage[0])
-
-                        }
-
-                    }
-                }
-            }
-
-
-        }
-
-
-        adminLoginViewModel.snackbarText.observe(this) { eventString ->
+        adminViewModel.errorsSnackbarText.observe(this) { eventString ->
             eventString.getContentIfNotHandled()?.let { snackBarText ->
                 Snackbar.make(
                     binding.root as ViewGroup,
@@ -96,24 +92,62 @@ class LoginActivity : AppCompatActivity() {
 
         binding.btnLogin.setOnClickListener {
 
-
             val id = bindingEdtId.text.toString().trim()
             val password = bindingEdtPassword.text.toString().trim()
 
-            if (checkValidated(id, password) && !isDoneProgress && !isLoading) {
-                adminLoginViewModel.postLogin(
+            if (checkValidated(id, password) && !isLoading) {
+                adminViewModel.login(
                     id,
                     password,
-                ) {
-                    Log.e("TAG", "progressListener: $it")
-                    val progress = it
-                    binding.progressBar.setProgressCompat(progress, true)
-                    isDoneProgress = it == 100
-                }
+                )
+            }
+        }
+
+        binding.btnForgotPassword.setOnClickListener {
+            startActivity(Intent(this@LoginActivity, ForgotPasswordActivity::class.java))
+        }
+
+        binding.btnSendWa.setOnClickListener {
+
+            val currentTime = Calendar.getInstance().time
+            val sdf = SimpleDateFormat("HH", Locale.getDefault())
+            val hour = sdf.format(currentTime).toInt()
+
+            val timeOfDay = when (hour) {
+                in 6..11 -> "pagi"
+                in 12..16 -> "siang"
+                in 17..18 -> "sore"
+                else -> "malam"
             }
 
+            val phoneNumber = "628988136896"
+            val message = "Selamat $timeOfDay, Saya mau tanya terkait simastekom"
 
-            // startActivity(Intent(this, MainActivity::class.java))
+            val url = "https://api.whatsapp.com/send?phone=$phoneNumber&text=${
+                URLEncoder.encode(
+                    message,
+                    "UTF-8"
+                )
+            }"
+            val intent = Intent(Intent.ACTION_VIEW)
+            intent.data = Uri.parse(url)
+
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivity(intent)
+            } else {
+                val webIntent = Intent(
+                    Intent.ACTION_VIEW,
+                    Uri.parse(
+                        "https://api.whatsapp.com/send?phone=$phoneNumber&text=${
+                            URLEncoder.encode(
+                                message,
+                                "UTF-8"
+                            )
+                        }"
+                    )
+                )
+                startActivity(webIntent)
+            }
         }
 
     }
@@ -157,18 +191,28 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun showAlertDialog(error: String) {
-        startActivity(Intent(this, MainActivity::class.java))
-        // MaterialAlertDialogBuilder(this)
-        //     .setCancelable(true)
-        //     // .setIcon(ContextCompat.getDrawable(this, R.drawable.ic_delete))
-        //     .setTitle("Login Gagal")
-        //     .setMessage(error.replaceFirstChar { if (it.isLowerCase()) it.titlecase(Locale.getDefault()) else it.toString() })
-        //     .setPositiveButton("OK") { _, _ -> return@setPositiveButton }
-        //     .show()
-    }
+        if (dialog == null) {
+            dialog = MaterialAlertDialogBuilder(this)
+                .setCancelable(true)
+                .setIcon(ContextCompat.getDrawable(this, R.drawable.z_ic_warning))
+                .setTitle(getString(R.string.title_dialog_login_failed))
+                .setMessage(error)
+                .setPositiveButton(getString(R.string.text_ok)) { _, _ ->     dialog = null;return@setPositiveButton }
+                .create()
+        }
+        dialog?.show()
 
+    }
 
     private fun stringFormat(string: String): String {
         return String.format(getString(R.string.empty_field), string)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (dialog != null) {
+            dialog?.dismiss();
+            dialog = null;
+        }
     }
 }

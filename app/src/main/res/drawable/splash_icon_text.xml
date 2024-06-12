@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?><!--<layer-list xmlns:android="http://schemas.android.com/apk/res/android">-->
+
+<!--    <item-->
+<!--        android:drawable="@color/md_theme_background"/>-->
+
+<!--    <item android:bottom="150dp">-->
+<!--        <bitmap-->
+<!--            android:gravity="center"-->
+<!--            android:src="@drawable/ic_app"/>-->
+
+
+<!--    </item>-->
+<!--    <item android:top="60dp">-->
+<!--        <bitmap-->
+<!--            android:gravity="center"-->
+<!--            android:tint="@android:color/white"-->
+<!--            android:src="@drawable/img_text_simastekom_admin"/>-->
+<!--    </item>-->
+<!--</layer-list>-->
+
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:width="80dp"
+        android:height="80dp"
+        android:drawable="@drawable/ic_app"
+        android:gravity="center" />
+
+    <!--<item android:drawable="@drawable/z_ic_simastekom_admin"-->
+    <!--    android:gravity="center"-->
+    <!--    android:width="80dp"-->
+    <!--    android:height="6.43dp"-->
+    <!--    android:top="80dp"/>-->
+
+</layer-list>

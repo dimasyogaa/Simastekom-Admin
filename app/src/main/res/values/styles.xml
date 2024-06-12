@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
 
     <!-- Custom - Rounded Style  -->
     <style name="rounded">
@@ -8,6 +8,13 @@
 
     <style name="rounded.circle">
         <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="rounded.custom">
+        <item name="cornerSizeBottomLeft">20%</item>
+        <item name="cornerSizeBottomRight">5%</item>
+        <item name="cornerSizeTopLeft">5%</item>
+        <item name="cornerSizeTopRight">20%</item>
     </style>
 
 
@@ -30,8 +37,112 @@
         <item name="titleTextColor">?attr/colorOnSurface</item>
         <item name="colorControlNormal">?attr/colorOnSurface</item>
         <item name="colorPrimary">?attr/colorSurface</item>
+    </style>
+
+
+    <!-- Custom - Table Layout -->
+    <style name="content">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="content_wrap">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+
+    <style name="content_wrap.text_size">
+        <item name="android:textSize">15sp</item>
+    </style>
+
+    <style name="content_wrap.text_size.column_name">
+        <item name="android:layout_marginEnd">16dp</item>
+    </style>
+
+    <style name="content_wrap.text_size.column_data">
+        <item name="android:layout_weight">1</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+    <!-- Custom - Dialog -->
+    <!--    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">-->
+    <!--        <item name="shapeAppearance">@style/ShapeAppearance.App.MediumComponent</item>-->
+    <!--        <item name="shapeAppearanceOverlay">@null</item>-->
+    <!--    </style>-->
+
+    <!--    <style name="MaterialAlertDialog.App.Title.Text" parent="MaterialAlertDialog.Material3.Title.Text">-->
+    <!--        <item name="android:textColor">@color/shrine_pink_900</item>-->
+    <!--    </style>-->
+
+    <style name="Widget.App.Button.Logout" parent="Widget.Material3.Button.TextButton.Dialog">
+        <item name="android:textColor">@color/md_theme_error</item>
+    </style>
+
+    <!--    <style name="ShapeAppearance.App.MediumComponent" parent="ShapeAppearance.Material3.MediumComponent">-->
+    <!--        <item name="cornerFamily">cut</item>-->
+    <!--        <item name="cornerSize">8dp</item>-->
+    <!--    </style>-->
+
+
+    <!-- Custom - ExposedDropDown  -->
+    <style name="Widget.App.ExposedDropdownMenu" parent="Widget.Material3.TextInputLayout.OutlinedBox.ExposedDropdownMenu">
+        <!--        <item name="colorSurfaceContainerHighest">@color/md_theme_error</item>-->
+        <item name="boxBackgroundColor">@android:color/transparent</item>
+    </style>
+
+    <style name="ThemeOverlay.App.ExposedDropdownMenu" parent="">
+
 
     </style>
 
+    <!-- Custom - MaterialTextView Button-->
+    <style name="content.MaterialTextView_Dialog">
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="drawableEndCompat">@drawable/z_ic_pop_up</item>
+    </style>
+
+    <style name="content.MaterialTextView_Button">
+        <item name="android:background">?attr/selectableItemBackground</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="android:padding">16dp</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:scaleType">centerCrop</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">end</item>
+        <item name="drawableEndCompat">@drawable/z_ic_next</item>
+    </style>
+
+    <!-- Textview    -->
+    <style name="CustomTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/md_theme_onSurface</item>
+    </style>
+
+    <!-- Custom - Value   -->
+    <style name="content_wrap.value">
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:textSize">15sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textIsSelectable">true</item>
+    </style>
+
+
+    <!-- Custom - Button   -->
+    <style name="CustomButtonCardView" parent="Widget.Material3.CardView.Outlined">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">120dp</item>
+        <item name="android:layout_marginTop">20dp</item>
+        <item name="android:layout_marginBottom">20dp</item>
+        <item name="android:checkable">true</item>
+        <item name="android:clickable">true</item>
+        <item name="android:focusable">true</item>
+        <item name="strokeWidth">0dp</item>
+    </style>
 
 </resources>

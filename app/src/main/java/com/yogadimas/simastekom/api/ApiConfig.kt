@@ -2,9 +2,8 @@ package com.yogadimas.simastekom.api
 
 
 import com.yogadimas.simastekom.BuildConfig
-import com.yogadimas.simastekom.BuildConfig.BASE_URL_API
-import com.yogadimas.simastekom.progress.ProgressInterceptor
-import com.yogadimas.simastekom.progress.ProgressListener
+import com.yogadimas.simastekom.BuildConfig.API
+import com.yogadimas.simastekom.BuildConfig.BASE_URL
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -14,7 +13,7 @@ class ApiConfig {
 
     companion object {
 
-        fun getApiService(progressListener: ProgressListener): ApiService {
+        fun getApiService(): ApiService {
 
             val loggingInterceptor = if (BuildConfig.DEBUG) {
                 HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY)
@@ -25,11 +24,10 @@ class ApiConfig {
 
             val client = OkHttpClient.Builder()
                 .addInterceptor(loggingInterceptor)
-                .addInterceptor(ProgressInterceptor(progressListener)) // Tambahkan ProgressInterceptor
                 .build()
 
             val retrofit = Retrofit.Builder()
-                .baseUrl(BASE_URL_API)
+                .baseUrl(BASE_URL + API)
                 .addConverterFactory(GsonConverterFactory.create())
                 .client(client)
                 .build()

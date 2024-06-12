@@ -3,16 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main_navigation"
-    app:startDestination="@id/kelasFragment">
+    app:startDestination="@id/actionFragment">
+
 
     <fragment
-        android:id="@+id/kelasFragment"
-        android:name="com.yogadimas.simastekom.ui.kelas.KelasFragment"
-        android:label="@string/title_classes"
-        tools:layout="@layout/fragment_kelas" />
+        android:id="@+id/actionFragment"
+        android:name="com.yogadimas.simastekom.ui.action.ActionFragment"
+        android:label="@string/title_action"
+        tools:layout="@layout/fragment_action"/>
+
     <fragment
-        android:id="@+id/profilFragment"
-        android:name="com.yogadimas.simastekom.ui.profil.ProfilFragment"
+        android:id="@+id/profileFragment"
+        android:name="com.yogadimas.simastekom.ui.profile.ProfileFragment"
         android:label="@string/title_profile"
-        tools:layout="@layout/fragment_profil" />
+        tools:layout="@layout/fragment_profile">
+
+        <action
+            android:id="@+id/action_profileFragment_to_loginActivity"
+            app:destination="@id/loginActivity"
+            app:launchSingleTop="true"
+            app:popUpTo="@id/loginActivity"
+            app:popUpToInclusive="true" />
+    </fragment>
+    <activity
+        android:id="@+id/loginActivity"
+        android:name="com.yogadimas.simastekom.ui.login.LoginActivity"
+        android:label="activity_login"
+        tools:layout="@layout/activity_login" />
+
+    <activity
+        android:id="@+id/passwordEditActivity"
+        android:name="com.yogadimas.simastekom.ui.password.PasswordEditActivity"
+        android:label="activity_password_edit"
+        tools:layout="@layout/activity_password_edit" />
+    <activity
+        android:id="@+id/adminUpdateActivity"
+        android:name="com.yogadimas.simastekom.ui.admin.AdminUpdateActivity2"
+        android:label="activity_admin_update"
+        tools:layout="@layout/activity_admin_update_2" />
+
+
+
 </navigation>

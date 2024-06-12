@@ -1,5 +1,5 @@
-
 <resources>
+
     <style name="Base.Theme.Simastekom" parent="Theme.Material3.Light.NoActionBar">
 
         <item name="colorPrimary">@color/md_theme_primary</item>
@@ -72,11 +72,78 @@
 
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
 
+        <item name="android:windowAnimationStyle">@null</item>
+
+
+        <item name="android:textColorHighlight">@color/colorCustomColor1Container</item>
+
+        <!-- Drawable-->
+        <item name="colorControlNormal">@color/md_theme_onSurface</item>
+
+
+        <!--  Textview     -->
+        <item name="android:textViewStyle">@style/CustomTextView</item>
+
+        <item name="android:windowDisablePreview">true</item>
+
+
+
     </style>
 
-    <style name="Theme.Simastekom" parent="Base.Theme.Simastekom"/>
+
+    <style name="Theme.Simastekom" parent="Base.Theme.Simastekom" />
+
+    <style name="Theme.App.Starting" parent="Theme.SplashScreen">
+        <!-- Set the splash screen background, animated icon, and animation
+    duration. -->
+        <item name="windowSplashScreenBackground">@color/md_theme_background</item>
+        <!--        <item name="android:windowBackground">@drawable/z_ic_simastekom_admin</item>-->
+
+        <!-- Use windowSplashScreenAnimatedIcon to add a drawable or an animated
+             drawable. One of these is required. -->
+        <item name="windowSplashScreenAnimatedIcon">@drawable/splash_inset</item>
+        <!-- Required for animated icons. -->
+        <!--        <item name="windowSplashScreenAnimationDuration">0</item>-->
 
 
+        <!-- Set the theme of the Activity that directly follows your splash
+        screen. This is required. -->
+        <item name="postSplashScreenTheme">@style/Theme.Simastekom</item>
+    </style>
+
+    <!-- Custom - Splash Activity   -->
+    <style name="Splash.Theme" parent="Theme.Material3.Light.NoActionBar">
+        <!--                <item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:backgroundTint">@color/md_theme_background</item>
+        <item name="android:navigationBarColor">@color/md_theme_background</item>
+        <item name="android:statusBarColor">@color/md_theme_background</item>
+        <item name="android:windowBackground">@color/md_theme_background</item>
+        <item name="android:windowLightStatusBar">true</item>
+
+
+    </style>
+
+    <!-- Custom - Dialog    -->
+    <style name="ThemeOverlay.App.MaterialAlertDialog.Logout" parent="ThemeOverlay.Material3.MaterialAlertDialog">
+        <!--        <item name="colorPrimary">@color/shrine_pink_100</item>-->
+        <!--        <item name="colorSecondary">@color/shrine_pink_100</item>-->
+        <!--        <item name="colorSurface">@color/shrine_pink_light</item>-->
+        <!--        <item name="colorOnSurface">@color/shrine_pink_900</item>-->
+        <!--        <item name="alertDialogStyle">@style/MaterialAlertDialog.App</item>-->
+        <!--        <item name="materialAlertDialogTitleTextStyle">@style/MaterialAlertDialog.App.Title.Text </item>-->
+        <item name="buttonBarPositiveButtonStyle">@style/Widget.App.Button.Logout</item>
+        <!--        <item name="buttonBarNegativeButtonStyle">@style/Widget.App.Button</item>-->
+    </style>
+
+    <!-- Custom Dialog Fragment -->
+    <style name="FullScreenDialogFragment" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorControlNormal">@color/md_theme_onSurface</item>
+        <item name="android:windowBackground">@color/md_theme_surface</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="android:textViewStyle">@style/CustomTextView</item>
+    </style>
 
 
 </resources>

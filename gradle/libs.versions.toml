@@ -1,4 +1,7 @@
 [versions]
+
+coreSplashscreen = "1.0.1"
+
 agp = "8.3.0"
 kotlin = "1.9.0"
 coreKtx = "1.12.0"
@@ -14,7 +17,7 @@ constraintlayout = "2.1.4"
 navigationFragmentKtx = "2.7.7"
 navigationUiKtx = "2.7.7"
 
-glide = "4.16.0"
+coil = "2.4.0"
 
 retrofit = "2.9.0"
 converterGson = "2.9.0"
@@ -24,8 +27,18 @@ lifecycleViewmodelKtx = "2.7.0"
 activityKtx =  "1.8.2"
 lifecycleLivedataKtx = "2.7.0"
 
+datastorePreferences = "1.0.0"
+
+bcrypt = "0.10.2"
+
+swiperefreshlayout = "1.1.0"
+
+
 [libraries]
+androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
 androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
@@ -38,7 +51,6 @@ androidx-constraintlayout = { group = "androidx.constraintlayout", name = "const
 androidx-navigation-fragment-ktx = { group = "androidx.navigation", name = "navigation-fragment-ktx", version.ref = "navigationFragmentKtx" }
 androidx-navigation-ui-ktx = { group = "androidx.navigation", name = "navigation-ui-ktx", version.ref = "navigationUiKtx" }
 
-glide = { group = "com.github.bumptech.glide", name = "glide", version.ref = "glide" }
 
 
 retrofit = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit" }
@@ -48,6 +60,15 @@ logging-interceptor = { group = "com.squareup.okhttp3", name = "logging-intercep
 androidx-activity-ktx = { group = "androidx.activity", name = "activity-ktx", version.ref = "activityKtx" }
 androidx-lifecycle-viewmodel-ktx = { group = "androidx.lifecycle", name = "lifecycle-viewmodel-ktx", version.ref = "lifecycleViewmodelKtx" }
 androidx-lifecycle-livedata-ktx = { group = "androidx.lifecycle", name = "lifecycle-livedata-ktx", version.ref = "lifecycleLivedataKtx" }
+
+androidx-datastore-preferences = { group = "androidx.datastore", name = "datastore-preferences", version.ref = "datastorePreferences" }
+
+coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
+
+
+bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
+
+androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

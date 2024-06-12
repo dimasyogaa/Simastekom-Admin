@@ -4,13 +4,42 @@
 
     <group android:checkableBehavior="single">
         <item
-            android:id="@+id/kelasFragment"
-            android:icon="@drawable/z_ic_kelas"
-            android:title="@string/title_classes"
+            android:id="@+id/actionFragment"
+            android:icon="@drawable/z_ic_action"
+            android:title="@string/title_action"
             app:showAsAction="ifRoom" />
 
     </group>
 
+    <item android:title="@string/text_account">
+        <menu>
+            <item
+                android:id="@+id/passwordEditActivity"
+                android:checkable="false"
+                android:icon="@drawable/z_ic_lock"
+                android:title="@string/text_change_password"
+                app:showAsAction="ifRoom" />
+            <item
+                android:id="@+id/logoutMenu"
+                android:checkable="false"
+                android:icon="@drawable/z_ic_logout"
+                android:title="@string/btn_text_logout"
+                app:showAsAction="ifRoom" />
+        </menu>
+    </item>
+
+    <item android:title="@string/refresh">
+        <menu>
+            <item
+                android:id="@+id/refreshMenu"
+                android:checkable="false"
+                android:icon="@drawable/z_ic_refresh"
+                android:title="@string/refresh"
+                app:showAsAction="ifRoom" />
+        </menu>
+
+
+    </item>
 
 
 </menu>

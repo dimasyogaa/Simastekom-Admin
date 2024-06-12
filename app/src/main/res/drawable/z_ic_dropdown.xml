@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<selector xmlns:android="http://schemas.android.com/apk/res/android">
+    <!-- Keadaan ketika toggle aktif -->
+    <item android:drawable="@drawable/z_ic_expand_more" android:state_checked="true" />
+    <!-- Keadaan ketika toggle tidak aktif -->
+    <item android:drawable="@drawable/z_ic_expand_less" />
+</selector>

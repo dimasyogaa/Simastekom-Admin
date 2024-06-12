@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.action.ActionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingHorizontal="40dp"
+        android:paddingVertical="20dp">
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_student"
+            style="@style/CustomButtonCardView">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingHorizontal="16dp"
+                android:weightSum="2"
+                android:background="@drawable/background_gradient">
+
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="110dp"
+                    android:layout_margin="8dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/z_ic_person"
+                    app:tint="?attr/colorPrimary" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="24dp"
+                    android:layout_margin="8dp"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Mahasiswa" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_lecturer"
+            style="@style/CustomButtonCardView">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/background_gradient">
+
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="110dp"
+                    app:tint="?attr/colorPrimary"
+                    android:layout_margin="8dp"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/z_ic_person" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="24dp"
+                    android:layout_margin="8dp"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Dosen" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_admin"
+            style="@style/CustomButtonCardView">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/background_gradient">
+
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="110dp"
+                    android:layout_margin="8dp"
+
+                    app:tint="?attr/colorPrimary"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/z_ic_person" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="24dp"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Admin" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+
+</ScrollView>

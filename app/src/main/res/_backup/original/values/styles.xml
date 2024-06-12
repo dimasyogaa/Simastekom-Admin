@@ -11,8 +11,8 @@
     </style>
 
     <!-- Custom - Divider  -->
-<!--    <style name="ThemeOverlay.App.NavigationView" parent="">-->
-<!--        <item name="colorOutline">@color/md_theme_outlineVariant</item>-->
-<!--    </style>-->
+    <!--    <style name="ThemeOverlay.App.NavigationView" parent="">-->
+    <!--        <item name="colorOutline">@color/md_theme_outlineVariant</item>-->
+    <!--    </style>-->
 
 </resources>

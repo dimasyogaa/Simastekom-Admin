@@ -13,23 +13,12 @@
         android:paddingBottom="32dp">
 
 
-
-        <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/progressBar"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:indeterminate="false"
-            android:visibility="gone"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
         <ImageView
             android:id="@+id/iv_login"
             android:layout_width="match_parent"
             android:layout_height="210dp"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="60dp"
+            android:layout_marginTop="36dp"
             android:src="@drawable/z_illustration_login"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -39,15 +28,15 @@
             android:id="@+id/tv_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="@string/title_admin"
+            android:layout_marginHorizontal="16dp"
             android:layout_marginTop="16dp"
+            android:text="@string/title_admin"
+            android:textAlignment="center"
             android:textSize="20sp"
             android:textStyle="bold"
-            android:layout_marginHorizontal="16dp"
-            android:textAlignment="center"
             app:layout_constraintEnd_toEndOf="@+id/iv_login"
             app:layout_constraintStart_toStartOf="@+id/iv_login"
-            app:layout_constraintTop_toBottomOf="@+id/iv_login" />
+            app:layout_constraintTop_toBottomOf="@+id/progressBar" />
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/input_layout_id"
@@ -55,7 +44,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            android:layout_marginTop="30dp"
+            android:layout_marginTop="40dp"
             android:hint="@string/text_label_id_username"
             app:expandedHintEnabled="false"
             app:layout_constraintEnd_toEndOf="@+id/tv_title"
@@ -110,9 +99,63 @@
             app:layout_constraintStart_toStartOf="@+id/input_layout_password"
             app:layout_constraintTop_toBottomOf="@+id/input_layout_password" />
 
+        <Button
+            android:id="@+id/btn_forgot_password"
+            style="@style/Widget.Material3.Button.OutlinedButton"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="80dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/text_forgot_password"
+            app:layout_constraintEnd_toEndOf="@+id/btn_login"
+            app:layout_constraintStart_toStartOf="@+id/btn_login"
+            app:layout_constraintTop_toBottomOf="@+id/btn_login"
+            app:strokeColor="?attr/colorPrimary" />
 
 
+        <TextView
+            android:id="@+id/tv_customer_support"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="24dp"
+            android:text="Hubungan masalah teknis login, dan operasional:"
+            android:textAlignment="center"
+            app:layout_constraintEnd_toEndOf="@+id/btn_forgot_password"
+            app:layout_constraintStart_toStartOf="@+id/btn_forgot_password"
+            app:layout_constraintTop_toBottomOf="@+id/btn_forgot_password" />
 
+        <Button
+            android:id="@+id/btn_send_wa"
+            style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:backgroundTint="@color/colorFixedGreen"
+            android:text="08988136896"
+            android:textColor="@android:color/white"
+            android:textSize="14sp"
+            app:icon="@drawable/z_ic_whatsapp"
+            app:iconSize="24dp"
+            app:iconTint="@null"
+            app:layout_constraintEnd_toEndOf="@+id/tv_customer_support"
+            app:layout_constraintStart_toStartOf="@+id/tv_customer_support"
+            app:layout_constraintTop_toBottomOf="@+id/tv_customer_support" />
+
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:indeterminate="true"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="@+id/iv_login"
+            app:layout_constraintStart_toStartOf="@+id/iv_login"
+            app:layout_constraintTop_toBottomOf="@+id/iv_login"
+            app:trackThickness="4dp" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    tools:context=".ui.identity.personal.IdentityPersonalActivity">
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/appBarLayout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            app:navigationIcon="@drawable/z_ic_close"
+            app:title="@string/text_identity_personal"
+            app:titleCentered="true"
+            app:titleTextColor="@color/md_theme_onSurface"
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
+
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/layout_root"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="20dp">
+
+
+            <ImageView
+                android:id="@+id/iv_phone"
+                style="@style/content_wrap"
+                android:src="@drawable/z_ic_phone"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_row_phone"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_label_phone"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_phone"
+                app:layout_constraintStart_toEndOf="@+id/iv_phone"
+                app:layout_constraintTop_toTopOf="@+id/iv_phone" />
+
+            <TextView
+                android:id="@+id/tv_phone"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_phone"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_phone"
+                tools:text="@string/text_dummy_number_phone_ind_08" />
+
+
+            <ImageView
+                android:id="@+id/iv_email"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_mail"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_phone" />
+
+            <TextView
+                android:id="@+id/tv_row_email"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_label_email"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_email"
+                app:layout_constraintStart_toEndOf="@+id/iv_email"
+                app:layout_constraintTop_toTopOf="@+id/iv_email" />
+
+            <TextView
+                android:id="@+id/tv_email"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_email"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_email"
+                tools:text="@string/text_dummy_email" />
+
+
+            <ImageView
+                android:id="@+id/iv_id_card_number"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_id_card"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_email" />
+
+            <TextView
+                android:id="@+id/tv_row_id_card_number"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_label_id_card_number"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_id_card_number"
+                app:layout_constraintStart_toEndOf="@+id/iv_id_card_number"
+                app:layout_constraintTop_toTopOf="@+id/iv_id_card_number" />
+
+            <TextView
+                android:id="@+id/tv_id_card_number"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_id_card_number"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_id_card_number"
+                tools:text="@string/text_dummy_id_card_number" />
+
+
+            <ImageView
+                android:id="@+id/iv_place_date_birth"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_place_birth"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_id_card_number" />
+
+            <TextView
+                android:id="@+id/tv_row_place_date_birth"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_place_date_birth"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_place_date_birth"
+                app:layout_constraintStart_toEndOf="@+id/iv_place_date_birth"
+                app:layout_constraintTop_toTopOf="@+id/iv_place_date_birth" />
+
+            <TextView
+                android:id="@+id/tv_place_date_birth"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_place_date_birth"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_place_date_birth"
+                tools:text="@string/text_dummy_place_birth" />
+
+
+            <ImageView
+                android:id="@+id/iv_address_home"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_place_home"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_place_date_birth" />
+
+            <TextView
+                android:id="@+id/tv_row_address_home"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_address_home"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_address_home"
+                app:layout_constraintStart_toEndOf="@+id/iv_address_home"
+                app:layout_constraintTop_toTopOf="@+id/iv_address_home" />
+
+            <TextView
+                android:id="@+id/tv_address_home"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_address_home"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_address_home"
+                tools:text="@string/text_dummy_address_home" />
+
+
+            <ImageView
+                android:id="@+id/iv_gender"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_gender"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_address_home" />
+
+            <TextView
+                android:id="@+id/tv_row_gender"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_label_gender"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_gender"
+                app:layout_constraintStart_toEndOf="@+id/iv_gender"
+                app:layout_constraintTop_toTopOf="@+id/iv_gender" />
+
+            <TextView
+                android:id="@+id/tv_gender"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_gender"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_gender"
+                tools:text="@string/text_man" />
+
+
+            <ImageView
+                android:id="@+id/iv_religion"
+                style="@style/content_wrap"
+                android:layout_marginTop="30dp"
+                android:src="@drawable/z_ic_person"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_gender" />
+
+            <TextView
+                android:id="@+id/tv_row_religion"
+                style="@style/content_wrap"
+                android:layout_marginStart="8dp"
+                android:text="@string/text_label_religion"
+                app:layout_constraintBottom_toBottomOf="@+id/iv_religion"
+                app:layout_constraintStart_toEndOf="@+id/iv_religion"
+                app:layout_constraintTop_toTopOf="@+id/iv_religion" />
+
+            <TextView
+                android:id="@+id/tv_religion"
+                style="@style/content_wrap.value"
+                app:layout_constraintStart_toStartOf="@+id/tv_row_religion"
+                app:layout_constraintTop_toBottomOf="@+id/tv_row_religion"
+                tools:text="@string/text_islam" />
+
+
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+                android:id="@+id/mainProgressBar"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="45dp"
+                android:indeterminate="true"
+                android:scaleX="0.75"
+                android:scaleY="0.75"
+                android:visibility="gone"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:trackThickness="4dp" />
+
+            <include
+                android:id="@+id/view_handle"
+                layout="@layout/layout_handle_data_connection"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:layout_marginTop="50dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
+

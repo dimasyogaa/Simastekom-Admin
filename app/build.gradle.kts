@@ -1,6 +1,7 @@
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
+    id("kotlin-parcelize")
 }
 
 android {
@@ -18,7 +19,9 @@ android {
 
         buildConfigField("boolean", "DEBUG", "true")
 
-        buildConfigField("String", "BASE_URL_API", "\"http://192.168.216.106:8000/\"")
+        buildConfigField("String", "BASE_URL", "\"http://192.168.231.106:8000\"")
+        buildConfigField("String", "API", "\"/api/\"")
+
     }
 
     buildTypes {
@@ -46,6 +49,14 @@ android {
 }
 
 dependencies {
+    implementation(libs.androidx.swiperefreshlayout)
+
+
+    implementation(libs.bcrypt)
+
+    implementation(libs.androidx.core.splashscreen)
+
+    implementation(libs.androidx.datastore.preferences)
 
     implementation(libs.retrofit)
     implementation(libs.converter.gson)
@@ -55,8 +66,9 @@ dependencies {
     implementation(libs.androidx.lifecycle.livedata.ktx)
     implementation(libs.androidx.activity.ktx)
 
-    implementation(libs.glide)
+    implementation(libs.coil)
 
+    // tidak perlu implementasi safe args disini
     implementation(libs.androidx.navigation.fragment.ktx)
     implementation(libs.androidx.navigation.ui.ktx)
 

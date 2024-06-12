@@ -1,4 +1,3 @@
-
 <resources>
     <color name="md_theme_primary">#236488</color>
     <color name="md_theme_onPrimary">#FFFFFF</color>
@@ -65,4 +64,11 @@
     <color name="colorOnCustomColor1">#FFFFFF</color>
     <color name="colorCustomColor1Container">#C8E6FF</color>
     <color name="colorOnCustomColor1Container">#001E2E</color>
+
+
+    <color name="colorFixedGreen">#41B06E</color>
+    <color name="colorFixedSoftBlue">#CFE2FF</color>
+    <color name="colorFixedSoftYellow">#FFF3CD</color>
+    <color name="colorFixedBlack">#49454F</color>
+
 </resources>

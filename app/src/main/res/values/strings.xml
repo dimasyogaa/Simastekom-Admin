@@ -3,15 +3,241 @@
 
     <string name="title_classes">Kelas</string>
     <string name="title_profile">Profil</string>
+    <string name="title_action">Aksi</string>
 
-    <string name="text_label_password">Password</string>
-    <string name="text_hint_password">Masukkan password anda...</string>
+    <string name="title_admin">Admin</string>
+    <string name="title_student">Mahasiswa</string>
+    <string name="title_lecturee">Dosen</string>
 
     <string name="btn_text_login">Login</string>
+    <string name="btn_text_logout">Logout</string>
+    <string name="title_dialog_login_failed">Login Gagal</string>
+    <string name="title_dialog_login_again">Login Ulang</string>
+    <string name="title_dialog_logout_failed">Logout Gagal</string>
+    <string name="btn_text_get_token_via_email">Dapatkan Token Melalui Email</string>
+    <string name="text_label_token">Token</string>
+    <string name="text_hint_token">Masukkan token valid anda…</string>
+    <string name="text_instruction_token_reset_password_1">Masukkan token atau kode konfirmasi 6 digit yang kami kirimkan ke email anda yaitu:</string>
+    <string name="text_instruction_token_reset_password_2">Mungkin butuh waktu sampai satu menit bagi Anda untuk menerima kode ini. Jika Anda tidak melihat email ini di kotak masuk Anda dalam waktu 15 menit, cari di folder spam Anda. Jika Anda menemukannya di sana, tolong tandai email tersebut sebagai \"Bukan Spam\".</string>
+    <string name="btn_text_verify_token">Verifikasi Token</string>
+
+    <string name="btn_text_change_photo">Ganti Foto</string>
+    <string name="btn_text_delete_photo">Hapus Foto</string>
 
     <string name="text_label_id_username">Nama Pengguna</string>
-    <string name="text_hint_id_username">Masukkan nama pengguna anda...</string>
-    <string name="title_admin">Admin</string>
+    <string name="text_hint_id_username">Masukkan nama pengguna anda…</string>
+
+    <string name="text_label_password">Password</string>
+    <string name="text_label_old_password">Password Lama</string>
+    <string name="text_label_new_password">Password Baru</string>
+    <string name="text_label_confirm_new_password">Konfirmasi Password Baru</string>
+    <string name="text_hint_password">Masukkan password anda…</string>
+    <string name="text_hint_old_password">Masukkan password lama anda…</string>
+    <string name="text_hint_new_password">Masukkan password baru anda…</string>
+    <string name="text_hint_confirm_new_password">Ketik ulang password baru anda…</string>
+    <string name="text_forgot_password">Lupa Password?</string>
+    <string name="text_change_password">Ganti Password</string>
+
+    <string name="text_label_name">Nama</string>
+    <string name="text_hint_user_name">Masukkan nama anda…</string>
+    <string name="text_hint_name">Masukkan nama…</string>
+
+    <string name="text_label_phone">Nomor WA</string>
+    <string name="text_hint_phone">Masukkan nomor wa anda…</string>
+
+    <string name="text_label_email">Email</string>
+    <string name="text_hint_email">Masukkan email valid anda…</string>
+    <string name="text_error_format_email">Format email harus valid (xxx@xxxx.com)</string>
+
+    <string name="text_label_gender">Jenis Kelamin</string>
+    <string name="text_hint_gender">Pilih jenis kelamin anda…</string>
+
+    <string name="text_label_id_card_number">Nomor KTP</string>
+    <string name="text_hint_id_card_number">Masukkan nomor KTP anda…</string>
+
+    <string name="text_label_religion">Agama Kepercayaan</string>
+    <string name="text_hint_religion">Pilih agama kepercayaan anda…</string>
+
+    <string name="text_label_place_birth">Kota Lahir</string>
+    <string name="text_hint_place_birth">Masukkan kota lahir anda…</string>
+
+    <string name="text_label_date_birth">Tanggal Lahir</string>
+    <string name="text_hint_date_birth">Tentukan tanggal lahir anda…</string>
+
+    <string name="text_address_home">Alamat Rumah</string>
+    <string name="text_label_province">Provinsi</string>
+    <string name="text_hint_province">Masukkan provinsi anda…</string>
+    <string name="text_label_city_regency">Kota/Kabupaten</string>
+    <string name="text_hint_city_regency">Masukkan kota/kabupaten anda…</string>
+    <string name="text_label_district">Kecamatan</string>
+    <string name="text_hint_district">Masukkan kecamatan anda…</string>
+    <string name="text_label_village">Desa/Kelurahan</string>
+    <string name="text_hint_village">Masukkan desa/kelurahan anda…</string>
+    <string name="text_label_rw">RW</string>
+    <string name="text_hint_rw">00</string>
+    <string name="text_label_rt">RT</string>
+    <string name="text_hint_rt">00</string>
+    <string name="text_label_street">Nama Jalan, Gedung</string>
+    <string name="text_label_address_other_detail">Detail Lainnya</string>
+    <string name="text_hint_address_other_detail">Cth: Blok/Unit No./No. Rumah, Patokan</string>
+
+    <string name="text_ok">OK</string>
+    <string name="text_cancel">Batal</string>
+
+    <string name="btn_text_edit">Edit</string>
+    <string name="btn_text_save">Simpan</string>
+
+    <string name="text_account">Akun</string>
+
+    <string name="text_identity_personal">Identitas Pribadi</string>
+    <string name="text_identity_parent">Identitas Orang Tua</string>
+
+
+    <string name="text_place_date_birth">Tempat/Tanggal Lahir</string>
+
+    <string name="text_man">Laki-Laki</string>
+    <string name="text_woman">Perempuan</string>
+
+    <string name="text_sign">tanda %1$s</string>
+
+    <string name="text_success">Berhasil</string>
+    <string name="text_failed">Gagal</string>
+    <string name="text_error">%1$s Error</string>
+
+    <string name="failed_to_connect">Gagal Terhubung</string>
+    <string name="refresh">Refresh</string>
+    <string name="text_loading">Sedang memuat…</string>
 
     <string name="empty_field">Masukkan %s anda</string>
+    <string name="mandatory_field">%s wajib diisi</string>
+    <string name="min_character_field">%s tidak boleh kurang dari %d karakter</string>
+    <string name="six_digits_field">%s harus memiliki %d digit</string>
+
+    <string name="text_alert_create_new_password">%1$s membuat password baru</string>
+    <string name="text_alert_change_password">%1$s mengubah password</string>
+
+    <string name="what_you_entered_is_not_correct">%1$s yang anda masukkan belum benar</string>
+    <string name="text_cannot_contain_spaces">%1$s tidak boleh mengandung spasi</string>
+    <string name="text_cannot_contain_spaces_early">Tidak boleh ada spasi di awal %1$s</string>
+    <string name="text_error_format">%1$s tidak boleh ada %2$s</string>
+
+
+    <string name="text_alert_add">%1$s menambah %2$s</string>
+    <string name="text_alert_change">%1$s mengubah %2$s</string>
+    <string name="text_alert_delete">%1$s menghapus %2$s</string>
+
+    <string name="text_alert_update_data">%1$s mengubah data</string>
+
+    <string name="text_please_login_again">Silakan login kembali</string>
+    <string name="text_const_unauthorized">unauthorized</string>
+
+    <string name="first_fragment_label">First Fragment</string>
+    <string name="second_fragment_label">Second Fragment</string>
+    <string name="next">Next</string>
+    <string name="previous">Previous</string>
+
+    <string name="text_buddhism">Budha</string>
+    <string name="text_hinduism">Hindu</string>
+    <string name="text_islam">Islam</string>
+    <string name="text_protestant">K. Protestan</string>
+    <string name="text_catholic">Katholik</string>
+    <string name="text_confucianism">Konghucu</string>
+
+
+    <string name="lorem_ipsum">
+        Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
+        volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
+        dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
+        litora torquent per conubia nostra, per inceptos himenaeos. Suspendisse blandit eleifend
+        diam, vel rutrum tellus vulputate quis. Aliquam eget libero aliquet, imperdiet nisl a,
+        ornare ex. Sed rhoncus est ut libero porta lobortis. Fusce in dictum tellus.\n\n
+        Suspendisse interdum ornare ante. Aliquam nec cursus lorem. Morbi id magna felis. Vivamus
+        egestas, est a condimentum egestas, turpis nisl iaculis ipsum, in dictum tellus dolor sed
+        neque. Morbi tellus erat, dapibus ut sem a, iaculis tincidunt dui. Interdum et malesuada
+        fames ac ante ipsum primis in faucibus. Curabitur et eros porttitor, ultricies urna vitae,
+        molestie nibh. Phasellus at commodo eros, non aliquet metus. Sed maximus nisl nec dolor
+        bibendum, vel congue leo egestas.\n\n
+        Sed interdum tortor nibh, in sagittis risus mollis quis. Curabitur mi odio, condimentum sit
+        amet auctor at, mollis non turpis. Nullam pretium libero vestibulum, finibus orci vel,
+        molestie quam. Fusce blandit tincidunt nulla, quis sollicitudin libero facilisis et. Integer
+        interdum nunc ligula, et fermentum metus hendrerit id. Vestibulum lectus felis, dictum at
+        lacinia sit amet, tristique id quam. Cras eu consequat dui. Suspendisse sodales nunc ligula,
+        in lobortis sem porta sed. Integer id ultrices magna, in luctus elit. Sed a pellentesque
+        est.\n\n
+        Aenean nunc velit, lacinia sed dolor sed, ultrices viverra nulla. Etiam a venenatis nibh.
+        Morbi laoreet, tortor sed facilisis varius, nibh orci rhoncus nulla, id elementum leo dui
+        non lorem. Nam mollis ipsum quis auctor varius. Quisque elementum eu libero sed commodo. In
+        eros nisl, imperdiet vel imperdiet et, scelerisque a mauris. Pellentesque varius ex nunc,
+        quis imperdiet eros placerat ac. Duis finibus orci et est auctor tincidunt. Sed non viverra
+        ipsum. Nunc quis augue egestas, cursus lorem at, molestie sem. Morbi a consectetur ipsum, a
+        placerat diam. Etiam vulputate dignissim convallis. Integer faucibus mauris sit amet finibus
+        convallis.\n\n
+        Phasellus in aliquet mi. Pellentesque habitant morbi tristique senectus et netus et
+        malesuada fames ac turpis egestas. In volutpat arcu ut felis sagittis, in finibus massa
+        gravida. Pellentesque id tellus orci. Integer dictum, lorem sed efficitur ullamcorper,
+        libero justo consectetur ipsum, in mollis nisl ex sed nisl. Donec maximus ullamcorper
+        sodales. Praesent bibendum rhoncus tellus nec feugiat. In a ornare nulla. Donec rhoncus
+        libero vel nunc consequat, quis tincidunt nisl eleifend. Cras bibendum enim a justo luctus
+        vestibulum. Fusce dictum libero quis erat maximus, vitae volutpat diam dignissim.
+    </string>
+
+    <string name="sign_plus">+</string>
+    <string name="text_country_code">kode negara</string>
+
+    <string name="text_instruction_phone_1">Isi No Hp/WA tanpa karakter -,.,(,)</string>
+    <string name="text_instruction_phone_2">Khusus nomor luar negeri Wajib diawali + dan %1$s</string>
+    <string name="text_instruction_phone_3">Contoh yang benar:\n%1$s\n%2$s\n+65777888999 (contoh nomor luar negeri Singapura)</string>
+
+    <string name="text_instruction_email">Perubahan email akan diperbarui jika sudah melakukan verifikasi dengan pengisian token yang dikirimkan melalui email</string>
+    <string name="text_instruction">Petunjuk</string>
+    <string name="text_info">Informasi</string>
+
+    <string name="text_dummy_number_phone_ind_08">081578168168</string>
+    <string name="text_dummy_number_phone_ind_62">+6281578168168</string>
+    <string name="text_dummy_number_phone_international">+65</string>
+    <string name="text_dummy_email">yyy@gmail.com</string>
+    <string name="text_dummy_id_card_number">11291749117121</string>
+    <string name="text_dummy_place_birth">Semarang, 12 Januari 1993</string>
+    <string name="text_dummy_address_home">Semarang, Jawa Tengah</string>
+
+    <string name="placeholder_value_is_not_empty">%1$s : %2$s</string>
+    <string name="text_instruction_reset_password_send_token_to_email">Anda bisa membuat password baru jika sudah melakukan verifikasi dengan pengisian token yang dikirimkan melalui email</string>
+
+    <string name="text_changes_not_saved">Perubahan belum disimpan</string>
+    <string name="text_exit_not_saved">Anda yakin ingin keluar tanpa menyimpan perubahan?</string>
+    <string name="text_question_do_you_want_to_leave_this_account">Anda ingin keluar dari akun ini?</string>
+    <string name="text_question_do_you_want_to_back_profile_page">Anda ingin kembali ke halaman profil tanpa menyimpan perubahan?</string>
+    <string name="text_question_do_you_want_to_delete">Anda ingin menghapus %1$s?</string>
+
+    <string name="searchbar_hint_student">Masukkan nim mahasiswa</string>
+
+    <string name="searchbar_hint">Cari</string>
+
+    <string name="title_search">Cari</string>
+
+    <string name="title_student_menu">Menu Mahasiswa</string>
+    <string name="title_student_study_program_menu">Menu Program Studi</string>
+
+    <string name="title_study_program">Program Studi</string>
+    <string name="title_faculty">Fakultas</string>
+    <string name="title_level">Jenjang</string>
+    <string name="title_major">Jurusan</string>
+    <string name="title_campus">Kampus</string>
+
+
+    <string name="text_add">Tambah</string>
+    <string name="text_change_or_delete">Ubah/Hapus</string>
+    <string name="text_delete">Hapus</string>
+
+    <string name="text_label_code">Kode</string>
+    <string name="text_hint_code">Masukkan kode…</string>
+    <string name="format_code_name">%1$s - %2$s</string>
+    <string name="text_max_char_5">Maksimal 5 karakter</string>
+    <string name="text_newest">Terbaru</string>
+    <string name="text_oldest">Terlama</string>
+    <string name="from_z_to_a">Dari Z ke A</string>
+    <string name="from_a_to_z">Dari A ke Z</string>
+    <string name="text_sort_by">Urutkan Berdasarkan</string>
+
+
 </resources>

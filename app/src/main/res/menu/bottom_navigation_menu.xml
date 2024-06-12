@@ -1,15 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<menu xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
 
 
     <item
-        android:id="@+id/kelasFragment"
-        android:icon="@drawable/z_ic_kelas"
-        android:title="@string/title_classes" />
+        android:id="@+id/actionFragment"
+        android:icon="@drawable/z_ic_action"
+        android:title="@string/title_action" />
 
     <item
-        android:id="@+id/profilFragment"
+        android:id="@+id/profileFragment"
         android:icon="@drawable/z_ic_person"
         android:title="@string/title_profile" />
 

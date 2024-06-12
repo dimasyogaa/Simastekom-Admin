@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <TextView
+        android:id="@+id/tv_name"
+        style="@style/content"
+        android:layout_margin="16dp"
+        android:textAlignment="center"
+        android:textAllCaps="true"
+        android:textSize="18sp"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Name" />
+
+    <TextView
+        android:id="@+id/tv_username"
+        style="@style/content"
+        android:layout_marginHorizontal="16dp"
+        android:layout_marginTop="4dp"
+        android:textAlignment="center"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_name"
+        tools:text="Username" />
+
+    <com.google.android.material.imageview.ShapeableImageView
+        android:id="@+id/iv_profile"
+        android:layout_width="180dp"
+        android:layout_height="180dp"
+        android:layout_marginTop="16dp"
+
+        android:scaleType="centerCrop"
+        android:src="@drawable/z_ic_placeholder_profile"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_username"
+        app:shapeAppearanceOverlay="@style/rounded.custom" />
+
+    <Button
+        android:id="@+id/btn_edit"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/btn_text_edit"
+        app:icon="@drawable/z_ic_edit"
+        app:layout_constraintEnd_toEndOf="@+id/iv_profile"
+        app:layout_constraintStart_toStartOf="@+id/iv_profile"
+        app:layout_constraintTop_toBottomOf="@+id/iv_profile" />
+
+    <Button
+        android:id="@+id/btn_identity_personal"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/text_identity_personal"
+        app:icon="@drawable/z_ic_person"
+        app:layout_constraintEnd_toEndOf="@+id/btn_edit"
+        app:layout_constraintStart_toStartOf="@+id/btn_edit"
+        app:layout_constraintTop_toBottomOf="@+id/btn_edit" />
+
+
+    <Button
+        android:id="@+id/btn_logout"
+        style="@style/Widget.Material3.Button.ElevatedButton.Icon"
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:text="@string/btn_text_logout"
+        android:textColor="?attr/colorError"
+        app:icon="@drawable/z_ic_logout"
+        app:iconTint="?attr/colorError"
+        app:layout_constraintEnd_toEndOf="@id/btn_identity_personal"
+        app:layout_constraintStart_toStartOf="@+id/btn_identity_personal"
+        app:layout_constraintTop_toBottomOf="@+id/btn_identity_personal" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

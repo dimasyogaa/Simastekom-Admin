@@ -1,5 +1,5 @@
-
 <resources>
+
     <style name="Base.Theme.Simastekom" parent="Theme.Material3.Dark.NoActionBar">
 
         <item name="colorPrimary">@color/md_theme_primary</item>
@@ -73,7 +73,38 @@
         <item name="toolbarStyle">@style/Widget.App.Toolbar</item>
 
 
+        <item name="android:windowAnimationStyle">@null</item>
+
+        <item name="android:textColorHighlight">@color/colorCustomColor1Container</item>
+
+        <!-- Drawable -->
+        <item name="colorControlNormal">@color/md_theme_onSurface</item>
+
+        <!--  Textview -->
+        <item name="android:textViewStyle">@style/CustomTextView</item>
+
     </style>
 
-    <style name="Theme.Simastekom" parent="Base.Theme.Simastekom"/>
+    <style name="Theme.Simastekom" parent="Base.Theme.Simastekom" />
+
+    <style name="Splash.Theme" parent="Theme.Material3.Dark.NoActionBar">
+        <!--        <item name="android:windowIsTranslucent">true</item>-->
+        <item name="android:backgroundTint">@color/md_theme_background</item>
+        <item name="android:navigationBarColor">@color/md_theme_background</item>
+        <item name="android:statusBarColor">@color/md_theme_background</item>
+        <item name="android:windowBackground">@color/md_theme_background</item>
+        <item name="android:windowLightStatusBar">false</item>
+    </style>
+
+    <!-- Custom Dialog Fragment -->
+    <style name="FullScreenDialogFragment" parent="Theme.AppCompat.Light.Dialog">
+        <item name="android:windowIsFloating">false</item>
+        <item name="colorControlNormal">@color/md_theme_onSurface</item>
+        <item name="android:windowBackground">@color/md_theme_surface</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">false</item>
+        <item name="android:textViewStyle">@style/CustomTextView</item>
+    </style>
+
+
 </resources>
