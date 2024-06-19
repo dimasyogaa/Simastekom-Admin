@@ -2,9 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.studyprogram.level.StudentLevelManipulationActivity">
+    tools:context=".ui.student.studyprogram.faculty.StudentFacultyManipulationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -27,7 +28,7 @@
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
 
-                app:title="@string/title_level" />
+                app:title="@string/title_faculty" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -38,12 +39,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="5"
-            app:helperText="@string/text_max_char_5"
             android:layout_marginTop="20dp"
             android:hint="@string/text_label_code"
-            app:expandedHintEnabled="false">
+            app:counterEnabled="true"
+            app:counterMaxLength="5"
+            app:expandedHintEnabled="false"
+            app:helperText="@string/text_max_char_5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_code"
@@ -51,7 +52,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/text_hint_code"
                 android:inputType="textCapCharacters"
-                android:maxLength="5"/>
+                android:maxLength="5" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

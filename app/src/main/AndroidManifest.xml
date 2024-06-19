@@ -29,6 +29,12 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.student.studyprogram.major.StudentMajorManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.studyprogram.faculty.StudentFacultyManipulationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.student.studyprogram.level.StudentLevelManipulationActivity"
             android:exported="false" />
         <activity

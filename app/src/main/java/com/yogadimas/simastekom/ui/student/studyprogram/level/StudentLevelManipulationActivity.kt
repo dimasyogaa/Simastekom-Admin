@@ -88,10 +88,10 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
 
             btnSave.setOnClickListener { save() }
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdmin() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndLevel() }
         }
 
-        getAdmin()
+        getAdminAndLevel()
 
     }
 
@@ -126,7 +126,7 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAdmin() {
+    private fun getAdminAndLevel() {
         buttonIsEnabled()
 
         authViewModel.getUser().observe(this) {

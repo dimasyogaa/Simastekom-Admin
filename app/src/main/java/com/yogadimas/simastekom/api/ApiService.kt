@@ -95,6 +95,38 @@ interface ApiService {
     ): Call<IdentityPersonalResponse>
 
 
+    /** FACULTY */
+    @FormUrlEncoded
+    @POST("faculties")
+    fun addFaculty(
+        @Header("Authorization") token: String,
+        @Field("kode") kode: String,
+        @Field("nama") nama: String,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @GET("faculties")
+    fun getAllFaculties(@Header("Authorization") token: String): Call<IdentityAcademicListResponse>
+
+    @GET("faculties/{id}")
+    fun getFacultyById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @PUT("faculties/{id}")
+    fun updateFaculty(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body identityAcademic: IdentityAcademicData,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @DELETE("faculties/{id}")
+    fun deleteFaculty(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<IdentityAcademicObjectResponse>
+
+
+    /** LEVEL */
     @FormUrlEncoded
     @POST("levels")
     fun addLevel(
@@ -132,6 +164,47 @@ interface ApiService {
         @Header("Authorization") token: String, @Path("id") id: Int
     ): Call<IdentityAcademicObjectResponse>
 
+
+    /** MAJOR */
+    @FormUrlEncoded
+    @POST("majors")
+    fun addMajor(
+        @Header("Authorization") token: String,
+        @Field("kode") kode: String,
+        @Field("nama") nama: String,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @GET("majors")
+    fun getAllMajors(@Header("Authorization") token: String): Call<IdentityAcademicListResponse>
+
+    @GET("majors/search-sort")
+    fun searchSortMajor(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<IdentityAcademicListResponse>
+
+    @GET("majors/{id}")
+    fun getMajorById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @PUT("majors/{id}")
+    fun updateMajor(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body identityAcademic: IdentityAcademicData,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @DELETE("majors/{id}")
+    fun deleteMajor(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<IdentityAcademicObjectResponse>
+
+
+    /** PASSWORD */
     @FormUrlEncoded
     @POST("reset-password")
     fun resetPassword(

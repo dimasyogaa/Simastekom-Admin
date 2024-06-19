@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.adapter.student.studiprogram.level
+package com.yogadimas.simastekom.adapter.student.studiprogram.levelfacultymajor
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

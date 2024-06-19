@@ -19,7 +19,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.studiprogram.level.CodeNameAdapter
+import com.yogadimas.simastekom.adapter.student.studiprogram.levelfacultymajor.CodeNameAdapter
 import com.yogadimas.simastekom.databinding.ActivityStudentLevelBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
@@ -80,47 +80,11 @@ class StudentLevelActivity : AppCompatActivity() {
             toolbar.setNavigationOnClickListener { finish() }
 
             toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getAdmin()
+                getAdminAndLevels()
                 true
             }
 
-            searchView.setupWithSearchBar(searchBar)
 
-            searchView
-                .editText
-                .setOnEditorActionListener { _, _, _ ->
-
-                    searchBar.setText(searchView.text)
-                    adminViewModel.searchSortLevel(searchView.text.toString().trim(), null, null)
-
-                    searchView.hide()
-
-                    false
-                }
-
-
-            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-
-            listOf(chipSortBy, chipCode, chipName).forEach { chipId ->
-                chipId.setOnCheckedChangeListener { chip, isChecked ->
-                    if (isChecked) {
-                        if (chipId == chipSortBy) {
-                            showMenu(
-                                chip, R.menu.top_appbar_sort_by_menu, "created_at"
-                            )
-                        } else {
-                            showMenu(
-                                chip, R.menu.top_appbar_sort_asc_desc_menu, when (chipId) {
-                                    chipCode -> "kode"
-                                    chipName -> "nama"
-                                    else -> ""
-                                }
-                            )
-                        }
-
-                    }
-                }
-            }
 
 
 
@@ -136,34 +100,22 @@ class StudentLevelActivity : AppCompatActivity() {
             val layoutManager = LinearLayoutManager(this@StudentLevelActivity)
             rvLevel.layoutManager = layoutManager
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdmin() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndLevels() }
 
         }
 
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {
-
-                binding.apply {
-                    if (searchView.isShowing) {
-                        searchView.hide()
-                    } else {
-                        finish()
-                    }
-                }
-
-            }
+            override fun handleOnBackPressed() {finish()}
         }
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onStart() {
         super.onStart()
-        getAdmin()
+        getAdminAndLevels()
     }
 
-    private fun getAdmin() {
-        binding.searchBar.setText(null)
-        binding.searchView.setText(null)
+    private fun getAdminAndLevels() {
         authViewModel.getUser().observe(this) {
             val token = it.first
             if (token == AuthPreferences.DEFAULT_VALUE) {
@@ -379,13 +331,11 @@ class StudentLevelActivity : AppCompatActivity() {
         binding.apply {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
-                toolbar2.visibility = View.VISIBLE
                 fabAdd.visibility = View.VISIBLE
                 rvLevel.visibility = View.VISIBLE
 
             } else {
                 toolbar.visibility = View.INVISIBLE
-                toolbar2.visibility = View.GONE
                 fabAdd.visibility = View.GONE
                 rvLevel.visibility = View.GONE
             }
@@ -401,44 +351,6 @@ class StudentLevelActivity : AppCompatActivity() {
 
     }
 
-    private fun showMenu(v: View, menuRes: Int, sortBy: String) {
-        val popup = PopupMenu(this@StudentLevelActivity, v)
-        popup.menuInflater.inflate(menuRes, popup.menu)
-
-        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
-            when (menuItem.itemId) {
-                R.id.ascMenu -> {
-                    adminViewModel.searchSortLevel(
-                        binding.searchView.text.toString().trim(),
-                        sortBy,
-                        Sort.ASC.value
-                    )
-                    true
-                }
-
-                R.id.descMenu -> {
-                    adminViewModel.searchSortLevel(
-                        binding.searchView.text.toString().trim(),
-                        sortBy,
-                        Sort.DESC.value
-                    )
-                    true
-                }
-
-                else -> false
-            }
-
-        }
-        popup.setOnDismissListener {
-            binding.apply {
-                chipSortBy.isChecked = false
-                chipCode.isChecked = false
-                chipName.isChecked = false
-            }
-        }
-        // Show the popup menu.
-        popup.show()
-    }
 
     override fun onStop() {
         super.onStop()

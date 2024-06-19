@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:fitsSystemWindows="true">
 
-
         <com.google.android.material.appbar.MaterialToolbar
             android:id="@+id/toolbar"
             android:layout_width="match_parent"
@@ -27,97 +26,7 @@
 
         </com.google.android.material.appbar.MaterialToolbar>
 
-
-        <com.google.android.material.appbar.MaterialToolbar
-            android:id="@+id/toolbar2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:background="?attr/colorPrimary"
-            app:layout_scrollFlags="noScroll|snap">
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical">
-
-                <com.google.android.material.search.SearchBar
-                    android:id="@+id/searchBar"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:hint="@string/searchbar_hint" />
-
-                    <HorizontalScrollView
-                        android:layout_width="match_parent"
-                        android:scrollbars="none"
-                        android:layout_marginTop="-12dp"
-                        android:gravity="center"
-                        android:layout_height="wrap_content">
-
-                        <com.google.android.material.chip.ChipGroup
-                            android:id="@+id/chipGroup"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            app:singleLine="true"
-                            app:singleSelection="true">
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip_sort_by"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_sort_by"
-                                app:checkedIcon="@drawable/z_ic_sort"
-                                app:checkedIconEnabled="true"
-                                app:chipIcon="@drawable/z_ic_sort"
-                                app:chipIconEnabled="true"
-                                app:ensureMinTouchTargetSize="true" />
-
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip_code"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_label_code"
-                                app:checkedIcon="@drawable/z_ic_sort"
-                                app:checkedIconEnabled="true"
-                                app:chipIcon="@drawable/z_ic_sort"
-                                app:chipIconEnabled="true"
-                                app:ensureMinTouchTargetSize="true" />
-
-                            <com.google.android.material.chip.Chip
-                                android:id="@+id/chip_name"
-                                style="@style/Widget.Material3.Chip.Filter"
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:text="@string/text_label_name"
-                                app:checkedIcon="@drawable/z_ic_sort"
-                                app:checkedIconEnabled="true"
-                                app:chipIcon="@drawable/z_ic_sort"
-                                app:chipIconEnabled="true"
-                                app:ensureMinTouchTargetSize="true" />
-
-
-                        </com.google.android.material.chip.ChipGroup>
-
-                    </HorizontalScrollView>
-            </LinearLayout>
-
-        </com.google.android.material.appbar.MaterialToolbar>
-
-
     </com.google.android.material.appbar.AppBarLayout>
-
-
-    <com.google.android.material.search.SearchView
-        android:id="@+id/searchView"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:hint="@string/searchbar_hint"
-        app:layout_anchor="@id/searchBar">
-
-
-    </com.google.android.material.search.SearchView>
 
 
     <androidx.core.widget.NestedScrollView
