@@ -16,6 +16,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
@@ -84,22 +85,8 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                 override fun afterTextChanged(p0: Editable?) {}
 
             })
-            btnSave.setOnClickListener {
-                hideKeyboard()
-                if (isEditDeleteView) {
-                    adminViewModel.updateLevel(
-                        id,
-                        IdentityAcademicData(
-                            code = edtCode.text.toString().trim(),
-                            name = edtName.text.toString().trim()
-                        )
-                    )
-                } else {
-                    adminViewModel.addLevel(edtCode.text.toString(), edtName.text.toString())
-                }
 
-            }
-
+            btnSave.setOnClickListener { save() }
 
             viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdmin() }
         }
@@ -133,6 +120,8 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                         icon.setColorFilter(color, PorterDuff.Mode.SRC_ATOP)
                     }
                 }
+
+
             }
         }
     }
@@ -171,7 +160,19 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                 binding.apply {
                     edtCode.setText(it.code)
                     edtName.setText(it.name)
+                    toolbar.setOnMenuItemClickListener { menuItem ->
+                        when (menuItem.itemId) {
+                            R.id.deleteMenu -> {
+                                delete(it.id, it.code ?: "", it.name ?: "")
+                                true
+                            }
+
+                            else -> false
+                        }
+                    }
                 }
+
+
 
 
                 if (it.isAdded || it.isUpdated || it.isDeleted) {
@@ -231,6 +232,34 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
         }
     }
 
+    private fun save() {
+        binding.apply {
+            hideKeyboard()
+            if (isEditDeleteView) {
+                adminViewModel.updateLevel(
+                    id,
+                    IdentityAcademicData(
+                        code = edtCode.text.toString().trim(),
+                        name = edtName.text.toString().trim()
+                    )
+                )
+            } else {
+                adminViewModel.addLevel(edtCode.text.toString(), edtName.text.toString())
+            }
+        }
+    }
+
+    private fun delete(id: Int?, code: String, name: String) {
+        binding.apply {
+            hideKeyboard()
+            showAlertDialog(
+                getString(R.string.format_code_name, code, name),
+                STATUS_DELETED,
+                id ?: 0
+            )
+        }
+    }
+
     private fun Activity.hideKeyboard() {
         fun clearFocus() {
             binding.apply {
@@ -249,6 +278,85 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
         }
     }
 
+    private fun showAlertDialog(msg: String = "", status: String, id: Int = 0) {
+
+        val unauthorized = msg == getString(R.string.text_const_unauthorized)
+        var title = ""
+        var message = ""
+        var icon: Drawable? = null
+        when (status) {
+            STATUS_DELETED -> {
+                icon = ContextCompat.getDrawable(this, R.drawable.z_ic_delete)
+                val wrappedDrawable = DrawableCompat.wrap(icon!!).mutate()
+                val color = ContextCompat.getColor(this, R.color.md_theme_error)
+                DrawableCompat.setTint(wrappedDrawable, color)
+                title = getString(R.string.text_delete)
+                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+            }
+
+            STATUS_ERROR -> {
+                if (unauthorized) {
+                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    title = getString(R.string.title_dialog_login_again)
+                    message = getString(R.string.text_please_login_again)
+                } else {
+                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    title = getString(R.string.text_error, "")
+                    message = msg
+                }
+
+            }
+        }
+
+        if (dialog == null) {
+
+            dialog = MaterialAlertDialogBuilder(this).apply {
+                setCancelable(false)
+                setIcon(icon)
+                setTitle(title)
+                setMessage(message)
+                if (status == STATUS_DELETED || status == STATUS_ERROR) {
+                    setPositiveButton(getString(R.string.text_ok)) { _, _ ->
+                        isAlertDialogShow = false
+                        dialog = null
+                        when (status) {
+                            STATUS_DELETED -> adminViewModel.deleteLevel(id)
+                            STATUS_ERROR -> {
+                                if (unauthorized) authViewModel.saveUser(
+                                    null,
+                                    null,
+                                    null
+                                ) else return@setPositiveButton
+                            }
+
+                        }
+                    }
+
+                    if (status == STATUS_DELETED) {
+                        setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
+                            isAlertDialogShow = false
+                            dialog = null
+                            return@setNegativeButton
+                        }
+                    }
+                }
+
+            }.create()
+
+        }
+
+
+
+        if (!isAlertDialogShow) {
+            isAlertDialogShow = true
+            dialog?.show()
+        }
+
+
+    }
+
+
+    /*
     private fun showAlertDialog(msg: String = "", status: String) {
 
         val unauthorized = msg == getString(R.string.text_const_unauthorized)
@@ -299,6 +407,8 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
 
     }
 
+     */
+
     private fun showLoadingMain(boolean: Boolean) {
         showLoading(binding.mainProgressBar, boolean)
         if (boolean) {
@@ -347,6 +457,7 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
     }
 
     companion object {
+        private const val STATUS_DELETED = "status_deleted"
         private const val STATUS_ERROR = "status_error"
 
         const val KEY_EXTRA_ID = "key_extra_id"
