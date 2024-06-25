@@ -1,4 +1,5 @@
 <resources>
     <dimen name="popup_width">300dp</dimen>
     <dimen name="popup_height_300">300dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
 </resources>

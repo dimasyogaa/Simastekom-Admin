@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.student.studyprogram.level
+package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.level
 
 import android.app.Activity
 import android.content.Intent

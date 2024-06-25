@@ -91,6 +91,7 @@
 
     <string name="text_identity_personal">Identitas Pribadi</string>
     <string name="text_identity_parent">Identitas Orang Tua</string>
+    <string name="text_identity_academic">Identitas Akademik</string>
 
 
     <string name="text_place_date_birth">Tempat/Tanggal Lahir</string>
@@ -131,8 +132,6 @@
     <string name="text_please_login_again">Silakan login kembali</string>
     <string name="text_const_unauthorized">unauthorized</string>
 
-    <string name="first_fragment_label">First Fragment</string>
-    <string name="second_fragment_label">Second Fragment</string>
     <string name="next">Next</string>
     <string name="previous">Previous</string>
 
@@ -216,13 +215,21 @@
     <string name="title_search">Cari</string>
 
     <string name="title_student_menu">Menu Mahasiswa</string>
+    <string name="title_student_identity_academic_menu">Menu Identitas Akademik</string>
     <string name="title_student_study_program_menu">Menu Program Studi</string>
+
 
     <string name="title_study_program">Program Studi</string>
     <string name="title_faculty">Fakultas</string>
     <string name="title_level">Jenjang</string>
     <string name="title_major">Jurusan</string>
+    <string name="title_degree">Gelar</string>
     <string name="title_campus">Kampus</string>
+
+    <string name="text_hint_faculty">Masukkan fakultas…</string>
+    <string name="text_hint_level">Masukkan jenjang…</string>
+    <string name="text_hint_major">Masukkan jurusan…</string>
+    <string name="text_hint_degree">Masukkan gelar…</string>
 
 
     <string name="text_add">Tambah</string>
@@ -233,11 +240,13 @@
     <string name="text_hint_code">Masukkan kode…</string>
     <string name="format_code_name">%1$s - %2$s</string>
     <string name="text_max_char_5">Maksimal 5 karakter</string>
+    <string name="text_max_char_10">Maksimal 10 karakter</string>
     <string name="text_newest">Terbaru</string>
     <string name="text_oldest">Terlama</string>
     <string name="from_z_to_a">Dari Z ke A</string>
     <string name="from_a_to_z">Dari A ke Z</string>
     <string name="text_sort_by">Urutkan Berdasarkan</string>
+    <string name="format_level_major_degree">%1$s %2$s (%3$s)</string>
 
 
 </resources>

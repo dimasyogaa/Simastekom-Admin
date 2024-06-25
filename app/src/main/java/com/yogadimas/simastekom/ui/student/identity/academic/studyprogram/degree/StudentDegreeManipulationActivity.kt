@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.student.studyprogram.major
+package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.degree
 
 import android.app.Activity
 import android.content.Intent
@@ -20,7 +20,7 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ActivityStudentMajorManipulationBinding
+import com.yogadimas.simastekom.databinding.ActivityStudentDegreeManipulationBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.helper.hideKeyboard
@@ -31,8 +31,8 @@ import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
 
-class StudentMajorManipulationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityStudentMajorManipulationBinding
+class StudentDegreeManipulationActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStudentDegreeManipulationBinding
 
     private val adminViewModel: AdminViewModel by viewModels()
 
@@ -50,7 +50,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStudentMajorManipulationBinding.inflate(layoutInflater)
+        binding = ActivityStudentDegreeManipulationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         id = intent.getIntExtra(KEY_EXTRA_ID, 0)
@@ -88,10 +88,10 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
 
             btnSave.setOnClickListener { save() }
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndMajor() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndDegree() }
         }
 
-        getAdminAndMajor()
+        getAdminAndDegree()
 
     }
 
@@ -126,7 +126,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAdminAndMajor() {
+    private fun getAdminAndDegree() {
         buttonIsEnabled()
 
         authViewModel.getUser().observe(this) {
@@ -138,7 +138,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
             } else {
                 adminViewModel.token = token
                 if (isEditDeleteView) {
-                    adminViewModel.getMajorById(id)
+                    adminViewModel.getDegreeById(id)
                 }
             }
         }
@@ -236,7 +236,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
         binding.apply {
             hideKeyboard()
             if (isEditDeleteView) {
-                adminViewModel.updateMajor(
+                adminViewModel.updateDegree(
                     id,
                     IdentityAcademicData(
                         code = edtCode.text.toString().trim(),
@@ -244,7 +244,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
                     )
                 )
             } else {
-                adminViewModel.addMajor(edtCode.text.toString(), edtName.text.toString())
+                adminViewModel.addDegree(edtCode.text.toString(), edtName.text.toString())
             }
         }
     }
@@ -320,7 +320,7 @@ class StudentMajorManipulationActivity : AppCompatActivity() {
                         isAlertDialogShow = false
                         dialog = null
                         when (status) {
-                            STATUS_DELETED -> adminViewModel.deleteMajor(id)
+                            STATUS_DELETED -> adminViewModel.deleteDegree(id)
                             STATUS_ERROR -> {
                                 if (unauthorized) authViewModel.saveUser(
                                     null,

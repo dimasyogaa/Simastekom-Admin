@@ -4,9 +4,9 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
-import com.yogadimas.simastekom.ui.student.campus.CampusActivity
-import com.yogadimas.simastekom.ui.student.studyprogram.StudentStudyProgramActivity
-import com.yogadimas.simastekom.ui.student.studyprogram.StudentStudyProgramMenuActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.StudentIdentityAcademicMenuActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity
 
 class StudentActivityMenu : AppCompatActivity() {
 
@@ -21,19 +21,11 @@ class StudentActivityMenu : AppCompatActivity() {
         binding.apply {
             toolbar.setNavigationOnClickListener { finish() }
 
-            btnStudyProgram.setOnClickListener {
+            btnIdentityAcademic.setOnClickListener {
                 startActivity(
                     Intent(
                         this@StudentActivityMenu,
-                        StudentStudyProgramMenuActivity::class.java
-                    )
-                )
-            }
-            btnCampus.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        CampusActivity::class.java
+                        StudentIdentityAcademicMenuActivity::class.java
                     )
                 )
             }

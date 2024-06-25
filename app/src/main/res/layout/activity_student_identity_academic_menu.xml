@@ -2,10 +2,10 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:scrollbars="none"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity">
+    android:scrollbars="none"
+    tools:context=".ui.student.identity.academic.StudentIdentityAcademicMenuActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,38 +28,26 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
-                app:title="@string/title_student_study_program_menu" />
+                app:title="@string/title_student_identity_academic_menu" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-
-        <Button
-            android:id="@+id/btn_faculty"
-            style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_faculty"/>
-
-        <Button
-            android:id="@+id/btn_level"
-            style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_level"/>
-
-        <Button
-            android:id="@+id/btn_major"
-            style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_major"/>
-
-        <Button
-            android:id="@+id/btn_degree"
-            style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_degree"/>
 
         <Button
             android:id="@+id/btn_study_program"
             style="@style/CustomButtonTonalMenu"
             android:text="@string/title_study_program"/>
 
+        <Button
+            android:id="@+id/btn_campus"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/title_campus"/>
 
 
+        <Button
+            android:id="@+id/btn_identity_academic"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_identity_academic"/>
 
     </LinearLayout>
 

@@ -29,31 +29,50 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.student.studyprogram.major.StudentMajorManipulationActivity"
+            android:name=".ui.student.identity.academic.studyprogram.degree.StudentDegreeManipulationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.faculty.StudentFacultyManipulationActivity"
+            android:name=".ui.student.identity.academic.studyprogram.degree.StudentDegreeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.level.StudentLevelManipulationActivity"
+            android:name=".ui.student.identity.academic.studyprogram.StudentStudyProgramManipulationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.campus.CampusActivity"
+            android:name=".ui.student.identity.academic.StudentIdentityAcademicMenuActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.faculty.StudentFacultyActivity"
+            android:name=".ui.student.identity.academic.StudentIdentityAcademicManipulationActivity"
+            android:exported="false"
+            android:theme="@style/Theme.Simastekom" />
+        <activity
+            android:name=".ui.student.identity.academic.StudentIdentityAcademicActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.major.StudentMajorActivity"
+            android:name=".ui.student.identity.academic.studyprogram.major.StudentMajorManipulationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.level.StudentLevelActivity"
+            android:name=".ui.student.identity.academic.studyprogram.faculty.StudentFacultyManipulationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.StudentStudyProgramMenuActivity"
+            android:name=".ui.student.identity.academic.studyprogram.level.StudentLevelManipulationActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.studyprogram.StudentStudyProgramActivity"
+            android:name=".ui.student.identity.academic.campus.CampusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.studyprogram.faculty.StudentFacultyActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.studyprogram.major.StudentMajorActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.studyprogram.level.StudentLevelActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.studyprogram.StudentStudyProgramActivity"
             android:exported="false" />
         <activity
             android:name=".ui.student.StudentActivityMenu"

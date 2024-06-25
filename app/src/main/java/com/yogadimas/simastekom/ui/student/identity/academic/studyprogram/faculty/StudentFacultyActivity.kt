@@ -1,12 +1,10 @@
-package com.yogadimas.simastekom.ui.student.studyprogram.major
+package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.faculty
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.widget.PopupMenu
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -19,11 +17,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.studiprogram.levelfacultymajor.CodeNameAdapter
-import com.yogadimas.simastekom.databinding.ActivityStudentMajorBinding
+import com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree.CodeNameAdapter
+import com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree.CodeNameManipulationAdapter
+import com.yogadimas.simastekom.databinding.ActivityStudentFacultyBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.enums.Sort
 import com.yogadimas.simastekom.helper.showLoading
 import com.yogadimas.simastekom.interfaces.OnItemClickCallback
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
@@ -36,8 +34,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StudentMajorActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityStudentMajorBinding
+class StudentFacultyActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStudentFacultyBinding
 
     private val adminViewModel: AdminViewModel by viewModels()
 
@@ -47,6 +45,7 @@ class StudentMajorActivity : AppCompatActivity() {
 
     private var isLoading = false
     private var isAlertDialogShow = false
+    private var isFromStudyProgram = false
 
     private var dialog: AlertDialog? = null
 
@@ -55,9 +54,9 @@ class StudentMajorActivity : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == StudentMajorManipulationActivity.KEY_RESULT_CODE && result.data != null) {
+        if (result.resultCode == StudentFacultyManipulationActivity.KEY_RESULT_CODE && result.data != null) {
             val successText =
-                result.data?.getStringExtra(StudentMajorManipulationActivity.KEY_EXTRA_SUCCESS)
+                result.data?.getStringExtra(StudentFacultyManipulationActivity.KEY_EXTRA_SUCCESS)
                     .orEmpty()
             showAlertDialog(successText, STATUS_SUCCESS)
         }
@@ -65,8 +64,12 @@ class StudentMajorActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStudentMajorBinding.inflate(layoutInflater)
+        binding = ActivityStudentFacultyBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isFromStudyProgram = intent.getBooleanExtra(KEY_STUDY_PROGRAM, false)
+
+
 
         if (savedInstanceState != null) {
             isSuccessDialogShowingOrientation =
@@ -80,77 +83,29 @@ class StudentMajorActivity : AppCompatActivity() {
             toolbar.setNavigationOnClickListener { finish() }
 
             toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getAdminAndMajors()
+                getAdminAndFaculties()
                 true
             }
-
-            searchView.setupWithSearchBar(searchBar)
-
-            searchView
-                .editText
-                .setOnEditorActionListener { _, _, _ ->
-
-                    searchBar.setText(searchView.text)
-                    adminViewModel.searchSortMajor(searchView.text.toString().trim(), null, null)
-
-                    searchView.hide()
-
-                    false
-                }
-
-
-            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-
-            listOf(chipSortBy, chipCode, chipName).forEach { chipId ->
-                chipId.setOnCheckedChangeListener { chip, isChecked ->
-                    if (isChecked) {
-                        if (chipId == chipSortBy) {
-                            showMenu(
-                                chip, R.menu.top_appbar_sort_by_menu, "created_at"
-                            )
-                        } else {
-                            showMenu(
-                                chip, R.menu.top_appbar_sort_asc_desc_menu, when (chipId) {
-                                    chipCode -> "kode"
-                                    chipName -> "nama"
-                                    else -> ""
-                                }
-                            )
-                        }
-
-                    }
-                }
-            }
-
-
 
             fabAdd.setOnClickListener {
                 resultLauncher.launch(
                     Intent(
-                        this@StudentMajorActivity,
-                        StudentMajorManipulationActivity::class.java
+                        this@StudentFacultyActivity,
+                        StudentFacultyManipulationActivity::class.java
                     )
                 )
             }
 
-            val layoutManager = LinearLayoutManager(this@StudentMajorActivity)
-            rvMajor.layoutManager = layoutManager
+            val layoutManager = LinearLayoutManager(this@StudentFacultyActivity)
+            rvFaculty.layoutManager = layoutManager
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndMajors() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndFaculties() }
 
         }
 
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
-
-                binding.apply {
-                    if (searchView.isShowing) {
-                        searchView.hide()
-                    } else {
-                        finish()
-                    }
-                }
-
+                finish()
             }
         }
         onBackPressedDispatcher.addCallback(this, callback)
@@ -158,12 +113,10 @@ class StudentMajorActivity : AppCompatActivity() {
 
     override fun onStart() {
         super.onStart()
-        getAdminAndMajors()
+        getAdminAndFaculties()
     }
 
-    private fun getAdminAndMajors() {
-        binding.searchBar.setText(null)
-        binding.searchView.setText(null)
+    private fun getAdminAndFaculties() {
         authViewModel.getUser().observe(this) {
             val token = it.first
             if (token == AuthPreferences.DEFAULT_VALUE) {
@@ -172,7 +125,7 @@ class StudentMajorActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                adminViewModel.getAllMajors()
+                adminViewModel.getAllLFaculties()
             }
         }
 
@@ -192,7 +145,7 @@ class StudentMajorActivity : AppCompatActivity() {
                 }
                 failedToConnect(false)
 
-                setMajorData(it)
+                setFacultyData(it)
 
 
             }
@@ -203,17 +156,16 @@ class StudentMajorActivity : AppCompatActivity() {
             eventData.getContentIfNotHandled()?.let {
 
 
-
                 if (it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val major = getString(R.string.title_major)
+                    val faculty = getString(R.string.title_faculty)
                     showAlertDialog(
-                        getString(R.string.text_alert_delete, success, major),
+                        getString(R.string.text_alert_delete, success, faculty),
                         STATUS_SUCCESS
                     )
                     lifecycleScope.launch {
                         delay(300)
-                        adminViewModel.getAllMajors()
+                        adminViewModel.getAllLFaculties()
                     }
 
                 }
@@ -246,31 +198,50 @@ class StudentMajorActivity : AppCompatActivity() {
         }
     }
 
-    private fun setMajorData(it: List<IdentityAcademicData>) {
-        val adapter = CodeNameAdapter(object : OnItemClickCallback<IdentityAcademicData> {
-            override fun onItemClicked(data: IdentityAcademicData) {
-                val intent = Intent(
-                    this@StudentMajorActivity,
-                    StudentMajorManipulationActivity::class.java
-                ).apply {
-                    putExtra(StudentMajorManipulationActivity.KEY_EXTRA_ID, data.id)
+    private fun setFacultyData(it: List<IdentityAcademicData>) {
+        val adapter = if (isFromStudyProgram) {
+            CodeNameAdapter(object : OnItemClickCallback<IdentityAcademicData> {
+                override fun onItemClicked(data: IdentityAcademicData) {
+                    val resultIntent = Intent()
+
+                    resultIntent.putExtra(
+                        KEY_STUDY_PROGRAM_RESULT_EXTRA,
+                        data
+                    )
+
+                    setResult(KEY_STUDY_PROGRAM_RESULT_CODE, resultIntent)
+                    finish()
                 }
-                resultLauncher.launch(intent)
-            }
 
-            override fun onDeleteClicked(data: IdentityAcademicData) {
-                showAlertDialog(
-                    getString(R.string.format_code_name, data.code, data.name),
-                    STATUS_DELETED,
-                    data.id ?: 0
-                )
-            }
+                override fun onDeleteClicked(data: IdentityAcademicData) {}
 
-        })
+            })
+        } else {
+            CodeNameManipulationAdapter(object : OnItemClickCallback<IdentityAcademicData> {
+                override fun onItemClicked(data: IdentityAcademicData) {
+                    val intent = Intent(
+                        this@StudentFacultyActivity,
+                        StudentFacultyManipulationActivity::class.java
+                    ).apply {
+                        putExtra(StudentFacultyManipulationActivity.KEY_EXTRA_ID, data.id)
+                    }
+                    resultLauncher.launch(intent)
+                }
+
+                override fun onDeleteClicked(data: IdentityAcademicData) {
+                    showAlertDialog(
+                        getString(R.string.format_code_name, data.code, data.name),
+                        STATUS_DELETED,
+                        data.id ?: 0
+                    )
+                }
+
+            })
+        }
+
         adapter.submitList(it)
-        binding.rvMajor.adapter = adapter
+        binding.rvFaculty.adapter = adapter
     }
-
 
     private fun showAlertDialog(msg: String = "", status: String, id: Int = 0) {
 
@@ -332,7 +303,7 @@ class StudentMajorActivity : AppCompatActivity() {
                         isAlertDialogShow = false
                         dialog = null
                         when (status) {
-                            STATUS_DELETED -> adminViewModel.deleteMajor(id)
+                            STATUS_DELETED -> adminViewModel.deleteFaculty(id)
                             STATUS_ERROR -> {
                                 if (unauthorized) authViewModel.saveUser(
                                     null,
@@ -379,15 +350,12 @@ class StudentMajorActivity : AppCompatActivity() {
         binding.apply {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
-                toolbar2.visibility = View.VISIBLE
-                fabAdd.visibility = View.VISIBLE
-                rvMajor.visibility = View.VISIBLE
-
+                if (isFromStudyProgram) fabAdd.visibility = View.GONE else fabAdd.visibility = View.VISIBLE
+                rvFaculty.visibility = View.VISIBLE
             } else {
                 toolbar.visibility = View.INVISIBLE
-                toolbar2.visibility = View.GONE
                 fabAdd.visibility = View.GONE
-                rvMajor.visibility = View.GONE
+                rvFaculty.visibility = View.GONE
             }
         }
     }
@@ -399,45 +367,6 @@ class StudentMajorActivity : AppCompatActivity() {
             binding.viewHandle.viewFailedConnect.root.visibility = View.GONE
         }
 
-    }
-
-    private fun showMenu(v: View, menuRes: Int, sortBy: String) {
-        val popup = PopupMenu(this@StudentMajorActivity, v)
-        popup.menuInflater.inflate(menuRes, popup.menu)
-
-        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
-            when (menuItem.itemId) {
-                R.id.ascMenu -> {
-                    adminViewModel.searchSortMajor(
-                        binding.searchView.text.toString().trim(),
-                        sortBy,
-                        Sort.ASC.value
-                    )
-                    true
-                }
-
-                R.id.descMenu -> {
-                    adminViewModel.searchSortMajor(
-                        binding.searchView.text.toString().trim(),
-                        sortBy,
-                        Sort.DESC.value
-                    )
-                    true
-                }
-
-                else -> false
-            }
-
-        }
-        popup.setOnDismissListener {
-            binding.apply {
-                chipSortBy.isChecked = false
-                chipCode.isChecked = false
-                chipName.isChecked = false
-            }
-        }
-        // Show the popup menu.
-        popup.show()
     }
 
     override fun onStop() {
@@ -454,11 +383,15 @@ class StudentMajorActivity : AppCompatActivity() {
         super.onSaveInstanceState(outState)
     }
 
-
     companion object {
         private const val STATUS_DELETED = "status_deleted"
         private const val STATUS_SUCCESS = "status_success"
         private const val STATUS_ERROR = "status_error"
         private const val KEY_SUCCESS_DIALOG_SHOWING = "key_success_dialog_showing"
+
+
+        const val KEY_STUDY_PROGRAM = "key_study_program"
+        const val KEY_STUDY_PROGRAM_RESULT_CODE = 10_100
+        const val KEY_STUDY_PROGRAM_RESULT_EXTRA = "key_study_program_result_extra"
     }
 }

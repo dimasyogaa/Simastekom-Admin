@@ -292,6 +292,149 @@ class AdminViewModel : ViewModel() {
     }
 
 
+    /** Study Program */
+    fun addStudyProgram(identityAcademicData: IdentityAcademicData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addStudyProgram(token, identityAcademicData)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+    fun getAllStudyPrograms() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllStudyPrograms(token)
+        client.enqueue(object : Callback<IdentityAcademicListResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicListResponse>,
+                response: Response<IdentityAcademicListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademicList.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortStudyProgram(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortStudyProgram(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<IdentityAcademicListResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicListResponse>,
+                response: Response<IdentityAcademicListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademicList.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getStudyProgramById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getStudyProgramById(token, id)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateStudyProgram(id: Int, identityAcademicData: IdentityAcademicData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateStudyProgram(token, id, identityAcademicData)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteStudyProgram(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteStudyProgram(token, id)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+
     /** FACULTY */
     fun addFaculty(code: String, name: String) {
         _isLoading.value = true
@@ -675,6 +818,149 @@ class AdminViewModel : ViewModel() {
     fun deleteMajor(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteMajor(token, id)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+
+    /** DEGREE */
+    fun addDegree(code: String, name: String) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addDegree(token, code, name)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+    fun getAllDegrees() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllDegrees(token)
+        client.enqueue(object : Callback<IdentityAcademicListResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicListResponse>,
+                response: Response<IdentityAcademicListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademicList.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortDegree(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortDegree(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<IdentityAcademicListResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicListResponse>,
+                response: Response<IdentityAcademicListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademicList.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getDegreeById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getDegreeById(token, id)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateDegree(id: Int, identityAcademicData: IdentityAcademicData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateDegree(token, id, identityAcademicData)
+        client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityAcademicObjectResponse>,
+                response: Response<IdentityAcademicObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityAcademic.value = Event(response.body()?.identityAcademicData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityAcademicObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteDegree(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteDegree(token, id)
         client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
             override fun onResponse(
                 call: Call<IdentityAcademicObjectResponse>,

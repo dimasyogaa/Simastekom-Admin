@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.student.studyprogram
+package com.yogadimas.simastekom.ui.student.identity.academic
 
 import android.os.Bundle
 import androidx.activity.enableEdgeToEdge
@@ -7,11 +7,11 @@ import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.yogadimas.simastekom.R
 
-class StudentStudyProgramActivity : AppCompatActivity() {
+class StudentIdentityAcademicManipulationActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
-        setContentView(R.layout.activity_student_study_program)
+        setContentView(R.layout.activity_student_identity_academic_manipulation)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)

@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.student.studyprogram.level
+package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram
 
 import android.content.Intent
 import android.graphics.drawable.Drawable
@@ -19,8 +19,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.studiprogram.levelfacultymajor.CodeNameAdapter
-import com.yogadimas.simastekom.databinding.ActivityStudentLevelBinding
+import com.yogadimas.simastekom.adapter.student.studiprogram.StudyProgramManipulationAdapter
+import com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree.CodeNameAdapter
+import com.yogadimas.simastekom.databinding.ActivityStudentStudyProgramBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.enums.Sort
@@ -36,8 +37,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class StudentLevelActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityStudentLevelBinding
+class StudentStudyProgramActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityStudentStudyProgramBinding
 
     private val adminViewModel: AdminViewModel by viewModels()
 
@@ -55,9 +56,9 @@ class StudentLevelActivity : AppCompatActivity() {
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == StudentLevelManipulationActivity.KEY_RESULT_CODE && result.data != null) {
+        if (result.resultCode == StudentStudyProgramManipulationActivity.KEY_RESULT_CODE && result.data != null) {
             val successText =
-                result.data?.getStringExtra(StudentLevelManipulationActivity.KEY_EXTRA_SUCCESS)
+                result.data?.getStringExtra(StudentStudyProgramManipulationActivity.KEY_EXTRA_SUCCESS)
                     .orEmpty()
             showAlertDialog(successText, STATUS_SUCCESS)
         }
@@ -65,7 +66,7 @@ class StudentLevelActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStudentLevelBinding.inflate(layoutInflater)
+        binding = ActivityStudentStudyProgramBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         if (savedInstanceState != null) {
@@ -80,42 +81,89 @@ class StudentLevelActivity : AppCompatActivity() {
             toolbar.setNavigationOnClickListener { finish() }
 
             toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getAdminAndLevels()
+                getAdminAndStudyPrograms()
                 true
             }
 
+            searchView.setupWithSearchBar(searchBar)
 
+            searchView
+                .editText
+                .setOnEditorActionListener { _, _, _ ->
+
+                    searchBar.setText(searchView.text)
+                    adminViewModel.searchSortStudyProgram(searchView.text.toString().trim(), null, null)
+
+                    searchView.hide()
+
+                    false
+                }
+
+
+            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+
+            listOf(chipSortBy, chipCode).forEach { chipId ->
+                chipId.setOnCheckedChangeListener { chip, isChecked ->
+                    if (isChecked) {
+                        if (chipId == chipSortBy) {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_by_menu, "created_at"
+                            )
+                        } else {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_asc_desc_menu, when (chipId) {
+                                    chipCode -> "kode"
+                                    else -> ""
+                                }
+                            )
+                        }
+
+                    }
+                }
+            }
 
 
 
             fabAdd.setOnClickListener {
                 resultLauncher.launch(
                     Intent(
-                        this@StudentLevelActivity,
-                        StudentLevelManipulationActivity::class.java
+                        this@StudentStudyProgramActivity,
+                        StudentStudyProgramManipulationActivity::class.java
                     )
                 )
             }
 
-            val layoutManager = LinearLayoutManager(this@StudentLevelActivity)
-            rvLevel.layoutManager = layoutManager
+            val layoutManager = LinearLayoutManager(this@StudentStudyProgramActivity)
+            rvStudyProgram.layoutManager = layoutManager
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndLevels() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndStudyPrograms() }
 
         }
 
         val callback = object : OnBackPressedCallback(true) {
-            override fun handleOnBackPressed() {finish()}
+            override fun handleOnBackPressed() {
+
+                binding.apply {
+                    if (searchView.isShowing) {
+                        searchView.hide()
+                    } else {
+                        finish()
+                    }
+                }
+
+            }
         }
         onBackPressedDispatcher.addCallback(this, callback)
     }
 
     override fun onStart() {
         super.onStart()
-        getAdminAndLevels()
+        getAdminAndStudyPrograms()
     }
 
-    private fun getAdminAndLevels() {
+    private fun getAdminAndStudyPrograms() {
+        binding.searchBar.setText(null)
+        binding.searchView.setText(null)
         authViewModel.getUser().observe(this) {
             val token = it.first
             if (token == AuthPreferences.DEFAULT_VALUE) {
@@ -124,7 +172,7 @@ class StudentLevelActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                adminViewModel.getAllLevels()
+                adminViewModel.getAllStudyPrograms()
             }
         }
 
@@ -144,7 +192,7 @@ class StudentLevelActivity : AppCompatActivity() {
                 }
                 failedToConnect(false)
 
-                setLevelData(it)
+                setStudyProgramData(it)
 
 
             }
@@ -155,17 +203,16 @@ class StudentLevelActivity : AppCompatActivity() {
             eventData.getContentIfNotHandled()?.let {
 
 
-
                 if (it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val level = getString(R.string.title_level)
+                    val studyProgram = getString(R.string.title_study_program)
                     showAlertDialog(
-                        getString(R.string.text_alert_delete, success, level),
+                        getString(R.string.text_alert_delete, success, studyProgram),
                         STATUS_SUCCESS
                     )
                     lifecycleScope.launch {
                         delay(300)
-                        adminViewModel.getAllLevels()
+                        adminViewModel.getAllStudyPrograms()
                     }
 
                 }
@@ -198,21 +245,23 @@ class StudentLevelActivity : AppCompatActivity() {
         }
     }
 
-    private fun setLevelData(it: List<IdentityAcademicData>) {
-        val adapter = CodeNameAdapter(object : OnItemClickCallback<IdentityAcademicData> {
+    private fun setStudyProgramData(it: List<IdentityAcademicData>) {
+        val adapter = StudyProgramManipulationAdapter(object : OnItemClickCallback<IdentityAcademicData> {
             override fun onItemClicked(data: IdentityAcademicData) {
                 val intent = Intent(
-                    this@StudentLevelActivity,
-                    StudentLevelManipulationActivity::class.java
+                    this@StudentStudyProgramActivity,
+                    StudentStudyProgramManipulationActivity::class.java
                 ).apply {
-                    putExtra(StudentLevelManipulationActivity.KEY_EXTRA_ID, data.id)
+                    putExtra(StudentStudyProgramManipulationActivity.KEY_EXTRA_ID, data.id)
                 }
                 resultLauncher.launch(intent)
             }
 
             override fun onDeleteClicked(data: IdentityAcademicData) {
+                val studyProgram =
+                    "${data.code} | ${data.facultyName} - ${data.levelName} ${data.majorName} (${data.degreeName})"
                 showAlertDialog(
-                    getString(R.string.format_code_name, data.code, data.name),
+                    studyProgram,
                     STATUS_DELETED,
                     data.id ?: 0
                 )
@@ -220,7 +269,7 @@ class StudentLevelActivity : AppCompatActivity() {
 
         })
         adapter.submitList(it)
-        binding.rvLevel.adapter = adapter
+        binding.rvStudyProgram.adapter = adapter
     }
 
 
@@ -284,7 +333,7 @@ class StudentLevelActivity : AppCompatActivity() {
                         isAlertDialogShow = false
                         dialog = null
                         when (status) {
-                            STATUS_DELETED -> adminViewModel.deleteLevel(id)
+                            STATUS_DELETED -> adminViewModel.deleteStudyProgram(id)
                             STATUS_ERROR -> {
                                 if (unauthorized) authViewModel.saveUser(
                                     null,
@@ -331,13 +380,15 @@ class StudentLevelActivity : AppCompatActivity() {
         binding.apply {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
+                toolbar2.visibility = View.VISIBLE
                 fabAdd.visibility = View.VISIBLE
-                rvLevel.visibility = View.VISIBLE
+                rvStudyProgram.visibility = View.VISIBLE
 
             } else {
                 toolbar.visibility = View.INVISIBLE
+                toolbar2.visibility = View.GONE
                 fabAdd.visibility = View.GONE
-                rvLevel.visibility = View.GONE
+                rvStudyProgram.visibility = View.GONE
             }
         }
     }
@@ -351,6 +402,43 @@ class StudentLevelActivity : AppCompatActivity() {
 
     }
 
+    private fun showMenu(v: View, menuRes: Int, sortBy: String) {
+        val popup = PopupMenu(this@StudentStudyProgramActivity, v)
+        popup.menuInflater.inflate(menuRes, popup.menu)
+
+        popup.setOnMenuItemClickListener { menuItem: MenuItem ->
+            when (menuItem.itemId) {
+                R.id.ascMenu -> {
+                    adminViewModel.searchSortStudyProgram(
+                        binding.searchView.text.toString().trim(),
+                        sortBy,
+                        Sort.ASC.value
+                    )
+                    true
+                }
+
+                R.id.descMenu -> {
+                    adminViewModel.searchSortStudyProgram(
+                        binding.searchView.text.toString().trim(),
+                        sortBy,
+                        Sort.DESC.value
+                    )
+                    true
+                }
+
+                else -> false
+            }
+
+        }
+        popup.setOnDismissListener {
+            binding.apply {
+                chipSortBy.isChecked = false
+                chipCode.isChecked = false
+            }
+        }
+        // Show the popup menu.
+        popup.show()
+    }
 
     override fun onStop() {
         super.onStop()

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.identity.academic.studyprogram.StudentStudyProgramActivity">
+    tools:context=".ui.student.identity.academic.studyprogram.degree.StudentDegreeActivity">
 
 
     <com.google.android.material.appbar.AppBarLayout
@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/top_appbar_refresh_menu"
             app:navigationIcon="@drawable/z_ic_back"
-            app:title="@string/title_study_program">
+            app:title="@string/title_degree">
 
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -85,7 +85,17 @@
                             app:chipIconEnabled="true"
                             app:ensureMinTouchTargetSize="true" />
 
-
+                        <com.google.android.material.chip.Chip
+                            android:id="@+id/chip_name"
+                            style="@style/Widget.Material3.Chip.Filter"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/text_label_name"
+                            app:checkedIcon="@drawable/z_ic_sort"
+                            app:checkedIconEnabled="true"
+                            app:chipIcon="@drawable/z_ic_sort"
+                            app:chipIconEnabled="true"
+                            app:ensureMinTouchTargetSize="true" />
 
 
                     </com.google.android.material.chip.ChipGroup>
@@ -124,7 +134,7 @@
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_study_program"
+                android:id="@+id/rv_degree"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"

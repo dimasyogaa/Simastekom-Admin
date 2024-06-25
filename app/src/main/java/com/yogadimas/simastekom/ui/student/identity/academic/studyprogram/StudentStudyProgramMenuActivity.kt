@@ -1,13 +1,13 @@
-package com.yogadimas.simastekom.ui.student.studyprogram
+package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram
 
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yogadimas.simastekom.databinding.ActivityStudentStudyProgramMenuBinding
-import com.yogadimas.simastekom.ui.student.studyprogram.faculty.StudentFacultyActivity
-import com.yogadimas.simastekom.ui.student.studyprogram.level.StudentLevelActivity
-import com.yogadimas.simastekom.ui.student.studyprogram.major.StudentMajorActivity
-import com.yogadimas.simastekom.ui.student.studyprogram.major.StudentMajorManipulationActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.degree.StudentDegreeActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.faculty.StudentFacultyActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.level.StudentLevelActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.major.StudentMajorActivity
 
 class StudentStudyProgramMenuActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentStudyProgramMenuBinding
@@ -36,6 +36,18 @@ class StudentStudyProgramMenuActivity : AppCompatActivity() {
             btnMajor.setOnClickListener {
                 startActivity(
                     Intent(this@StudentStudyProgramMenuActivity, StudentMajorActivity::class.java)
+                )
+            }
+
+            btnDegree.setOnClickListener {
+                startActivity(
+                    Intent(this@StudentStudyProgramMenuActivity, StudentDegreeActivity::class.java)
+                )
+            }
+
+            btnStudyProgram.setOnClickListener {
+                startActivity(
+                    Intent(this@StudentStudyProgramMenuActivity, StudentStudyProgramActivity::class.java)
                 )
             }
         }

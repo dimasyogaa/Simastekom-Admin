@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.studyprogram.major.StudentMajorManipulationActivity">
+    tools:context=".ui.student.identity.academic.studyprogram.major.StudentMajorManipulationActivity">
 
     <LinearLayout
         android:layout_width="match_parent"

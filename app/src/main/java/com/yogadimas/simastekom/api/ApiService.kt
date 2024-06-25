@@ -94,6 +94,42 @@ interface ApiService {
         @Field("token") tokenVerifyEmail: String,
     ): Call<IdentityPersonalResponse>
 
+    /** STUDY PROGRAM */
+    @POST("study-programs")
+    fun addStudyProgram(
+        @Header("Authorization") token: String,
+        @Body identityAcademic: IdentityAcademicData,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @GET("study-programs")
+    fun getAllStudyPrograms(@Header("Authorization") token: String): Call<IdentityAcademicListResponse>
+
+    @GET("study-programs/search-sort")
+    fun searchSortStudyProgram(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<IdentityAcademicListResponse>
+
+    @GET("study-programs/{id}")
+    fun getStudyProgramById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @PUT("study-programs/{id}")
+    fun updateStudyProgram(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body identityAcademic: IdentityAcademicData,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @DELETE("study-programs/{id}")
+    fun deleteStudyProgram(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<IdentityAcademicObjectResponse>
+
 
     /** FACULTY */
     @FormUrlEncoded
@@ -200,6 +236,44 @@ interface ApiService {
 
     @DELETE("majors/{id}")
     fun deleteMajor(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<IdentityAcademicObjectResponse>
+
+    /** DEGREE */
+    @FormUrlEncoded
+    @POST("degrees")
+    fun addDegree(
+        @Header("Authorization") token: String,
+        @Field("kode") kode: String,
+        @Field("nama") nama: String,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @GET("degrees")
+    fun getAllDegrees(@Header("Authorization") token: String): Call<IdentityAcademicListResponse>
+
+    @GET("degrees/search-sort")
+    fun searchSortDegree(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<IdentityAcademicListResponse>
+
+    @GET("degrees/{id}")
+    fun getDegreeById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @PUT("degrees/{id}")
+    fun updateDegree(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body identityAcademic: IdentityAcademicData,
+    ): Call<IdentityAcademicObjectResponse>
+
+    @DELETE("degrees/{id}")
+    fun deleteDegree(
         @Header("Authorization") token: String, @Path("id") id: Int
     ): Call<IdentityAcademicObjectResponse>
 
