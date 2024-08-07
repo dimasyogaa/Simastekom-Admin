@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree
+package com.yogadimas.simastekom.adapter.student.identitasacademic.campus
 
 import android.view.LayoutInflater
 import android.view.View
@@ -7,33 +7,36 @@ import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ItemCodeNameBinding
+import com.yogadimas.simastekom.databinding.ItemCampusBinding
+import com.yogadimas.simastekom.databinding.ItemStudyProgramBinding
 import com.yogadimas.simastekom.interfaces.OnItemClickCallback
+import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 
-class CodeNameAdapter(private val itemClickCallback: OnItemClickCallback<IdentityAcademicData>) :
-    ListAdapter<IdentityAcademicData, CodeNameAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class CampusAdapter(private val itemClickCallback: OnItemClickCallback<CampusData>) :
+    ListAdapter<CampusData, CampusAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding =
-            ItemCodeNameBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCampusBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding, itemClickCallback)
     }
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
-        val level = getItem(position)
-        holder.bind(level)
+        val campus = getItem(position)
+        holder.bind(campus)
     }
 
     class MyViewHolder(
-        private val binding: ItemCodeNameBinding,
-        private val itemClickCallback: OnItemClickCallback<IdentityAcademicData>,
+        private val binding: ItemCampusBinding,
+        private val itemClickCallback: OnItemClickCallback<CampusData>,
     ) : RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: IdentityAcademicData) {
+        fun bind(data: CampusData) {
             binding.apply {
-                tvCodeName.text =
-                    itemView.context.getString(R.string.format_code_name, data.code, data.name)
+                tvCampusCode.text = data.code
+                tvCampusName.text = data.name
+                tvCampusAddress.text = data.address
                 itemView.setOnClickListener { itemClickCallback.onItemClicked(data) }
                 btnDelete.visibility = View.GONE
                 btnDelete.isEnabled = false
@@ -43,17 +46,17 @@ class CodeNameAdapter(private val itemClickCallback: OnItemClickCallback<Identit
     }
 
     companion object {
-        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<IdentityAcademicData>() {
+        val DIFF_CALLBACK = object : DiffUtil.ItemCallback<CampusData>() {
             override fun areItemsTheSame(
-                oldItem: IdentityAcademicData,
-                newItem: IdentityAcademicData,
+                oldItem: CampusData,
+                newItem: CampusData,
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: IdentityAcademicData,
-                newItem: IdentityAcademicData,
+                oldItem: CampusData,
+                newItem: CampusData,
             ): Boolean {
                 return oldItem == newItem
             }

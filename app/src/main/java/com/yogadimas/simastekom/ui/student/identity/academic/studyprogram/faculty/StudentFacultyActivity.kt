@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree.CodeNameAdapter
-import com.yogadimas.simastekom.adapter.student.studiprogram.facultylevelmajordegree.CodeNameManipulationAdapter
+import com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram.facultylevelmajordegree.CodeNameAdapter
+import com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram.facultylevelmajordegree.CodeNameManipulationAdapter
 import com.yogadimas.simastekom.databinding.ActivityStudentFacultyBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences

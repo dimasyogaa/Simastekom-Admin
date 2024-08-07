@@ -1,6 +1,9 @@
 package com.yogadimas.simastekom.api
 
 import com.yogadimas.simastekom.model.responses.AdminResponse
+import com.yogadimas.simastekom.model.responses.CampusData
+import com.yogadimas.simastekom.model.responses.CampusListResponse
+import com.yogadimas.simastekom.model.responses.CampusObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
@@ -93,6 +96,42 @@ interface ApiService {
         @Field("email") email: String,
         @Field("token") tokenVerifyEmail: String,
     ): Call<IdentityPersonalResponse>
+
+    /** Campus */
+    @POST("campus")
+    fun addCampus(
+        @Header("Authorization") token: String,
+        @Body campus: CampusData,
+    ): Call<CampusObjectResponse>
+
+    @GET("campus")
+    fun getAllCampus(@Header("Authorization") token: String): Call<CampusListResponse>
+
+    @GET("campus/search-sort")
+    fun searchSortCampus(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<CampusListResponse>
+
+    @GET("campus/{id}")
+    fun getCampusById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<CampusObjectResponse>
+
+    @PUT("campus/{id}")
+    fun updateCampus(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body campus: CampusData,
+    ): Call<CampusObjectResponse>
+
+    @DELETE("campus/{id}")
+    fun deleteCampus(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<CampusObjectResponse>
 
     /** STUDY PROGRAM */
     @POST("study-programs")

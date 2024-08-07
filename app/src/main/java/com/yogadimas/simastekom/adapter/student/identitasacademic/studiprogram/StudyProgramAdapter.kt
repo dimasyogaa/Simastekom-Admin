@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.adapter.student.studiprogram
+package com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram
 
 import android.view.LayoutInflater
 import android.view.View

@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.degree
+package com.yogadimas.simastekom.ui.student.identity.academic.campus
 
 import android.app.Activity
 import android.content.Intent
@@ -20,19 +20,20 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ActivityStudentDegreeManipulationBinding
+import com.yogadimas.simastekom.databinding.ActivityCampusManipulationBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.helper.hideKeyboard
 import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.model.responses.IdentityAcademicData
+import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
 
-class StudentDegreeManipulationActivity : AppCompatActivity() {
-    private lateinit var binding: ActivityStudentDegreeManipulationBinding
+class CampusManipulationActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityCampusManipulationBinding
+
 
     private val adminViewModel: AdminViewModel by viewModels()
 
@@ -48,11 +49,19 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
     private var isEditDeleteView = false
     private var id: Int = 0
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityStudentDegreeManipulationBinding.inflate(layoutInflater)
+        binding = ActivityCampusManipulationBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        mainCall();
+
+    }
+
+
+    private fun mainCall() {
         id = intent.getIntExtra(KEY_EXTRA_ID, 0)
 
         isEditDeleteView = id != 0
@@ -86,14 +95,25 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
 
             })
 
+            edtCampusAddress.addTextChangedListener(object : TextWatcher {
+                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+
+                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                    buttonIsEnabled()
+                }
+
+                override fun afterTextChanged(p0: Editable?) {}
+
+            })
+
             btnSave.setOnClickListener { save() }
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndDegree() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getAdminAndCampus() }
         }
 
-        getAdminAndDegree()
-
+        getAdminAndCampus()
     }
+
 
     private fun addMode() {
         binding.apply {
@@ -126,7 +146,8 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
         }
     }
 
-    private fun getAdminAndDegree() {
+
+    private fun getAdminAndCampus() {
         buttonIsEnabled()
 
         authViewModel.getUser().observe(this) {
@@ -138,7 +159,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
             } else {
                 adminViewModel.token = token
                 if (isEditDeleteView) {
-                    adminViewModel.getDegreeById(id)
+                    adminViewModel.getCampusById(id)
                 }
             }
         }
@@ -148,7 +169,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
             showLoadingMain(it)
         }
 
-        adminViewModel.identityAcademic.observe(this) { eventData ->
+        adminViewModel.campus.observe(this) { eventData ->
             eventData.getContentIfNotHandled()?.let {
                 if (isLoading) {
                     isVisibleAllView(false)
@@ -160,6 +181,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
                 binding.apply {
                     edtCode.setText(it.code)
                     edtName.setText(it.name)
+                    edtCampusAddress.setText(it.address)
                     toolbar.setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.deleteMenu -> {
@@ -177,7 +199,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
 
                 if (it.isAdded || it.isUpdated || it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val degree = getString(R.string.title_degree)
+                    val campus = getString(R.string.title_campus)
                     val resultIntent = Intent()
 
                     val msg = when {
@@ -188,7 +210,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
 
                     resultIntent.putExtra(
                         KEY_EXTRA_SUCCESS,
-                        getString(msg, success, degree)
+                        getString(msg, success, campus)
                     )
 
                     setResult(KEY_RESULT_CODE, resultIntent)
@@ -236,15 +258,23 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
         binding.apply {
             hideKeyboard()
             if (isEditDeleteView) {
-                adminViewModel.updateDegree(
+                adminViewModel.updateCampus(
                     id,
-                    IdentityAcademicData(
+                    CampusData(
                         code = edtCode.text.toString().trim(),
-                        name = edtName.text.toString().trim()
+                        name = edtName.text.toString().trim(),
+                        address = edtCampusAddress.text.toString().trim()
                     )
                 )
             } else {
-                adminViewModel.addDegree(edtCode.text.toString(), edtName.text.toString())
+                adminViewModel.addCampus(
+                    CampusData(
+                        id = id,
+                        code = edtCode.text.toString().trim(),
+                        name = edtName.text.toString().trim(),
+                        address = edtCampusAddress.text.toString().trim()
+                    )
+                )
             }
         }
     }
@@ -260,11 +290,13 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
         }
     }
 
+
     private fun Activity.hideKeyboard() {
         fun clearFocus() {
             binding.apply {
                 inputLayoutCode.editText?.clearFocus()
                 inputLayoutName.editText?.clearFocus()
+                inputLayoutCampusAddress.editText?.clearFocus()
             }
         }
         hideKeyboard(currentFocus ?: View(this))
@@ -274,7 +306,8 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
     private fun buttonIsEnabled() {
         binding.apply {
             btnSave.isEnabled = edtCode.text.toString().isNotEmpty() &&
-                    edtName.text.toString().isNotEmpty()
+                    edtName.text.toString().isNotEmpty() &&
+                    edtCampusAddress.text.toString().isNotEmpty()
         }
     }
 
@@ -320,7 +353,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
                         isAlertDialogShow = false
                         dialog = null
                         when (status) {
-                            STATUS_DELETED -> adminViewModel.deleteDegree(id)
+                            STATUS_DELETED -> adminViewModel.deleteCampus(id)
                             STATUS_ERROR -> {
                                 if (unauthorized) authViewModel.saveUser(
                                     null,
@@ -372,6 +405,8 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
                 edtCode.visibility = View.VISIBLE
                 inputLayoutName.visibility = View.VISIBLE
                 edtName.visibility = View.VISIBLE
+                inputLayoutCampusAddress.visibility = View.VISIBLE
+                edtCampusAddress.visibility = View.VISIBLE
                 btnSave.visibility = View.VISIBLE
 
             } else {
@@ -380,6 +415,8 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
                 edtCode.visibility = View.GONE
                 inputLayoutName.visibility = View.GONE
                 edtName.visibility = View.GONE
+                inputLayoutCampusAddress.visibility = View.GONE
+                edtCampusAddress.visibility = View.GONE
                 btnSave.visibility = View.GONE
             }
         }
@@ -403,6 +440,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
         }
     }
 
+
     companion object {
         private const val STATUS_DELETED = "status_deleted"
         private const val STATUS_ERROR = "status_error"
@@ -411,5 +449,7 @@ class StudentDegreeManipulationActivity : AppCompatActivity() {
 
         const val KEY_EXTRA_SUCCESS = "key_extra_success"
         const val KEY_RESULT_CODE = 200
+
+        const val KEY_CAMPUS = "key_campus"
     }
 }

@@ -1,23 +1,23 @@
-package com.yogadimas.simastekom.adapter.student.studiprogram
+package com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram.facultylevelmajordegree
 
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ItemCodeNameBinding
-import com.yogadimas.simastekom.databinding.ItemStudyProgramBinding
 import com.yogadimas.simastekom.interfaces.OnItemClickCallback
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 
-class StudyProgramManipulationAdapter(private val itemClickCallback: OnItemClickCallback<IdentityAcademicData>) :
-    ListAdapter<IdentityAcademicData, StudyProgramManipulationAdapter.MyViewHolder>(DIFF_CALLBACK) {
+class CodeNameAdapter(private val itemClickCallback: OnItemClickCallback<IdentityAcademicData>) :
+    ListAdapter<IdentityAcademicData, CodeNameAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val binding =
-            ItemStudyProgramBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemCodeNameBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return MyViewHolder(binding, itemClickCallback)
     }
 
@@ -27,21 +27,16 @@ class StudyProgramManipulationAdapter(private val itemClickCallback: OnItemClick
     }
 
     class MyViewHolder(
-        private val binding: ItemStudyProgramBinding,
+        private val binding: ItemCodeNameBinding,
         private val itemClickCallback: OnItemClickCallback<IdentityAcademicData>,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: IdentityAcademicData) {
             binding.apply {
-                tvCode.text = data.code
-                tvFaculty.text = data.facultyName
-                tvLevelMajorDegree.text = itemView.context.getString(
-                    R.string.format_level_major_degree,
-                    data.levelName,
-                    data.majorName,
-                    data.degreeName
-                )
+                tvCodeName.text =
+                    itemView.context.getString(R.string.format_code_name, data.code, data.name)
                 itemView.setOnClickListener { itemClickCallback.onItemClicked(data) }
-                btnDelete.setOnClickListener { itemClickCallback.onDeleteClicked(data) }
+                btnDelete.visibility = View.GONE
+                btnDelete.isEnabled = false
             }
 
         }

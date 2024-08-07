@@ -9,6 +9,9 @@ import com.yogadimas.simastekom.event.Event
 import com.yogadimas.simastekom.helper.getErrors
 import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.model.responses.AdminResponse
+import com.yogadimas.simastekom.model.responses.CampusData
+import com.yogadimas.simastekom.model.responses.CampusListResponse
+import com.yogadimas.simastekom.model.responses.CampusObjectResponse
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
@@ -36,6 +39,12 @@ class AdminViewModel : ViewModel() {
 
     private val _identityAcademic = MutableLiveData<Event<IdentityAcademicData?>>()
     val identityAcademic: LiveData<Event<IdentityAcademicData?>> = _identityAcademic
+
+    private val _campusList = MutableLiveData<Event<List<CampusData>?>>()
+    val campusList: LiveData<Event<List<CampusData>?>> = _campusList
+
+    private val _campus = MutableLiveData<Event<CampusData?>>()
+    val campus: LiveData<Event<CampusData?>> = _campus
 
     private val _errors = MutableLiveData<Event<Errors?>>()
     val errors: LiveData<Event<Errors?>> = _errors
@@ -291,8 +300,150 @@ class AdminViewModel : ViewModel() {
 
     }
 
+    /** STUDY PROGRAM */
+    fun addCampus(campusData: CampusData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addCampus(token, campusData)
+        client.enqueue(object : Callback<CampusObjectResponse> {
+            override fun onResponse(
+                call: Call<CampusObjectResponse>,
+                response: Response<CampusObjectResponse>,
+            ) {
 
-    /** Study Program */
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campus.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<CampusObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+    fun getAllCampuses() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllCampus(token)
+        client.enqueue(object : Callback<CampusListResponse> {
+            override fun onResponse(
+                call: Call<CampusListResponse>,
+                response: Response<CampusListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campusList.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<CampusListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortCampus(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortCampus(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<CampusListResponse> {
+            override fun onResponse(
+                call: Call<CampusListResponse>,
+                response: Response<CampusListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campusList.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<CampusListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getCampusById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getCampusById(token, id)
+        client.enqueue(object : Callback<CampusObjectResponse> {
+            override fun onResponse(
+                call: Call<CampusObjectResponse>,
+                response: Response<CampusObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campus.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<CampusObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateCampus(id: Int, campusData: CampusData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateCampus(token, id, campusData)
+        client.enqueue(object : Callback<CampusObjectResponse> {
+            override fun onResponse(
+                call: Call<CampusObjectResponse>,
+                response: Response<CampusObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campus.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<CampusObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteCampus(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteCampus(token, id)
+        client.enqueue(object : Callback<CampusObjectResponse> {
+            override fun onResponse(
+                call: Call<CampusObjectResponse>,
+                response: Response<CampusObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _campus.value = Event(response.body()?.campusData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<CampusObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+
+    /** STUDY PROGRAM */
     fun addStudyProgram(identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().addStudyProgram(token, identityAcademicData)

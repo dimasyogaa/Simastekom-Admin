@@ -64,6 +64,7 @@
     <string name="text_label_date_birth">Tanggal Lahir</string>
     <string name="text_hint_date_birth">Tentukan tanggal lahir anda…</string>
 
+
     <string name="text_address_home">Alamat Rumah</string>
     <string name="text_label_province">Provinsi</string>
     <string name="text_hint_province">Masukkan provinsi anda…</string>
@@ -230,6 +231,7 @@
     <string name="text_hint_level">Masukkan jenjang…</string>
     <string name="text_hint_major">Masukkan jurusan…</string>
     <string name="text_hint_degree">Masukkan gelar…</string>
+    <string name="text_hint_address">Masukkan alamat…</string>
 
 
     <string name="text_add">Tambah</string>
@@ -247,6 +249,10 @@
     <string name="from_a_to_z">Dari A ke Z</string>
     <string name="text_sort_by">Urutkan Berdasarkan</string>
     <string name="format_level_major_degree">%1$s %2$s (%3$s)</string>
+
+    <string name="text_address">Alamat</string>
+
+
 
 
 </resources>
