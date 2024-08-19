@@ -7,6 +7,8 @@ import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
 import com.yogadimas.simastekom.ui.student.identity.academic.StudentIdentityAcademicMenuActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity
+import com.yogadimas.simastekom.ui.student.status.employment.EmploymentStatusActivity
+import com.yogadimas.simastekom.ui.student.status.student.StudentStatusActivity
 
 class StudentActivityMenu : AppCompatActivity() {
 
@@ -26,6 +28,22 @@ class StudentActivityMenu : AppCompatActivity() {
                     Intent(
                         this@StudentActivityMenu,
                         StudentIdentityAcademicMenuActivity::class.java
+                    )
+                )
+            }
+            btnStudentStatus.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentActivityMenu,
+                        StudentStatusActivity::class.java
+                    )
+                )
+            }
+            btnEmploymentStatus.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentActivityMenu,
+                        EmploymentStatusActivity::class.java
                     )
                 )
             }

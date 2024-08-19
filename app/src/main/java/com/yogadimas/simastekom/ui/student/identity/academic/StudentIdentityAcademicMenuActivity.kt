@@ -2,15 +2,12 @@ package com.yogadimas.simastekom.ui.student.identity.academic
 
 import android.content.Intent
 import android.os.Bundle
-import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.view.ViewCompat
-import androidx.core.view.WindowInsetsCompat
-import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityStudentIdentityAcademicMenuBinding
-import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
-import com.yogadimas.simastekom.ui.student.StudentActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.classsession.ClassSessionActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.lecturemethod.LectureMethodActivity
+import com.yogadimas.simastekom.ui.student.identity.academic.semester.SemesterActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity
 
 class StudentIdentityAcademicMenuActivity : AppCompatActivity() {
@@ -34,6 +31,34 @@ class StudentIdentityAcademicMenuActivity : AppCompatActivity() {
                 )
             }
 
+
+            btnClassSession.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentIdentityAcademicMenuActivity,
+                        ClassSessionActivity::class.java
+                    )
+                )
+            }
+
+            btnSemester.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentIdentityAcademicMenuActivity,
+                        SemesterActivity::class.java
+                    )
+                )
+            }
+
+            btnLectureMethod.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentIdentityAcademicMenuActivity,
+                        LectureMethodActivity::class.java
+                    )
+                )
+            }
+
             btnCampus.setOnClickListener {
                 startActivity(
                     Intent(
@@ -47,7 +72,7 @@ class StudentIdentityAcademicMenuActivity : AppCompatActivity() {
                 startActivity(
                     Intent(
                         this@StudentIdentityAcademicMenuActivity,
-                        StudentIdentityAcademicMenuActivity::class.java
+                        StudentIdentityAcademicActivity::class.java
                     )
                 )
             }

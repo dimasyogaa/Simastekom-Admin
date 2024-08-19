@@ -4,7 +4,7 @@ xmlns:app="http://schemas.android.com/apk/res-auto"
 xmlns:tools="http://schemas.android.com/tools"
 android:layout_width="match_parent"
 android:layout_height="match_parent"
-tools:context=".ui.student.StudentActivity">
+tools:context=".ui.student.status.employment.EmploymentStatusActivity">
 
 
 <com.google.android.material.appbar.AppBarLayout
@@ -12,7 +12,6 @@ tools:context=".ui.student.StudentActivity">
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:fitsSystemWindows="true">
-
 
     <com.google.android.material.appbar.MaterialToolbar
         android:id="@+id/toolbar"
@@ -22,7 +21,7 @@ tools:context=".ui.student.StudentActivity">
         app:layout_scrollFlags="scroll|enterAlways|snap"
         app:menu="@menu/top_appbar_refresh_menu"
         app:navigationIcon="@drawable/z_ic_back"
-        app:title="@string/title_student">
+        app:title="@string/text_label_employment_status">
 
 
     </com.google.android.material.appbar.MaterialToolbar>
@@ -72,17 +71,6 @@ tools:context=".ui.student.StudentActivity">
                         app:chipIconEnabled="true"
                         app:ensureMinTouchTargetSize="true" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_code"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/text_label_student_id_number"
-                        app:checkedIcon="@drawable/z_ic_sort"
-                        app:checkedIconEnabled="true"
-                        app:chipIcon="@drawable/z_ic_sort"
-                        app:chipIconEnabled="true"
-                        app:ensureMinTouchTargetSize="true" />
 
                     <com.google.android.material.chip.Chip
                         android:id="@+id/chip_name"
@@ -96,40 +84,26 @@ tools:context=".ui.student.StudentActivity">
                         app:chipIconEnabled="true"
                         app:ensureMinTouchTargetSize="true" />
 
-                    <com.google.android.material.chip.Chip
-                        android:id="@+id/chip_major"
-                        style="@style/Widget.Material3.Chip.Filter"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/title_major"
-                        app:checkedIcon="@drawable/z_ic_sort"
-                        app:checkedIconEnabled="true"
-                        app:chipIcon="@drawable/z_ic_sort"
-                        app:chipIconEnabled="true"
-                        android:layout_marginEnd="16dp"
-                        app:ensureMinTouchTargetSize="true" />
+
 
                 </com.google.android.material.chip.ChipGroup>
-
 
             </HorizontalScrollView>
         </LinearLayout>
 
     </com.google.android.material.appbar.MaterialToolbar>
 
-
 </com.google.android.material.appbar.AppBarLayout>
 
+    <com.google.android.material.search.SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:hint="@string/searchbar_hint"
+        app:layout_anchor="@id/searchBar">
 
-<com.google.android.material.search.SearchView
-    android:id="@+id/searchView"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:hint="@string/searchbar_hint"
-    app:layout_anchor="@id/searchBar">
 
-
-</com.google.android.material.search.SearchView>
+    </com.google.android.material.search.SearchView>
 
 
 <androidx.core.widget.NestedScrollView
@@ -146,11 +120,11 @@ tools:context=".ui.student.StudentActivity">
 
 
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_student"
+            android:id="@+id/rv_employment_status"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="8dp"
-            tools:listitem="@layout/item_student" />
+            tools:listitem="@layout/item_code_name" />
 
 
     </LinearLayout>

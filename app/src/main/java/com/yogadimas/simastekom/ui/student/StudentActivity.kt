@@ -1,5 +1,6 @@
 package com.yogadimas.simastekom.ui.student
 
+import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -13,6 +14,7 @@ import com.yogadimas.simastekom.databinding.ActivityLoginBinding
 import com.yogadimas.simastekom.databinding.ActivityStudentBinding
 import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusManipulationActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -56,7 +58,19 @@ class StudentActivity : AppCompatActivity() {
                         false
                     }
 
+            fabAdd.setOnClickListener {
+//                resultLauncher.launch(
+//                    Intent(
+//                        this@CampusActivity,
+//                        CampusManipulationActivity::class.java
+//                    )
+//                )
 
+                startActivity(Intent(
+                        this@StudentActivity,
+                        StudentManipulationActivity::class.java
+                    ))
+            }
 
 
 

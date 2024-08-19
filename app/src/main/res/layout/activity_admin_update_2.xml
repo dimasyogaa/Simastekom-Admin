@@ -117,7 +117,7 @@
                     android:id="@+id/edt_name"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/text_hint_user_name"
+                    android:hint="@string/text_hint_your_name"
                     android:inputType="text" />
 
             </com.google.android.material.textfield.TextInputLayout>
@@ -243,7 +243,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:focusable="false"
-                            android:hint="@string/text_hint_gender"
+                            android:hint="@string/text_hint_your_gender"
                             android:inputType="none" />
 
 

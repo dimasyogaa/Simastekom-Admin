@@ -39,6 +39,23 @@
             android:text="@string/title_study_program"/>
 
         <Button
+            android:id="@+id/btn_class_session"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_label_class_session"/>
+
+
+        <Button
+            android:id="@+id/btn_semester"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_label_semester"/>
+
+        <Button
+            android:id="@+id/btn_lecture_method"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_label_lecture_method"/>
+
+
+        <Button
             android:id="@+id/btn_campus"
             style="@style/CustomButtonTonalMenu"
             android:text="@string/title_campus"/>

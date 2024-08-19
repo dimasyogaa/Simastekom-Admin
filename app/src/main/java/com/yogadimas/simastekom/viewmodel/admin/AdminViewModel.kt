@@ -18,6 +18,9 @@ import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
+import com.yogadimas.simastekom.model.responses.NameData
+import com.yogadimas.simastekom.model.responses.NameListResponse
+import com.yogadimas.simastekom.model.responses.NameObjectResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
@@ -45,6 +48,12 @@ class AdminViewModel : ViewModel() {
 
     private val _campus = MutableLiveData<Event<CampusData?>>()
     val campus: LiveData<Event<CampusData?>> = _campus
+
+    private val _nameList = MutableLiveData<Event<List<NameData>?>>()
+    val nameList: LiveData<Event<List<NameData>?>> = _nameList
+
+    private val _name = MutableLiveData<Event<NameData?>>()
+    val name: LiveData<Event<NameData?>> = _name
 
     private val _errors = MutableLiveData<Event<Errors?>>()
     val errors: LiveData<Event<Errors?>> = _errors
@@ -300,7 +309,700 @@ class AdminViewModel : ViewModel() {
 
     }
 
-    /** STUDY PROGRAM */
+    /** EMPLOYMENT STATUS */
+    fun addEmploymentStatus(nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addEmploymentStatus(token, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun getAllEmploymentStatuses() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllEmploymentStatus(token)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun searchSortEmploymentStatus(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortEmploymentStatus(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun getEmploymentStatusById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getEmploymentStatusById(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun updateEmploymentStatus(id: Int, nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateEmploymentStatus(token, id, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun deleteEmploymentStatus(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteEmploymentStatus(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    /** STUDENT STATUS */
+    fun addStudentStatus(nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addStudentStatus(token, nameData) // Mengubah dari addClassSession menjadi addStudentStatus
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getAllStudentStatuses() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllStudentStatus(token) // Mengubah dari getAllClassSessions menjadi getAllStudentStatuses
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortStudentStatus(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortStudentStatus(token, keyword, sortBy, sortDir) // Mengubah dari searchSortClassSession menjadi searchSortStudentStatus
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getStudentStatusById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getStudentStatusById(token, id) // Mengubah dari getClassSessionById menjadi getStudentStatusById
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateStudentStatus(id: Int, nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateStudentStatus(token, id, nameData) // Mengubah dari updateClassSession menjadi updateStudentStatus
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteStudentStatus(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteStudentStatus(token, id) // Mengubah dari deleteClassSession menjadi deleteStudentStatus
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    /** LECTURE METHOD */
+    fun addLectureMethod(nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addLectureMethod(token, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getAllLectureMethods() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllLectureMethods(token)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortLectureMethod(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortLectureMethod(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getLectureMethodById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getLectureMethodById(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateLectureMethod(id: Int, nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateLectureMethod(token, id, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteLectureMethod(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteLectureMethod(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+
+
+    /** SEMESTER */
+    fun addSemester(nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addSemester(token, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+    }
+    fun getAllSemesters() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllSemesters(token)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortSemester(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortSemester(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getSemesterById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getSemesterById(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateSemester(id: Int, nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateSemester(token, id, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteSemester(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteSemester(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+
+    /** CLASS SESSION */
+    fun addClassSession(nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().addClassSession(token, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+    fun getAllClassSessions() {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getAllClassSession(token)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun searchSortClassSession(keyword: String?, sortBy: String?, sortDir: String?) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().searchSortClassSession(token, keyword, sortBy, sortDir)
+        client.enqueue(object : Callback<NameListResponse> {
+            override fun onResponse(
+                call: Call<NameListResponse>,
+                response: Response<NameListResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _nameList.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameListResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun getClassSessionById(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getClassSessionById(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun updateClassSession(id: Int, nameData: NameData) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().updateClassSession(token, id, nameData)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+    fun deleteClassSession(id: Int) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().deleteClassSession(token, id)
+        client.enqueue(object : Callback<NameObjectResponse> {
+            override fun onResponse(
+                call: Call<NameObjectResponse>,
+                response: Response<NameObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _name.value = Event(response.body()?.nameData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+
+                }
+            }
+
+            override fun onFailure(call: Call<NameObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    /** CAMPUS */
     fun addCampus(campusData: CampusData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().addCampus(token, campusData)

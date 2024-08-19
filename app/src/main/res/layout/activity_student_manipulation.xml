@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.student.StudentManipulationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="@drawable/z_ic_back"
+
+                app:title="@string/title_student" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <!-- Section with TextInputLayouts -->
+        <ViewStub
+            android:id="@+id/viewStubStudentManipulationTextInputs1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/inflatedStudentManipulationTextInputs1"
+            android:layout="@layout/layout_student_manipulation_text_inputs_1"/>
+
+        <ViewStub
+            android:id="@+id/viewStubStudentManipulationTextInputs2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inflatedId="@+id/inflatedStudentManipulationTextInputs2"
+            android:layout="@layout/layout_student_manipulation_text_inputs_2"/>
+
+
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/mainProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:indeterminate="true"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:visibility="gone"
+            app:trackThickness="4dp" />
+
+        <!-- Section with handle data connection -->
+        <ViewStub
+            android:id="@+id/viewStubHandleDataConnection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:inflatedId="@+id/inflatedHandleDataConnection"
+            android:layout="@layout/layout_handle_data_connection"/>
+
+    </LinearLayout>
+
+</ScrollView>

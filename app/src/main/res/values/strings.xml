@@ -39,8 +39,12 @@
     <string name="text_change_password">Ganti Password</string>
 
     <string name="text_label_name">Nama</string>
-    <string name="text_hint_user_name">Masukkan nama anda…</string>
+    <string name="text_hint_your_name">Masukkan nama anda…</string>
     <string name="text_hint_name">Masukkan nama…</string>
+
+    <string name="text_label_fullname">Nama Lengkap</string>
+    <string name="text_hint_your_fullname">Masukkan nama lengkap anda…</string>
+    <string name="text_hint_fullname">Masukkan nama lengkap…</string>
 
     <string name="text_label_phone">Nomor WA</string>
     <string name="text_hint_phone">Masukkan nomor wa anda…</string>
@@ -50,7 +54,8 @@
     <string name="text_error_format_email">Format email harus valid (xxx@xxxx.com)</string>
 
     <string name="text_label_gender">Jenis Kelamin</string>
-    <string name="text_hint_gender">Pilih jenis kelamin anda…</string>
+    <string name="text_hint_gender">Pilih jenis kelamin…</string>
+    <string name="text_hint_your_gender">Pilih jenis kelamin anda…</string>
 
     <string name="text_label_id_card_number">Nomor KTP</string>
     <string name="text_hint_id_card_number">Masukkan nomor KTP anda…</string>
@@ -81,6 +86,37 @@
     <string name="text_label_street">Nama Jalan, Gedung</string>
     <string name="text_label_address_other_detail">Detail Lainnya</string>
     <string name="text_hint_address_other_detail">Cth: Blok/Unit No./No. Rumah, Patokan</string>
+
+
+    <string name="text_label_student_id_number">NIM</string>
+    <string name="text_hint_student_id_number">Masukkan Nomor Induk Mahasiswa…</string>
+
+    <string name="text_label_batch">Angkatan</string>
+    <string name="text_hint_batch">Masukkan angkatan…</string>
+
+    <string name="text_label_class_session">Sesi Kelas</string>
+    <string name="text_hint_choose_class_session">Pilih sesi kelas…</string>
+    <string name="text_hint_class_session">Masukkan sesi kelas…</string>
+
+    <string name="text_label_semester">Semester</string>
+    <string name="text_hint_choose_semester">Pilih semester…</string>
+    <string name="text_hint_semester">Masukkan semester…</string>
+
+    <string name="text_label_lecture_method">Metode Kuliah</string>
+    <string name="text_hint_choose_lecture_method">Pilih metode kuliah…</string>
+    <string name="text_hint_lecture_method">Masukkan metode kuliah…</string>
+
+    <string name="text_label_campus">Kampus</string>
+    <string name="text_hint_choose_campus">Pilih kampus…</string>
+    <string name="text_hint_campus">Masukkan kampus…</string>
+
+    <string name="text_label_student_status">Status Mahasiswa</string>
+    <string name="text_hint_choose_student_status">Pilih status mahasiswa…</string>
+    <string name="text_hint_student_status">Masukkan status mahasiswa…</string>
+
+    <string name="text_label_employment_status">Status Pekerjaan</string>
+    <string name="text_hint_choose_employment_status">Pilih status pekerjaan…</string>
+    <string name="text_hint_employment_status">Masukkan status pekerjaan…</string>
 
     <string name="text_ok">OK</string>
     <string name="text_cancel">Batal</string>
@@ -227,6 +263,12 @@
     <string name="title_degree">Gelar</string>
     <string name="title_campus">Kampus</string>
 
+    <string name="text_hint_choose_study_program">Pilih program studi…</string>
+    <string name="text_hint_choose_faculty">Pilih fakultas…</string>
+    <string name="text_hint_choose_level">Pilih jenjang…</string>
+    <string name="text_hint_choose_major">Pilih jurusan…</string>
+    <string name="text_hint_choose_degree">Pilih gelar…</string>
+    <string name="text_hint_study_program">Masukkan program studi…</string>
     <string name="text_hint_faculty">Masukkan fakultas…</string>
     <string name="text_hint_level">Masukkan jenjang…</string>
     <string name="text_hint_major">Masukkan jurusan…</string>
@@ -251,8 +293,8 @@
     <string name="format_level_major_degree">%1$s %2$s (%3$s)</string>
 
     <string name="text_address">Alamat</string>
-
-
+    <string name="text_semester_number">Nomor Semester</string>
+    <string name="smallest_number">Angka Terkecil</string>
 
 
 </resources>

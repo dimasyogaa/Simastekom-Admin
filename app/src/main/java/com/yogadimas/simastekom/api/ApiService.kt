@@ -9,6 +9,9 @@ import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
+import com.yogadimas.simastekom.model.responses.NameData
+import com.yogadimas.simastekom.model.responses.NameListResponse
+import com.yogadimas.simastekom.model.responses.NameObjectResponse
 import com.yogadimas.simastekom.model.responses.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -96,6 +99,189 @@ interface ApiService {
         @Field("email") email: String,
         @Field("token") tokenVerifyEmail: String,
     ): Call<IdentityPersonalResponse>
+
+    /** Employment Status */
+    @POST("employment-status")
+    fun addEmploymentStatus(
+        @Header("Authorization") token: String,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @GET("employment-status")
+    fun getAllEmploymentStatus(@Header("Authorization") token: String): Call<NameListResponse>
+
+    @GET("employment-status/search-sort")
+    fun searchSortEmploymentStatus(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<NameListResponse>
+
+    @GET("employment-status/{id}")
+    fun getEmploymentStatusById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<NameObjectResponse>
+
+    @PUT("employment-status/{id}")
+    fun updateEmploymentStatus(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @DELETE("employment-status/{id}")
+    fun deleteEmploymentStatus(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<NameObjectResponse>
+
+    /** Student Status */
+    @POST("student-status") // Mengubah dari class-session menjadi student-status
+    fun addStudentStatus(
+        @Header("Authorization") token: String,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @GET("student-status") // Mengubah dari class-session menjadi student-status
+    fun getAllStudentStatus(@Header("Authorization") token: String): Call<NameListResponse>
+
+    @GET("student-status/search-sort") // Mengubah dari class-session/search-sort menjadi student-status/search-sort
+    fun searchSortStudentStatus(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<NameListResponse>
+
+    @GET("student-status/{id}") // Mengubah dari class-session/{id} menjadi student-status/{id}
+    fun getStudentStatusById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<NameObjectResponse>
+
+    @PUT("student-status/{id}") // Mengubah dari class-session/{id} menjadi student-status/{id}
+    fun updateStudentStatus(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @DELETE("student-status/{id}") // Mengubah dari class-session/{id} menjadi student-status/{id}
+    fun deleteStudentStatus(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<NameObjectResponse>
+
+    /** Lecture Method */
+    @POST("lecture-method")
+    fun addLectureMethod(
+        @Header("Authorization") token: String,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @GET("lecture-method")
+    fun getAllLectureMethods(@Header("Authorization") token: String): Call<NameListResponse>
+
+    @GET("lecture-method/search-sort")
+    fun searchSortLectureMethod(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<NameListResponse>
+
+    @GET("lecture-method/{id}")
+    fun getLectureMethodById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<NameObjectResponse>
+
+    @PUT("lecture-method/{id}")
+    fun updateLectureMethod(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @DELETE("lecture-method/{id}")
+    fun deleteLectureMethod(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int
+    ): Call<NameObjectResponse>
+
+
+    /** Semester */
+    @POST("semester")
+    fun addSemester(
+        @Header("Authorization") token: String,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @GET("semester")
+    fun getAllSemesters(@Header("Authorization") token: String): Call<NameListResponse>
+
+    @GET("semester/search-sort")
+    fun searchSortSemester(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<NameListResponse>
+
+    @GET("semester/{id}")
+    fun getSemesterById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<NameObjectResponse>
+
+    @PUT("semester/{id}")
+    fun updateSemester(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @DELETE("semester/{id}")
+    fun deleteSemester(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<NameObjectResponse>
+
+
+    /** Class Session */
+    @POST("class-session")
+    fun addClassSession(
+        @Header("Authorization") token: String,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @GET("class-session")
+    fun getAllClassSession(@Header("Authorization") token: String): Call<NameListResponse>
+
+    @GET("class-session/search-sort")
+    fun searchSortClassSession(
+        @Header("Authorization") token: String,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): Call<NameListResponse>
+
+    @GET("class-session/{id}")
+    fun getClassSessionById(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+    ): Call<NameObjectResponse>
+
+    @PUT("class-session/{id}")
+    fun updateClassSession(
+        @Header("Authorization") token: String,
+        @Path("id") id: Int,
+        @Body name: NameData,
+    ): Call<NameObjectResponse>
+
+    @DELETE("class-session/{id}")
+    fun deleteClassSession(
+        @Header("Authorization") token: String, @Path("id") id: Int
+    ): Call<NameObjectResponse>
 
     /** Campus */
     @POST("campus")

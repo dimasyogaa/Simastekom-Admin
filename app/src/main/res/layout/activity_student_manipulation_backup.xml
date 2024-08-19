@@ -1,0 +1,403 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.student.StudentManipulationActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="@drawable/z_ic_back"
+
+                app:title="@string/title_student" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_fullname"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_fullname"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/tv_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_layout_fullname"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_fullname"
+                android:imeOptions="actionDone"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_new_password"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="24dp"
+            android:hint="@string/text_label_new_password"
+            app:endIconMode="password_toggle"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/tv_title_new_password"
+            app:layout_constraintStart_toStartOf="@+id/tv_title_new_password"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title_new_password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_new_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_new_password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_confirm_new_password"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="18dp"
+            android:hint="@string/text_label_confirm_new_password"
+            app:endIconMode="password_toggle"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/input_layout_new_password"
+            app:layout_constraintStart_toStartOf="@+id/input_layout_new_password"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_new_password">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_confirm_new_password"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_confirm_new_password"
+                android:inputType="textPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_gender"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_gender"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_id_card_number"
+            app:layout_constraintStart_toStartOf="@id/input_layout_id_card_number"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_id_card_number">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_gender"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_student_id_number"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_student_id_number"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/tv_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_layout_student_id_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:hint="@string/text_hint_student_id_number"
+                android:imeOptions="actionDone"
+                android:inputType="numberPassword"
+                app:counterEnabled="true" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_study_program"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/title_study_program"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_study_program"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_study_program"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_batch"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_batch"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/tv_title"
+            app:layout_constraintStart_toStartOf="@+id/tv_title"
+            app:layout_constraintTop_toBottomOf="@+id/tv_title">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_layout_batch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:hint="@string/text_hint_batch"
+                android:inputType="numberPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_class_session"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_class_session"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_class_session"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_class_session"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_semester"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_semester"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_semester"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_semester"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_lecture_method"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_lecture_method"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_lecture_method"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_lecture_method"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_student_status"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_student_status"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_student_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_student_status"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_employment_status"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_employment_status"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_employment_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_employment_status"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_campus"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_campus"
+            app:endIconDrawable="@drawable/z_ic_pop_up"
+            app:endIconMode="custom"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_gender"
+            app:layout_constraintStart_toStartOf="@id/input_layout_gender"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_gender">
+
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_campus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:focusable="false"
+                android:hint="@string/text_hint_choose_campus"
+                android:inputType="none" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/Widget.Material3.Button.IconButton.Filled"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="14dp"
+            android:layout_marginTop="20dp"
+            android:drawableStart="@drawable/z_ic_save"
+            android:text="@string/btn_text_save"
+            android:textSize="16sp" />
+
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/mainProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:indeterminate="true"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            android:visibility="gone"
+            app:trackThickness="4dp" />
+
+        <include
+            android:id="@+id/view_handle"
+            layout="@layout/layout_handle_data_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp" />
+
+    </LinearLayout>
+
+</ScrollView>

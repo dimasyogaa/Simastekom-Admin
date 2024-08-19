@@ -43,6 +43,17 @@
             style="@style/CustomButtonTonalMenu"
             android:text="@string/text_identity_parent" />
 
+        <Button
+            android:id="@+id/btn_student_status"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_label_student_status"/>
+
+
+        <Button
+            android:id="@+id/btn_employment_status"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_label_employment_status"/>
+
 
         <Button
             android:id="@+id/btn_student"

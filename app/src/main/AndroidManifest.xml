@@ -29,6 +29,39 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.student.status.student.StudentStatusManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.status.employment.EmploymentStatusManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.semester.SemesterManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.lecturemethod.LectureMethodManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.classsession.ClassSessionManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.status.student.StudentStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.status.employment.EmploymentStatusActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.semester.SemesterActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.lecturemethod.LectureMethodActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.academic.classsession.ClassSessionActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.StudentManipulationActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.student.identity.academic.campus.CampusManipulationActivity"
             android:exported="false" />
         <activity
