@@ -2,7 +2,7 @@ package com.yogadimas.simastekom.model
 
 import android.os.Parcelable
 import android.util.Log
-import com.yogadimas.simastekom.helper.capitalizeWords
+import com.yogadimas.simastekom.common.helper.capitalizeWords
 import kotlinx.parcelize.Parcelize
 
 @Parcelize

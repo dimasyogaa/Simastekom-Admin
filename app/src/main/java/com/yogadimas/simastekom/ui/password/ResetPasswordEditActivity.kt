@@ -18,10 +18,10 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityResetPasswordEditBinding
-import com.yogadimas.simastekom.helper.dataString
-import com.yogadimas.simastekom.helper.minCharacterPasswordValidation
-import com.yogadimas.simastekom.helper.newPasswordSameWithNewConfirmPassword
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.helper.dataString
+import com.yogadimas.simastekom.common.helper.minCharacterPasswordValidation
+import com.yogadimas.simastekom.common.helper.newPasswordSameWithNewConfirmPassword
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.viewmodel.forgotpassword.ForgotPasswordViewModel
 
 class ResetPasswordEditActivity : AppCompatActivity() {
@@ -126,6 +126,7 @@ class ResetPasswordEditActivity : AppCompatActivity() {
         ): Boolean {
 
             return minCharacterPasswordValidation(
+                this,
                 edtPassword,
                 password,
                 layoutPassword,
@@ -146,6 +147,7 @@ class ResetPasswordEditActivity : AppCompatActivity() {
         ): Boolean {
 
             return newPasswordSameWithNewConfirmPassword(
+                this,
                 newConfirmEdtPassword,
                 newConfirmPassword,
                 newConfirmLayoutPassword,

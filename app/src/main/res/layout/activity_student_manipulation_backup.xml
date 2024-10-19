@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.student.StudentManipulationActivity">
+    tools:context=".ui.student.StudentManipulationViewStubActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -45,7 +45,7 @@
             app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edt_layout_fullname"
+                android:id="@+id/edt_fullname"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:hint="@string/text_hint_fullname"

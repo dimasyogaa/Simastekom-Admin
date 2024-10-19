@@ -29,13 +29,13 @@ import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityAdminEditBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.isContainsSpace
-import com.yogadimas.simastekom.helper.reduceFileImage
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.helper.uriToFile
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.isContainsSpace
+import com.yogadimas.simastekom.common.helper.reduceFileImage
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.helper.uriToFile
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -50,6 +50,7 @@ import okhttp3.MediaType.Companion.toMediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody.Companion.asRequestBody
 import okhttp3.RequestBody.Companion.toRequestBody
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.io.File
 import java.io.FileOutputStream
 import java.io.OutputStream
@@ -63,7 +64,7 @@ class AdminEditActivity : AppCompatActivity() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private var isLoading = false
     private var isAlertDialogShow = false

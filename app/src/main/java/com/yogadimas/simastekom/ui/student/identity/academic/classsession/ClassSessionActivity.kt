@@ -19,13 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
+import com.yogadimas.simastekom.adapter.student.name.NameAdapter
 import com.yogadimas.simastekom.adapter.student.name.NameManipulationAdapter
 import com.yogadimas.simastekom.databinding.ActivityClassSessionBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.enums.Sort
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.interfaces.OnItemClickCallback
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.SortDir
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
+import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -35,11 +37,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ClassSessionActivity : AppCompatActivity() {
     private lateinit var binding: ActivityClassSessionBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -64,10 +67,15 @@ class ClassSessionActivity : AppCompatActivity() {
         }
     }
 
+
+    private var isFromStudent = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityClassSessionBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isFromStudent = intent.getBooleanExtra(KEY_STUDENT, false)
 
         if (savedInstanceState != null) {
             isSuccessDialogShowingOrientation =
@@ -255,7 +263,30 @@ class ClassSessionActivity : AppCompatActivity() {
     }
 
     private fun setData(it: List<NameData>) {
-        val adapter = NameManipulationAdapter(object : OnItemClickCallback<NameData> {
+        val adapter = if (isFromStudent) {
+            NameAdapter(object : OnItemClickManipulationCallback<NameData> {
+                override fun onItemClicked(data: NameData) {
+
+                    val resultIntent = Intent()
+
+                    val studentData = StudentData(
+                        classSessionId = data.id,
+                        classSessionName = data.name,
+                    )
+
+                    resultIntent.putExtra(
+                        KEY_STUDENT_RESULT_EXTRA,
+                        studentData
+                    )
+
+                    setResult(KEY_STUDENT_RESULT_CODE, resultIntent)
+                    finish()
+                }
+
+                override fun onDeleteClicked(data: NameData) { }
+
+            })
+        } else{ NameManipulationAdapter(object : OnItemClickManipulationCallback<NameData> {
             override fun onItemClicked(data: NameData) {
                 val intent = Intent(
                     this@ClassSessionActivity,
@@ -274,7 +305,7 @@ class ClassSessionActivity : AppCompatActivity() {
                 )
             }
 
-        })
+        })}
         adapter.submitList(it)
         binding.rvClassSession.adapter = adapter
     }
@@ -391,7 +422,7 @@ class ClassSessionActivity : AppCompatActivity() {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE
-                fabAdd.visibility = View.VISIBLE
+                if (isFromStudent) fabAdd.visibility = View.GONE else fabAdd.visibility = View.VISIBLE
                 rvClassSession.visibility = View.VISIBLE
 
             } else {
@@ -422,7 +453,7 @@ class ClassSessionActivity : AppCompatActivity() {
                     adminViewModel.searchSortClassSession(
                         binding.searchView.text.toString().trim(),
                         sortBy,
-                        Sort.ASC.value
+                        SortDir.ASC.value
                     )
                     true
                 }
@@ -431,7 +462,7 @@ class ClassSessionActivity : AppCompatActivity() {
                     adminViewModel.searchSortClassSession(
                         binding.searchView.text.toString().trim(),
                         sortBy,
-                        Sort.DESC.value
+                        SortDir.DESC.value
                     )
                     true
                 }
@@ -470,5 +501,10 @@ class ClassSessionActivity : AppCompatActivity() {
         private const val STATUS_SUCCESS = "status_success"
         private const val STATUS_ERROR = "status_error"
         private const val KEY_SUCCESS_DIALOG_SHOWING = "key_success_dialog_showing"
+
+
+        const val KEY_STUDENT = "key_student"
+        const val KEY_STUDENT_RESULT_CODE = 11_200
+        const val KEY_STUDENT_RESULT_EXTRA = "key_student_result_extra"
     }
 }

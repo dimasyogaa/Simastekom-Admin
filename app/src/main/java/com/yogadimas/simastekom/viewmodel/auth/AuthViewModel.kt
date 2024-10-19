@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.asLiveData
 import androidx.lifecycle.viewModelScope
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import kotlinx.coroutines.launch
 
 class AuthViewModel(private val preferences: AuthPreferences) : ViewModel() {

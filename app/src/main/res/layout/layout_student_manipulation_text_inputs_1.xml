@@ -21,7 +21,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_layout_fullname"
+            android:id="@+id/edt_fullname"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/text_hint_fullname"
@@ -31,13 +31,13 @@
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_new_password"
+        android:id="@+id/input_layout_password"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="24dp"
-        android:hint="@string/text_label_new_password"
+        android:hint="@string/text_label_password"
         app:endIconMode="password_toggle"
         app:expandedHintEnabled="false"
         app:layout_constraintEnd_toEndOf="@+id/tv_title_new_password"
@@ -45,22 +45,22 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title_new_password">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_new_password"
+            android:id="@+id/edt_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/text_hint_new_password"
+            android:hint="@string/text_hint_password"
             android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
 
     <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/input_layout_confirm_new_password"
+        android:id="@+id/input_layout_confirm_password"
         style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="18dp"
-        android:hint="@string/text_label_confirm_new_password"
+        android:hint="@string/text_label_confirm_password"
         app:endIconMode="password_toggle"
         app:expandedHintEnabled="false"
         app:layout_constraintEnd_toEndOf="@+id/input_layout_new_password"
@@ -68,10 +68,10 @@
         app:layout_constraintTop_toBottomOf="@+id/input_layout_new_password">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_confirm_new_password"
+            android:id="@+id/edt_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:hint="@string/text_hint_confirm_new_password"
+            android:hint="@string/text_hint_confirm_password"
             android:inputType="textPassword" />
 
     </com.google.android.material.textfield.TextInputLayout>
@@ -118,7 +118,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_layout_student_id_number"
+            android:id="@+id/edt_student_id_number"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/text_hint_student_id_number"

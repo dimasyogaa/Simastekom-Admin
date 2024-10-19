@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="inherit_m3_ripple_default_alpha">@dimen/inherit_m3_sys_state_dragged_state_layer_opacity</dimen>
+    <dimen name="inherit_m3_ripple_focused_alpha">@dimen/inherit_m3_sys_state_focus_state_layer_opacity</dimen>
+    <dimen name="inherit_m3_ripple_hovered_alpha">@dimen/inherit_m3_sys_state_hover_state_layer_opacity</dimen>
+    <dimen name="inherit_m3_ripple_pressed_alpha">@dimen/inherit_m3_sys_state_pressed_state_layer_opacity</dimen>
+    <item format="float" name="inherit_m3_sys_state_dragged_state_layer_opacity" type="dimen">0.16</item>
+    <item format="float" name="inherit_m3_sys_state_focus_state_layer_opacity" type="dimen">0.10</item>
+    <item format="float" name="inherit_m3_sys_state_hover_state_layer_opacity" type="dimen">0.08</item>
+    <item format="float" name="inherit_m3_sys_state_pressed_state_layer_opacity" type="dimen">0.10</item>
+    <item format="float" name="inherit_material_emphasis_disabled_background" type="dimen">0.12</item>
+</resources>

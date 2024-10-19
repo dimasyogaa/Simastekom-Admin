@@ -2,7 +2,7 @@ package com.yogadimas.simastekom.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yogadimas.simastekom.datastore.preferences.SettingPreferences
+import com.yogadimas.simastekom.common.datastore.preferences.SettingPreferences
 import com.yogadimas.simastekom.viewmodel.setting.SettingViewModel
 
 class SettingViewModelFactory(private val pref: SettingPreferences) :

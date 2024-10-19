@@ -32,6 +32,11 @@
 
         </com.google.android.material.appbar.AppBarLayout>
 
+        <Button
+            android:id="@+id/btn_study_program"
+            style="@style/CustomButtonFilledMenu"
+            android:text="@string/title_study_program_data"/>
+
 
         <Button
             android:id="@+id/btn_faculty"
@@ -53,10 +58,7 @@
             style="@style/CustomButtonTonalMenu"
             android:text="@string/title_degree"/>
 
-        <Button
-            android:id="@+id/btn_study_program"
-            style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_study_program"/>
+
 
 
 

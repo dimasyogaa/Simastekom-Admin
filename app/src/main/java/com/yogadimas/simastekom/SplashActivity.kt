@@ -7,8 +7,8 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import com.yogadimas.simastekom.databinding.ActivitySplashBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory

@@ -10,10 +10,8 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -24,10 +22,10 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityStudentStudyProgramManipulationBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.degree.StudentDegreeActivity
@@ -37,12 +35,12 @@ import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.major.
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
-import kotlin.text.Typography.degree
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentStudyProgramManipulationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentStudyProgramManipulationBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -141,12 +139,12 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
         if (savedInstanceState != null) {
             identityAcademicData = if (Build.VERSION.SDK_INT >= 33) {
                 savedInstanceState.getParcelable(
-                    KEY_IDENTITY_ACADEMIC,
+                    KEY_BUNDLE_STUDY_PROGRAM,
                     IdentityAcademicData::class.java
                 )
             } else {
                 @Suppress("DEPRECATION")
-                savedInstanceState.getParcelable(KEY_IDENTITY_ACADEMIC)
+                savedInstanceState.getParcelable(KEY_BUNDLE_STUDY_PROGRAM)
             }
         }
 
@@ -548,7 +546,6 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
 
     }
 
-
     private fun showLoadingMain(boolean: Boolean) {
         showLoading(binding.mainProgressBar, boolean)
         if (boolean) {
@@ -609,7 +606,7 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(KEY_IDENTITY_ACADEMIC, identityAcademicData)
+        outState.putParcelable(KEY_BUNDLE_STUDY_PROGRAM, identityAcademicData)
         super.onSaveInstanceState(outState)
     }
 
@@ -622,6 +619,6 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
         const val KEY_EXTRA_SUCCESS = "key_extra_success"
         const val KEY_RESULT_CODE = 200
 
-        const val KEY_IDENTITY_ACADEMIC = "key_identity_academic"
+        const val KEY_BUNDLE_STUDY_PROGRAM = "key_bundle_study_program"
     }
 }

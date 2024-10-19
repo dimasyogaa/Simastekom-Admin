@@ -11,7 +11,6 @@ import androidx.appcompat.app.AlertDialog
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.navigation.Navigation
 import coil.load
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -19,18 +18,17 @@ import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ContentMainProfileBinding
 import com.yogadimas.simastekom.databinding.FragmentProfileBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
 import com.yogadimas.simastekom.model.responses.AdminData
-import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import com.yogadimas.simastekom.ui.action.ActionFragment.Companion.NAME_FRAGMENT
 import com.yogadimas.simastekom.ui.admin.AdminEditActivity
-import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalActivity
+import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalDetailActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class ProfileFragment : Fragment() {
 
@@ -44,7 +42,7 @@ class ProfileFragment : Fragment() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(requireContext().dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private var isLoading = false
     private var isAlertDialogShow = false
@@ -86,7 +84,7 @@ class ProfileFragment : Fragment() {
 
 
             btnIdentityPersonal.setOnClickListener {
-                startActivity(Intent(requireActivity(), IdentityPersonalActivity::class.java))
+                startActivity(Intent(requireActivity(), IdentityPersonalDetailActivity::class.java))
             }
 
 

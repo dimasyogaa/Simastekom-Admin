@@ -11,8 +11,8 @@ import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.DialogFragmentReligionBinding
-import com.yogadimas.simastekom.helper.isLandscape
-import com.yogadimas.simastekom.interfaces.OnOptionDialogListenerInterface
+import com.yogadimas.simastekom.common.helper.isLandscape
+import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -105,7 +105,7 @@ class ReligionDialogFragment : DialogFragment() {
             binding.scrollView.isScrollbarFadingEnabled = false
         }
         dialog?.window?.setLayout(width, height)
-        dialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_background_rounded)
+        dialog?.window?.setBackgroundDrawableResource(R.drawable.background_dialog_rounded)
     }
 
     override fun onDetach() {

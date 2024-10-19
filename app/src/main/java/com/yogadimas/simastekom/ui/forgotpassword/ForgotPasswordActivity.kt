@@ -19,9 +19,9 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityForgotPasswordBinding
-import com.yogadimas.simastekom.helper.isValidFormatEmail
-import com.yogadimas.simastekom.helper.onTextChange
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.helper.isValidFormatEmail
+import com.yogadimas.simastekom.common.helper.onTextChange
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.ui.identity.personal.email.EmailActivity
 import com.yogadimas.simastekom.ui.password.ResetPasswordEditActivity
 import com.yogadimas.simastekom.viewmodel.forgotpassword.ForgotPasswordViewModel

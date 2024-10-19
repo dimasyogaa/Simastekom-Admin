@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -21,14 +22,16 @@ import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityPlaceDateBirthBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.capitalizeWords
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.helper.simpleDateFormatHelper
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.capitalizeWords
+import com.yogadimas.simastekom.common.helper.getParcelableExtra
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.helper.simpleDateFormatHelper
 import com.yogadimas.simastekom.model.PlaceBirth
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity.Companion.KEY_ADMIN_STUDENT
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -38,6 +41,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import java.util.Calendar
 import java.util.Locale
 
@@ -49,7 +53,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
 
     private var isLoading = false
@@ -66,10 +70,14 @@ class PlaceDateBirthActivity : AppCompatActivity() {
 
     private lateinit var constraintsBuilder: CalendarConstraints.Builder
 
+    private var identityPersonalData: IdentityPersonalData? = IdentityPersonalData()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityPlaceDateBirthBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
 
         constraintsBuilder = CalendarConstraints.Builder()
             .setValidator(DateValidatorPointBackward.now())
@@ -127,14 +135,22 @@ class PlaceDateBirthActivity : AppCompatActivity() {
 
 
         authViewModel.getUser().observe(this) {
-            val (token, userId, userType) = it
+            var (token, userId, userType) = it
             if (token == AuthPreferences.DEFAULT_VALUE) {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                adminViewModel.getIdentityPersonal(userType, userId)
+                if (identityPersonalData?.isFromAdminStudent == true) {
+                    identityPersonalData?.let { data ->
+                        userType = data.userType.orEmpty()
+                        userId = data.userId.orEmpty()
+                        adminViewModel.getIdentityPersonal(userType, userId)
+                    }
+                } else {
+                    adminViewModel.getIdentityPersonal(userType, userId)
+                }
                 binding.btnSave.setOnClickListener { updateSave(userType, userId) }
             }
         }
@@ -183,9 +199,9 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
                         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                            val placeValue = s.toString()
-                            val hasLeadingSpace = placeValue.startsWith(" ")
-                            val isEmpty = placeValue.isEmpty()
+                            val place = s.toString()
+                            val hasLeadingSpace = place.startsWith(" ")
+                            val isEmpty = place.isEmpty()
 
 
                             if (isEmpty) {
@@ -200,6 +216,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                             }
 
                             buttonIsEnabled()
+                            placeValue = place
                         }
 
                         override fun afterTextChanged(s: Editable?) {}

@@ -65,10 +65,11 @@
     <color name="colorCustomColor1Container">#C8E6FF</color>
     <color name="colorOnCustomColor1Container">#001E2E</color>
 
-
     <color name="colorFixedGreen">#41B06E</color>
+    <color name="colorFixedBlue">#1B72B1</color>
     <color name="colorFixedSoftBlue">#CFE2FF</color>
     <color name="colorFixedSoftYellow">#FFF3CD</color>
     <color name="colorFixedBlack">#49454F</color>
+
 
 </resources>

@@ -38,9 +38,9 @@
         tools:layout="@layout/activity_password_edit" />
     <activity
         android:id="@+id/adminUpdateActivity"
-        android:name="com.yogadimas.simastekom.ui.admin.AdminUpdateActivity2"
+        android:name="com.yogadimas.simastekom.ui.admin.AdminEditOldActivity"
         android:label="activity_admin_update"
-        tools:layout="@layout/activity_admin_update_2" />
+        tools:layout="@layout/activity_admin_edit_old" />
 
 
 

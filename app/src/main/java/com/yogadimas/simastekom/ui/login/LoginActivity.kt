@@ -1,9 +1,7 @@
 package com.yogadimas.simastekom.ui.login
 
 import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -15,24 +13,22 @@ import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityLoginBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.onTextChange
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.onTextChange
+import com.yogadimas.simastekom.common.helper.sendMessage
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.ui.forgotpassword.ForgotPasswordActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
-import java.net.URLEncoder
-import java.text.SimpleDateFormat
-import java.util.Calendar
-import java.util.Locale
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class LoginActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityLoginBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -108,46 +104,9 @@ class LoginActivity : AppCompatActivity() {
         }
 
         binding.btnSendWa.setOnClickListener {
-
-            val currentTime = Calendar.getInstance().time
-            val sdf = SimpleDateFormat("HH", Locale.getDefault())
-            val hour = sdf.format(currentTime).toInt()
-
-            val timeOfDay = when (hour) {
-                in 6..11 -> "pagi"
-                in 12..16 -> "siang"
-                in 17..18 -> "sore"
-                else -> "malam"
-            }
-
-            val phoneNumber = "628988136896"
-            val message = "Selamat $timeOfDay, Saya mau tanya terkait simastekom"
-
-            val url = "https://api.whatsapp.com/send?phone=$phoneNumber&text=${
-                URLEncoder.encode(
-                    message,
-                    "UTF-8"
-                )
-            }"
-            val intent = Intent(Intent.ACTION_VIEW)
-            intent.data = Uri.parse(url)
-
-            if (intent.resolveActivity(packageManager) != null) {
-                startActivity(intent)
-            } else {
-                val webIntent = Intent(
-                    Intent.ACTION_VIEW,
-                    Uri.parse(
-                        "https://api.whatsapp.com/send?phone=$phoneNumber&text=${
-                            URLEncoder.encode(
-                                message,
-                                "UTF-8"
-                            )
-                        }"
-                    )
-                )
-                startActivity(webIntent)
-            }
+            sendMessage(
+                context = this@LoginActivity
+            )
         }
 
     }
@@ -211,8 +170,8 @@ class LoginActivity : AppCompatActivity() {
     override fun onStop() {
         super.onStop()
         if (dialog != null) {
-            dialog?.dismiss();
-            dialog = null;
+            dialog?.dismiss()
+            dialog = null
         }
     }
 }

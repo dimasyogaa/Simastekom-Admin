@@ -8,7 +8,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import com.yogadimas.simastekom.databinding.FragmentActionBinding
-import com.yogadimas.simastekom.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
 import com.yogadimas.simastekom.ui.student.StudentActivity
 import com.yogadimas.simastekom.ui.student.StudentActivityMenu
 

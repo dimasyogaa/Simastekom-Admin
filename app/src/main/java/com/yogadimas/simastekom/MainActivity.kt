@@ -27,10 +27,9 @@ import com.google.android.material.navigation.NavigationView
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.BuildConfig.BASE_URL
 import com.yogadimas.simastekom.databinding.ActivityMainBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.datastore.preferences.SingleEventPreferences
-import com.yogadimas.simastekom.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
 import com.yogadimas.simastekom.ui.action.ActionFragment
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.password.PasswordEditActivity
@@ -38,12 +37,11 @@ import com.yogadimas.simastekom.ui.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
-import com.yogadimas.simastekom.viewmodel.factory.SingleEventViewModelFactory
-import com.yogadimas.simastekom.viewmodel.singleevent.SingleEventViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import kotlin.properties.Delegates
 
 
@@ -53,7 +51,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
 
     private lateinit var binding: ActivityMainBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))

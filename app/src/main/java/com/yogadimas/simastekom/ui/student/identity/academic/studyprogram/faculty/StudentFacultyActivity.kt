@@ -17,13 +17,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram.facultylevelmajordegree.CodeNameAdapter
-import com.yogadimas.simastekom.adapter.student.identitasacademic.studiprogram.facultylevelmajordegree.CodeNameManipulationAdapter
+import com.yogadimas.simastekom.adapter.student.identityacademic.studiprogram.facultylevelmajordegree.CodeNameAdapter
+import com.yogadimas.simastekom.adapter.student.identityacademic.studiprogram.facultylevelmajordegree.CodeNameManipulationAdapter
 import com.yogadimas.simastekom.databinding.ActivityStudentFacultyBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.interfaces.OnItemClickCallback
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -33,11 +33,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentFacultyActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentFacultyBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -200,7 +201,7 @@ class StudentFacultyActivity : AppCompatActivity() {
 
     private fun setFacultyData(it: List<IdentityAcademicData>) {
         val adapter = if (isFromStudyProgram) {
-            CodeNameAdapter(object : OnItemClickCallback<IdentityAcademicData> {
+            CodeNameAdapter(object : OnItemClickManipulationCallback<IdentityAcademicData> {
                 override fun onItemClicked(data: IdentityAcademicData) {
                     val resultIntent = Intent()
 
@@ -217,7 +218,7 @@ class StudentFacultyActivity : AppCompatActivity() {
 
             })
         } else {
-            CodeNameManipulationAdapter(object : OnItemClickCallback<IdentityAcademicData> {
+            CodeNameManipulationAdapter(object : OnItemClickManipulationCallback<IdentityAcademicData> {
                 override fun onItemClicked(data: IdentityAcademicData) {
                     val intent = Intent(
                         this@StudentFacultyActivity,
@@ -230,7 +231,7 @@ class StudentFacultyActivity : AppCompatActivity() {
 
                 override fun onDeleteClicked(data: IdentityAcademicData) {
                     showAlertDialog(
-                        getString(R.string.format_code_name, data.code, data.name),
+                        getString(R.string.format_string_strip_string, data.code, data.name),
                         STATUS_DELETED,
                         data.id ?: 0
                     )

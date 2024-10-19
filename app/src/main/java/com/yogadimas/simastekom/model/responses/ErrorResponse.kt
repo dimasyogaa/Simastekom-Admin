@@ -1,14 +1,17 @@
 package com.yogadimas.simastekom.model.responses
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 
 data class Errors(
     @SerializedName("errors")
-    val errors: ErrorDetails? = null,
+    val errors: ErrorDetail? = null,
 )
 
-data class ErrorDetails(
+@Parcelize
+data class ErrorDetail(
     @SerializedName("message")
     val message: List<String>? = null,
 
@@ -26,4 +29,4 @@ data class ErrorDetails(
 
     @SerializedName("jenis_kelamin")
     val gender: List<String>? = null,
-)
+): Parcelable

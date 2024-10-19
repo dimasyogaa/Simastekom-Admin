@@ -132,7 +132,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:backgroundTint="@color/colorFixedGreen"
-            android:text="08988136896"
+            android:text="@string/technician_08988136896"
             android:textColor="@android:color/white"
             android:textSize="14sp"
             app:icon="@drawable/z_ic_whatsapp"

@@ -74,23 +74,11 @@
 
 
                         <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_code"
+                            android:id="@+id/chip_student_id_number"
                             style="@style/Widget.Material3.Chip.Filter"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:text="@string/text_label_code"
-                            app:checkedIcon="@drawable/z_ic_sort"
-                            app:checkedIconEnabled="true"
-                            app:chipIcon="@drawable/z_ic_sort"
-                            app:chipIconEnabled="true"
-                            app:ensureMinTouchTargetSize="true" />
-
-                        <com.google.android.material.chip.Chip
-                            android:id="@+id/chip_name"
-                            style="@style/Widget.Material3.Chip.Filter"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/text_label_name"
+                            android:text="@string/text_label_student_id_number"
                             app:checkedIcon="@drawable/z_ic_sort"
                             app:checkedIconEnabled="true"
                             app:chipIcon="@drawable/z_ic_sort"
@@ -120,7 +108,7 @@
     </com.google.android.material.search.SearchView>
 
 
-    <androidx.core.widget.NestedScrollView
+    <com.yogadimas.simastekom.common.custom.SmartNestedScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:scrollbars="none"
@@ -129,31 +117,26 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:paddingBottom="100dp">
+            android:orientation="vertical">
 
 
             <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rv_major"
+                android:id="@+id/rv_identity_academic"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="8dp"
-                tools:listitem="@layout/item_code_name" />
+                android:clipToPadding="false"
+                android:nestedScrollingEnabled="true"
+                android:paddingBottom="100dp"
+                tools:listitem="@layout/item_identity_academic" />
 
 
         </LinearLayout>
 
 
-    </androidx.core.widget.NestedScrollView>
+    </com.yogadimas.simastekom.common.custom.SmartNestedScrollView>
 
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_add"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="16dp"
-        app:srcCompat="@drawable/z_ic_add" />
 
 
     <com.google.android.material.progressindicator.CircularProgressIndicator

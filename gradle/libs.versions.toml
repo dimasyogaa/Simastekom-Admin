@@ -33,6 +33,11 @@ bcrypt = "0.10.2"
 
 swiperefreshlayout = "1.1.0"
 
+pagingRuntimeKtx = "3.3.2"
+
+
+koinAndroid = "4.0.0-RC1"
+
 
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
@@ -69,6 +74,12 @@ coil = { group = "io.coil-kt", name = "coil", version.ref = "coil" }
 bcrypt = { module = "at.favre.lib:bcrypt", version.ref = "bcrypt" }
 
 androidx-swiperefreshlayout = { module = "androidx.swiperefreshlayout:swiperefreshlayout", version.ref = "swiperefreshlayout" }
+
+
+androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", version.ref = "pagingRuntimeKtx" }
+
+
+koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

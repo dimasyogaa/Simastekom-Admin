@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -19,16 +20,20 @@ import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityEmailBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.isValidFormatEmail
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.getParcelableExtra
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.isValidFormatEmail
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity.Companion.KEY_ADMIN_STUDENT
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class EmailActivity : AppCompatActivity() {
 
@@ -39,22 +44,25 @@ class EmailActivity : AppCompatActivity() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private var isLoading = false
     private var isAlertDialogShow = false
 
     private var dialog: AlertDialog? = null
 
-
     private var email: String? = null
 
     private val digits = 6
+
+    private var identityPersonalData: IdentityPersonalData? = IdentityPersonalData()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityEmailBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
 
         if (savedInstanceState != null) {
             email = savedInstanceState.getString(KEY_EMAIL_VALID)
@@ -148,14 +156,22 @@ class EmailActivity : AppCompatActivity() {
 
         authViewModel.getUser().observe(this) {
             if (email == null) {
-                val (token, userId, userType) = it
+                var (token, userId, userType) = it
                 if (token == AuthPreferences.DEFAULT_VALUE) {
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 } else {
                     adminViewModel.token = token
-                    adminViewModel.getIdentityPersonal(userType, userId)
+                    if (identityPersonalData?.isFromAdminStudent == true) {
+                        identityPersonalData?.let { data ->
+                            userType = data.userType.orEmpty()
+                            userId = data.userId.orEmpty()
+                            adminViewModel.getIdentityPersonal(userType, userId)
+                        }
+                    } else {
+                        adminViewModel.getIdentityPersonal(userType, userId)
+                    }
                     binding.btnGetTokenViaEmail.setOnClickListener { view ->
                         hideKeyboard(view)
                         if (checkValidatedEmail(binding.edtEmail.text.toString().trim())) {
@@ -326,14 +342,22 @@ class EmailActivity : AppCompatActivity() {
 
         authViewModel.getUser().observe(this) {
             if (email != null) {
-                val (token, userId, userType) = it
+                var (token, userId, userType) = it
                 if (token == AuthPreferences.DEFAULT_VALUE) {
                     val intent = Intent(this, LoginActivity::class.java)
                     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                     startActivity(intent)
                 } else {
                     adminViewModel.token = token
-                    adminViewModel.getIdentityPersonal(userType, userId)
+                    if (identityPersonalData?.isFromAdminStudent == true) {
+                        identityPersonalData?.let { data ->
+                            userType = data.userType.orEmpty()
+                            userId = data.userId.orEmpty()
+                            adminViewModel.getIdentityPersonal(userType, userId)
+                        }
+                    } else {
+                        adminViewModel.getIdentityPersonal(userType, userId)
+                    }
                     binding.btnVerifyToken.setOnClickListener { view ->
                         hideKeyboard(view)
                         if (checkValidatedToken(

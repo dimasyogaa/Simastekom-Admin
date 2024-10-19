@@ -18,6 +18,11 @@
     </style>
 
 
+    <style name="rounded.custom2">
+        <item name="cornerSize">20%</item>
+    </style>
+
+
     <!-- Custom - Navigation Drawer - Divider  -->
     <style name="Widget.App.NavigationView" parent="Widget.Material3.NavigationView">
         <item name="materialThemeOverlay">@style/ThemeOverlay.App.Toolbar</item>
@@ -156,6 +161,32 @@
         <item name="android:paddingBottom">16dp</item>
         <item name="android:textAlignment">textStart</item>
         <item name="cornerRadius">10dp</item>
+    </style>
+
+
+    <style name="CustomButtonFilledMenu" parent="Widget.Material3.Button.IconButton.Filled">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">80dp</item>
+        <item name="android:layout_marginTop">8dp</item>
+        <item name="android:layout_marginBottom">16dp</item>
+        <item name="android:layout_marginStart">16dp</item>
+        <item name="android:layout_marginEnd">16dp</item>
+        <item name="android:paddingStart">24dp</item>
+        <item name="android:paddingTop">16dp</item>
+        <item name="android:paddingBottom">16dp</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="cornerRadius">10dp</item>
+    </style>
+
+
+    <style name="CustomButtonTextButtonMenu" parent="Widget.Material3.Button.TextButton">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAlignment">textStart</item>
+        <item name="android:paddingStart">4dp</item>
+        <item name="android:layout_marginTop">-16dp</item>
+        <item name="cornerRadius">10dp</item>
+        <item name="rippleColor">@null</item>
     </style>
 
 </resources>

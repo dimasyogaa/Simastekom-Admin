@@ -3,7 +3,9 @@ package com.yogadimas.simastekom.ui.student
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
+import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
+import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.StudentIdentityAcademicMenuActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity
@@ -22,6 +24,15 @@ class StudentActivityMenu : AppCompatActivity() {
 
         binding.apply {
             toolbar.setNavigationOnClickListener { finish() }
+
+            btnIdentityPersonal.setOnClickListener {
+                startActivity(
+                    Intent(
+                        this@StudentActivityMenu,
+                        IdentityPersonalActivity::class.java
+                    ).putExtra(IdentityPersonalActivity.KEY_EXTRA_ROLE, Role.STUDENT.value)
+                )
+            }
 
             btnIdentityAcademic.setOnClickListener {
                 startActivity(

@@ -28,6 +28,9 @@ data class IdentityAcademicData(
     @field:SerializedName("nama")
     var name: String? = null,
 
+    @field:SerializedName("nim")
+    var studentIdNumber: String? = null,
+
 
     @field:SerializedName("kode_fakultas")
     var facultyId: Int? = null,
@@ -68,6 +71,52 @@ data class IdentityAcademicData(
     @field:SerializedName("nama_gelar")
     var degreeName: String? = null,
 
+
+    @field:SerializedName("id_program_studi")
+    var studyProgramId: Int? = null,
+
+    @field:SerializedName("text_kode_program_studi")
+    var studyProgramCode: String? = null,
+
+    @field:SerializedName("nama_program_studi")
+    var studyProgramName: String? = null,
+
+
+    @field:SerializedName("angkatan")
+    var batch: String? = null,
+
+
+    @field:SerializedName("id_sesi_kelas")
+    var classSessionId: Int? = null,
+
+    @field:SerializedName("nama_sesi_kelas")
+    var classSessionName: String? = null,
+
+
+    @field:SerializedName("id_semester")
+    var semesterId: Int? = null,
+
+    @field:SerializedName("nomor_semester")
+    var numberSemester: String? = null,
+
+
+    @field:SerializedName("id_metode_kuliah")
+    var lectureMethodId: Int? = null,
+
+    @field:SerializedName("nama_metode_kuliah")
+    var lectureMethodName: String? = null,
+
+
+    @field:SerializedName("id_kampus")
+    var campusId: Int? = null,
+
+    @field:SerializedName("text_code_kampus")
+    var campusCode: String? = null,
+
+    @field:SerializedName("nama_kampus")
+    var campusName: String? = null,
+
+
     @field:SerializedName("is_added")
     val isAdded: Boolean = false,
 
@@ -77,4 +126,4 @@ data class IdentityAcademicData(
     @field:SerializedName("is_deleted")
     val isDeleted: Boolean = false,
 
-    ): Parcelable
+    ) : Parcelable

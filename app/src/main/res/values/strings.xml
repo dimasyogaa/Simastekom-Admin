@@ -1,13 +1,20 @@
 <resources>
     <string name="app_name">Simastekom - Admin</string>
 
+
+    <string name="text_user">Pengguna</string>
+
     <string name="title_classes">Kelas</string>
     <string name="title_profile">Profil</string>
     <string name="title_action">Aksi</string>
 
     <string name="title_admin">Admin</string>
     <string name="title_student">Mahasiswa</string>
-    <string name="title_lecturee">Dosen</string>
+    <string name="title_lecture">Dosen</string>
+
+    <string name="title_admin_data">Data Admin</string>
+    <string name="title_student_data">Data Mahasiswa</string>
+    <string name="title_lecture_data">Data Dosen</string>
 
     <string name="btn_text_login">Login</string>
     <string name="btn_text_logout">Logout</string>
@@ -30,10 +37,12 @@
     <string name="text_label_password">Password</string>
     <string name="text_label_old_password">Password Lama</string>
     <string name="text_label_new_password">Password Baru</string>
+    <string name="text_label_confirm_password">Konfirmasi Password</string>
     <string name="text_label_confirm_new_password">Konfirmasi Password Baru</string>
     <string name="text_hint_password">Masukkan password anda…</string>
     <string name="text_hint_old_password">Masukkan password lama anda…</string>
     <string name="text_hint_new_password">Masukkan password baru anda…</string>
+    <string name="text_hint_confirm_password">Ketik ulang password anda…</string>
     <string name="text_hint_confirm_new_password">Ketik ulang password baru anda…</string>
     <string name="text_forgot_password">Lupa Password?</string>
     <string name="text_change_password">Ganti Password</string>
@@ -130,11 +139,29 @@
     <string name="text_identity_parent">Identitas Orang Tua</string>
     <string name="text_identity_academic">Identitas Akademik</string>
 
+    <string name="text_identity_academic_data">Data Identitas Akademik</string>
+
 
     <string name="text_place_date_birth">Tempat/Tanggal Lahir</string>
 
     <string name="text_man">Laki-Laki</string>
     <string name="text_woman">Perempuan</string>
+
+    <string name="text_lecture_mister_format">Bapak Dosen %s</string>
+    <string name="text_lecture_madam_format">Ibu Dosen %s</string>
+
+
+    <string name="text_with_identity_format">" dengan identitas %1$s"</string>
+
+    <string name="text_student_name_format">Mahasiswa %s</string>
+    <string name="text_admin_name_format">%s</string>
+    <string name="text_lecture_name_format">Dosen %s</string>
+    <string name="text_technician">Teknisi</string>
+
+    <string name="text_time_morning">Pagi</string>
+    <string name="text_time_afternoon">Siang</string>
+    <string name="text_time_Evening">Sore</string>
+    <string name="text_time_NIght">Malam</string>
 
     <string name="text_sign">tanda %1$s</string>
 
@@ -148,6 +175,7 @@
 
     <string name="empty_field">Masukkan %s anda</string>
     <string name="mandatory_field">%s wajib diisi</string>
+    <string name="cannot_be_less_than">tidak boleh kurang dari</string>
     <string name="min_character_field">%s tidak boleh kurang dari %d karakter</string>
     <string name="six_digits_field">%s harus memiliki %d digit</string>
 
@@ -159,12 +187,6 @@
     <string name="text_cannot_contain_spaces_early">Tidak boleh ada spasi di awal %1$s</string>
     <string name="text_error_format">%1$s tidak boleh ada %2$s</string>
 
-
-    <string name="text_alert_add">%1$s menambah %2$s</string>
-    <string name="text_alert_change">%1$s mengubah %2$s</string>
-    <string name="text_alert_delete">%1$s menghapus %2$s</string>
-
-    <string name="text_alert_update_data">%1$s mengubah data</string>
 
     <string name="text_please_login_again">Silakan login kembali</string>
     <string name="text_const_unauthorized">unauthorized</string>
@@ -263,6 +285,9 @@
     <string name="title_degree">Gelar</string>
     <string name="title_campus">Kampus</string>
 
+    <string name="title_study_program_data">Data Program Studi</string>
+
+
     <string name="text_hint_choose_study_program">Pilih program studi…</string>
     <string name="text_hint_choose_faculty">Pilih fakultas…</string>
     <string name="text_hint_choose_level">Pilih jenjang…</string>
@@ -280,9 +305,18 @@
     <string name="text_change_or_delete">Ubah/Hapus</string>
     <string name="text_delete">Hapus</string>
 
+    <string name="text_alert_add">%1$s menambah %2$s</string>
+    <string name="text_alert_change">%1$s mengubah %2$s</string>
+    <string name="text_alert_delete">%1$s menghapus %2$s</string>
+
+    <string name="text_alert_update_data">%1$s mengubah data</string>
+
+    <string name="text_to_add">Menambah</string>
+    <string name="text_to_delete">Menghapus</string>
+
     <string name="text_label_code">Kode</string>
     <string name="text_hint_code">Masukkan kode…</string>
-    <string name="format_code_name">%1$s - %2$s</string>
+    <string name="format_string_strip_string">%1$s - %2$s</string>
     <string name="text_max_char_5">Maksimal 5 karakter</string>
     <string name="text_max_char_10">Maksimal 10 karakter</string>
     <string name="text_newest">Terbaru</string>
@@ -294,7 +328,32 @@
 
     <string name="text_address">Alamat</string>
     <string name="text_semester_number">Nomor Semester</string>
-    <string name="smallest_number">Angka Terkecil</string>
+    <string name="smallest">Terkecil</string>
+    <string name="largest">Terbesar</string>
+
+    <string name="retry">Coba lagi</string>
+    <string name="occurred_failure_when_accessing_data">Terjadi kegagalan ketika mengakses data %1$s</string>
+    <string name="text_not_found">Tidak ditemukan</string>
+    <string name="not_found_state">State Not Found</string>
+
+    <string name="text_confirm_the_new_password_matches_the_new_password_you_entered">Konfirmasi Password Baru sesuai dengan Password Baru yang anda masukkan</string>
+    <string name="text_make_sure_confirm_your_new_password_matches_the_new_password_you_entered">Pastikan Konfirmasi Password Baru sesuai dengan Password Baru yang anda masukkan sebelumnya</string>
+    <string name="text_make_sure_confirm_matches_entered">Pastikan Konfirmasi %1$s sesuai dengan %1$s yang anda masukkan sebelumnya</string>
+
+    <string name="text_id_format">Id %1$s</string>
+    <string name="text_student_id_number_format">NIM %1$s</string>
+    <string name="text_batch_format">Angkatan %1$s</string>
+    <string name="text_semester_format">Semester %1$s</string>
+
+
+    <string name="text_label_lecture_id_number">NIDN</string>
+    <string name="text_hint_lecture_id_number">Masukkan Nomor Induk Dosen Nasional…</string>
+    <string name="text_more">Selengkapnya</string>
+    <string name="text_close">Tutup</string>
+    <string name="profile_photo">Foto Profil</string>
+    <string name="technician_08988136896">08988136896</string>
+    <string name="technician_628988136896">628988136896</string>
+    <string name="text_message_send_message">Selamat %1$s %2$s, perkenalkan saya %3$s%4$s</string>
 
 
 </resources>

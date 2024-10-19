@@ -10,7 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -22,20 +21,21 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityStudentFacultyManipulationBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class StudentFacultyManipulationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentFacultyManipulationBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -255,7 +255,7 @@ class StudentFacultyManipulationActivity : AppCompatActivity() {
         binding.apply {
             hideKeyboard()
             showAlertDialog(
-                getString(R.string.format_code_name, code, name),
+                getString(R.string.format_string_strip_string, code, name),
                 STATUS_DELETED,
                 id ?: 0
             )

@@ -8,7 +8,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
 import androidx.activity.OnBackPressedCallback
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
@@ -20,13 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
+import com.yogadimas.simastekom.adapter.student.name.NameAdapter
 import com.yogadimas.simastekom.adapter.student.name.NameManipulationAdapter
 import com.yogadimas.simastekom.databinding.ActivitySemesterBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.enums.Sort
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.interfaces.OnItemClickCallback
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.SortDir
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
+import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -36,11 +37,12 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class SemesterActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySemesterBinding
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -66,14 +68,16 @@ class SemesterActivity : AppCompatActivity() {
     }
 
 
-
-
+    private var isFromStudent = false
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivitySemesterBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        isFromStudent = intent.getBooleanExtra(KEY_STUDENT, false)
+
         if (savedInstanceState != null) {
             isSuccessDialogShowingOrientation =
                 savedInstanceState.getBoolean(KEY_SUCCESS_DIALOG_SHOWING)
@@ -254,26 +258,47 @@ class SemesterActivity : AppCompatActivity() {
     }
 
     private fun setData(it: List<NameData>) {
-        val adapter = NameManipulationAdapter(object : OnItemClickCallback<NameData> {
-            override fun onItemClicked(data: NameData) {
-                val intent = Intent(
-                    this@SemesterActivity,
-                    SemesterManipulationActivity::class.java
-                ).apply {
-                    putExtra(SemesterManipulationActivity.KEY_EXTRA_ID, data.id)
+        val adapter = if (isFromStudent) {
+            NameAdapter(object : OnItemClickManipulationCallback<NameData> {
+                override fun onItemClicked(data: NameData) {
+
+                    val resultIntent = Intent()
+
+                    val studentData = StudentData(
+                        semesterId = data.id,
+                        numberSemester = data.name,
+                    )
+
+                    resultIntent.putExtra(
+                        KEY_STUDENT_RESULT_EXTRA,
+                        studentData
+                    )
+
+                    setResult(KEY_STUDENT_RESULT_CODE, resultIntent)
+                    finish()
                 }
-                resultLauncher.launch(intent)
-            }
-
-            override fun onDeleteClicked(data: NameData) {
-                showAlertDialog(
-                    data.name ?: "",
-                    STATUS_DELETED,
-                    data.id ?: 0
-                )
-            }
-
-        })
+                override fun onDeleteClicked(data: NameData) {}
+            })
+        } else {
+            NameManipulationAdapter(object : OnItemClickManipulationCallback<NameData> {
+                override fun onItemClicked(data: NameData) {
+                    val intent = Intent(
+                        this@SemesterActivity,
+                        SemesterManipulationActivity::class.java
+                    ).apply {
+                        putExtra(SemesterManipulationActivity.KEY_EXTRA_ID, data.id)
+                    }
+                    resultLauncher.launch(intent)
+                }
+                override fun onDeleteClicked(data: NameData) {
+                    showAlertDialog(
+                        data.name ?: "",
+                        STATUS_DELETED,
+                        data.id ?: 0
+                    )
+                }
+            })
+        }
         adapter.submitList(it)
         binding.rvSemester.adapter = adapter
     }
@@ -389,7 +414,8 @@ class SemesterActivity : AppCompatActivity() {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE
-                fabAdd.visibility = View.VISIBLE
+                if (isFromStudent) fabAdd.visibility = View.GONE else fabAdd.visibility =
+                    View.VISIBLE
                 rvSemester.visibility = View.VISIBLE
 
             } else {
@@ -420,7 +446,7 @@ class SemesterActivity : AppCompatActivity() {
                     adminViewModel.searchSortSemester(
                         binding.searchView.text.toString().trim(),
                         sortBy,
-                        Sort.ASC.value
+                        SortDir.ASC.value
                     )
                     true
                 }
@@ -429,7 +455,7 @@ class SemesterActivity : AppCompatActivity() {
                     adminViewModel.searchSortSemester(
                         binding.searchView.text.toString().trim(),
                         sortBy,
-                        Sort.DESC.value
+                        SortDir.DESC.value
                     )
                     true
                 }
@@ -466,5 +492,9 @@ class SemesterActivity : AppCompatActivity() {
         private const val STATUS_SUCCESS = "status_success"
         private const val STATUS_ERROR = "status_error"
         private const val KEY_SUCCESS_DIALOG_SHOWING = "key_success_dialog_showing"
+
+        const val KEY_STUDENT = "key_student"
+        const val KEY_STUDENT_RESULT_CODE = 11_300
+        const val KEY_STUDENT_RESULT_EXTRA = "key_student_result_extra"
     }
 }

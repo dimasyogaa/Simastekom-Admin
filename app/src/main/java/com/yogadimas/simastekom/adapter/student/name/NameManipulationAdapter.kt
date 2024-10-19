@@ -5,14 +5,11 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-import com.yogadimas.simastekom.adapter.student.identitasacademic.campus.CampusManipulationAdapter
-import com.yogadimas.simastekom.databinding.ItemCampusBinding
 import com.yogadimas.simastekom.databinding.ItemNameBinding
-import com.yogadimas.simastekom.interfaces.OnItemClickCallback
-import com.yogadimas.simastekom.model.responses.CampusData
+import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
 import com.yogadimas.simastekom.model.responses.NameData
 
-class NameManipulationAdapter(private val itemClickCallback: OnItemClickCallback<NameData>) :
+class NameManipulationAdapter(private val itemClickCallback: OnItemClickManipulationCallback<NameData>) :
     ListAdapter<NameData, NameManipulationAdapter.MyViewHolder>(DIFF_CALLBACK) {
 
 
@@ -29,7 +26,7 @@ class NameManipulationAdapter(private val itemClickCallback: OnItemClickCallback
 
     class MyViewHolder(
         private val binding: ItemNameBinding,
-        private val itemClickCallback: OnItemClickCallback<NameData>,
+        private val itemClickCallback: OnItemClickManipulationCallback<NameData>,
     ) : RecyclerView.ViewHolder(binding.root) {
         fun bind(data: NameData) {
             binding.apply {

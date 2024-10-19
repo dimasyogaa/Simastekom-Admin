@@ -4,8 +4,8 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yogadimas.simastekom.api.ApiConfig
-import com.yogadimas.simastekom.event.Event
-import com.yogadimas.simastekom.helper.getErrors
+import com.yogadimas.simastekom.common.event.Event
+import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.UserData
 import com.yogadimas.simastekom.model.responses.UserResponse

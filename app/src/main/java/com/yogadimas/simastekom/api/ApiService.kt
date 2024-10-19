@@ -1,5 +1,7 @@
 package com.yogadimas.simastekom.api
 
+import com.yogadimas.simastekom.model.responses.StudentData
+import com.yogadimas.simastekom.model.responses.StudentObjectResponse
 import com.yogadimas.simastekom.model.responses.AdminResponse
 import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.model.responses.CampusListResponse
@@ -12,10 +14,12 @@ import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
+import com.yogadimas.simastekom.model.responses.PaginationResponse
 import com.yogadimas.simastekom.model.responses.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
+import retrofit2.Response
 import retrofit2.http.Body
 import retrofit2.http.DELETE
 import retrofit2.http.Field
@@ -99,6 +103,91 @@ interface ApiService {
         @Field("email") email: String,
         @Field("token") tokenVerifyEmail: String,
     ): Call<IdentityPersonalResponse>
+
+    /** Student */
+    @GET("student")
+    suspend fun getAllStudents(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort_by") sortBy: String
+    ): PaginationResponse<StudentData>
+
+    @GET("student/search-sort")
+    suspend fun searchSortStudents(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<StudentData>
+
+    @GET("student/{id}")
+    suspend fun getStudentById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<StudentObjectResponse>
+
+
+    @PUT("student/{id}")
+    suspend fun updateStudent(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body studentData: StudentData,
+    ): Response<StudentObjectResponse>
+
+    @POST("student")
+    suspend fun addStudent(
+        @Header("Authorization") token: String,
+        @Body studentData: StudentData,
+    ): Response<StudentObjectResponse>
+
+    @DELETE("student/{id}")
+    suspend fun deleteStudent(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<StudentObjectResponse>
+
+
+    /** Identity Personal */
+    @GET("identity-personal")
+    suspend fun getAllIdentitiesPersonal(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("user-type") userType: String
+    ): PaginationResponse<IdentityPersonalData>
+
+    @GET("identity-personal/search-sort")
+    suspend fun searchSortIdentitiesPersonal(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+        @Query("user-type") userType: String,
+    ): PaginationResponse<IdentityPersonalData>
+
+    /** Identity Academic */
+    @GET("identity-academic")
+    suspend fun getAllIdentitiesAcademic(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): PaginationResponse<IdentityAcademicData>
+
+    @GET("identity-academic/search-sort")
+    suspend fun searchSortIdentitiesAcademic(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<IdentityAcademicData>
+
 
     /** Employment Status */
     @POST("employment-status")

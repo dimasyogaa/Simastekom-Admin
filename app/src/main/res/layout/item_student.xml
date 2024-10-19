@@ -1,46 +1,85 @@
 <?xml version="1.0" encoding="utf-8"?>
 <com.google.android.material.card.MaterialCardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     style="@style/Widget.Material3.CardView.Elevated"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_margin="8dp"
     android:clickable="true"
-    android:focusable="true"
-    android:layout_margin="8dp">
+    android:focusable="true">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
+        android:paddingHorizontal="16dp"
         android:paddingVertical="8dp"
-        android:paddingHorizontal="16dp">
+        android:weightSum="2">
 
-
-        <TextView
-            android:id="@+id/tv_student_id_number"
-            android:layout_width="match_parent"
+        <LinearLayout
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:textSize="16sp"
-            android:padding="4dp"
-            android:text="nim" />
+            android:layout_weight="2"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_student_name"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:ellipsize="end"
-            android:padding="4dp"
-            android:text="nama" />
 
-        <TextView
-            android:id="@+id/tv_student_study_program"
-            android:layout_width="match_parent"
+            <TextView
+                android:id="@+id/tv_student_id_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="4dp"
+                tools:text="nim"
+                android:textSize="16sp"
+                android:textStyle="bold"/>
+
+            <TextView
+                android:id="@+id/tv_student_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:padding="4dp"
+                tools:text="nama"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_student_study_program"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:text="teknik informatika"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_student_batch"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:text="angkatan"
+                android:textSize="13sp" />
+
+            <TextView
+                android:id="@+id/tv_student_campus"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:padding="4dp"
+                tools:text="kampus"
+                android:textSize="13sp" />
+
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_delete"
+            style="?attr/materialIconButtonStyle"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="16sp"
-            android:ellipsize="end"
-            android:padding="4dp"
-            android:text="teknik informatika" />
+            android:layout_gravity="end"
+            app:icon="@drawable/z_ic_delete"
+            app:iconTint="?attr/colorError" />
 
     </LinearLayout>
 

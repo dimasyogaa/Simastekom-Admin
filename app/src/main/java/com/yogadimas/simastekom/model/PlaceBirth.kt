@@ -1,6 +1,6 @@
 package com.yogadimas.simastekom.model
 
-import com.yogadimas.simastekom.helper.simpleDateFormatHelper
+import com.yogadimas.simastekom.common.helper.simpleDateFormatHelper
 import java.util.Calendar
 
 data class PlaceBirth(val place: String, val birthDate: Calendar?) {

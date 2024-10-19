@@ -2,7 +2,7 @@ package com.yogadimas.simastekom.viewmodel.factory
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 
 class AuthViewModelFactory(private val pref: AuthPreferences) :

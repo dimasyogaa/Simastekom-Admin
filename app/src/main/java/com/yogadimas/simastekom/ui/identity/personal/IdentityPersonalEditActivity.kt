@@ -14,17 +14,21 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
+import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.getParcelableCompat
+import com.yogadimas.simastekom.common.helper.getParcelableExtra
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.setBold
+import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.databinding.ActivityIdentityPersonalEditBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.setBold
-import com.yogadimas.simastekom.helper.showLoading
-import com.yogadimas.simastekom.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.ui.dialog.GenderDialogFragment
 import com.yogadimas.simastekom.ui.dialog.ReligionDialogFragment
@@ -41,6 +45,7 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListenerInterface {
 
@@ -53,7 +58,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private var isLoading = false
     private var isAlertDialogShow = false
@@ -61,6 +66,9 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     private var dialog: AlertDialog? = null
 
     private var isSuccessDialogShowingOrientation = false
+
+    private var identityPersonalData: IdentityPersonalData? = IdentityPersonalData()
+
 
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -82,13 +90,14 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
         binding = ActivityIdentityPersonalEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+
+        identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
+
         if (savedInstanceState != null) {
-            isSuccessDialogShowingOrientation =
-                savedInstanceState.getBoolean(KEY_SUCCESS_DIALOG_SHOWING)
-            if (isSuccessDialogShowingOrientation) {
-                showAlertDialog(status = STATUS_SUCCESS)
-            }
+            restoreInstanceState(savedInstanceState)
         }
+
 
         getUser()
 
@@ -117,13 +126,20 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                 }
 
             }
-            edtGender.setOnClickListener {
-                hideKeyboard()
-                GenderDialogFragment().show(
-                    fragmentManager,
-                    GenderDialogFragment::class.java.simpleName
-                )
+
+
+            checkingIsGenderGone {
+                edtGender.setOnClickListener {
+                    hideKeyboard()
+                    GenderDialogFragment().show(
+                        fragmentManager,
+                        GenderDialogFragment::class.java.simpleName
+                    )
+                }
             }
+
+
+
             edtReligion.setOnClickListener {
                 hideKeyboard()
                 ReligionDialogFragment().show(
@@ -135,31 +151,31 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
 
             tvPhone.setOnClickListener {
-                resultLauncher.launch(Intent(
-                    this@IdentityPersonalEditActivity,
-                    PhoneActivity::class.java
-                ))
+                resultLauncher.launch(
+                    Intent(this@IdentityPersonalEditActivity, PhoneActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
+                    }
+                )
             }
             tvEmail.setOnClickListener {
-                resultLauncher.launch(Intent(
-                    this@IdentityPersonalEditActivity,
-                    EmailActivity::class.java
-                ))
+                resultLauncher.launch(
+                    Intent(this@IdentityPersonalEditActivity, EmailActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
+                    }
+                )
             }
             tvPlaceDateBirth.setOnClickListener {
                 startActivity(
-                    Intent(
-                        this@IdentityPersonalEditActivity,
-                        PlaceDateBirthActivity::class.java
-                    )
+                    Intent(this@IdentityPersonalEditActivity, PlaceDateBirthActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
+                    }
                 )
             }
             tvAddressHome.setOnClickListener {
                 startActivity(
-                    Intent(
-                        this@IdentityPersonalEditActivity,
-                        AddressHomeActivity::class.java
-                    )
+                    Intent(this@IdentityPersonalEditActivity, AddressHomeActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
+                    }
                 )
             }
 
@@ -168,17 +184,39 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
     }
 
+    private fun restoreInstanceState(savedInstanceState: Bundle) {
+        identityPersonalData = savedInstanceState.getParcelableCompat(
+            KEY_BUNDLE_IDENTITY_PERSONAL
+        )
+        isSuccessDialogShowingOrientation =
+            savedInstanceState.getBoolean(KEY_SUCCESS_DIALOG_SHOWING)
+        if (isSuccessDialogShowingOrientation) {
+            showAlertDialog(status = STATUS_SUCCESS)
+        }
+    }
+
 
     private fun getUser() {
         authViewModel.getUser().observe(this) {
-            val (token, userId, userType) = it
+            var (token, userId, userType) = it
             if (token == AuthPreferences.DEFAULT_VALUE) {
                 val intent = Intent(this, LoginActivity::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                adminViewModel.getIdentityPersonal(userType, userId)
+                if (identityPersonalData?.isFromAdminStudent == true) {
+
+                    identityPersonalData?.let { data ->
+                        userType = data.userType.orEmpty()
+                        userId = data.userId.orEmpty()
+                        adminViewModel.getIdentityPersonal(userType, userId)
+                    }
+
+                } else {
+                    adminViewModel.getIdentityPersonal(userType, userId)
+                }
+
                 binding.btnSave.setOnClickListener { updateSave(userType, userId) }
             }
         }
@@ -200,13 +238,21 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
                 binding.apply {
                     edtIdCardNumber.setText(it.idCardNumber)
-                    setGender(it.gender)
+                    if (identityPersonalData?.isFromAdminStudent == true) {
+                        identityPersonalData?.gender = it.gender
+                    } else {
+                        setGender(it.gender)
+
+                    }
                     edtReligion.setText(it.religion)
                     tvPhone.text =
                         formatData(getString(R.string.text_label_phone), it.phone.orEmpty())
                     tvEmail.text =
                         formatData(getString(R.string.text_label_email), it.email.orEmpty())
                 }
+
+
+
 
 
                 if (it.isUpdated) {
@@ -256,9 +302,12 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     private fun updateSave(userType: String, userId: String) {
         hideKeyboard()
         val idCardNumber = binding.edtIdCardNumber.text.toString().trim()
-        val gender = binding.edtGender.text.toString().lowercase()
+        val gender =
+            if (identityPersonalData?.isFromAdminStudent == true)
+                identityPersonalData?.gender
+            else
+                binding.edtGender.text.toString().lowercase()
         val religion = binding.edtReligion.text.toString().trim()
-
 
         adminViewModel.updateIdentityPersonal(
             userType,
@@ -324,7 +373,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
     }
 
-    private fun showAlertDialog(msg: String = "", status: String, isCallback: Boolean= false) {
+    private fun showAlertDialog(msg: String = "", status: String, isCallback: Boolean = false) {
 
         val unauthorized = msg == getString(R.string.text_const_unauthorized)
         var title = ""
@@ -426,7 +475,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutIdCardNumber.visibility = View.VISIBLE
-                inputLayoutGender.visibility = View.VISIBLE
+                checkingIsGenderGone { inputLayoutGender.visibility = View.VISIBLE }
                 inputLayoutReligion.visibility = View.VISIBLE
                 btnSave.visibility = View.VISIBLE
                 div1.visibility = View.VISIBLE
@@ -452,6 +501,25 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
     }
 
+
+
+
+    private fun checkingIsGenderGone(block: () -> Unit) {
+        if (identityPersonalData?.isFromAdminStudent != true) {
+            block()
+        } else {
+            setGenderGone()
+        }
+    }
+
+    private fun setGenderGone() = binding.apply {
+        inputLayoutGender.isVisible = false
+        inputLayoutGender.editText?.isVisible = false
+        inputLayoutGender.startIconDrawable = null
+        inputLayoutGender.endIconMode = TextInputLayout.END_ICON_NONE
+        inputLayoutGender.requestLayout()
+    }
+
     override fun onStop() {
         super.onStop()
         if (dialog != null) {
@@ -462,6 +530,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
+        outState.putParcelable(KEY_BUNDLE_IDENTITY_PERSONAL, identityPersonalData)
         outState.putBoolean(KEY_SUCCESS_DIALOG_SHOWING, isSuccessDialogShowingOrientation)
         super.onSaveInstanceState(outState)
     }
@@ -470,6 +539,11 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         private const val STATUS_SUCCESS = "status_success"
         private const val STATUS_ERROR = "status_error"
         private const val KEY_SUCCESS_DIALOG_SHOWING = "key_success_dialog_showing"
+
+        const val KEY_ADMIN_STUDENT = "key_admin_student"
+
+        private const val KEY_BUNDLE_IDENTITY_PERSONAL = "key_bundle_identity_personal"
     }
+
 
 }

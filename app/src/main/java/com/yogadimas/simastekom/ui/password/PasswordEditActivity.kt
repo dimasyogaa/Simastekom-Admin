@@ -18,17 +18,18 @@ import com.google.android.material.textfield.TextInputEditText
 import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityPasswordEditBinding
-import com.yogadimas.simastekom.datastore.ObjectDataStore.dataStore
-import com.yogadimas.simastekom.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.helper.dataString
-import com.yogadimas.simastekom.helper.hideKeyboard
-import com.yogadimas.simastekom.helper.minCharacterPasswordValidation
-import com.yogadimas.simastekom.helper.newPasswordSameWithNewConfirmPassword
-import com.yogadimas.simastekom.helper.showLoading
+import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
+import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.dataString
+import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.minCharacterPasswordValidation
+import com.yogadimas.simastekom.common.helper.newPasswordSameWithNewConfirmPassword
+import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
+import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class PasswordEditActivity : AppCompatActivity() {
 
@@ -61,7 +62,7 @@ class PasswordEditActivity : AppCompatActivity() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
-    private val adminViewModel: AdminViewModel by viewModels()
+    private val adminViewModel: AdminViewModel by viewModel()
 
     private var isSuccessDialogShowingOrientation = false
 
@@ -189,6 +190,7 @@ class PasswordEditActivity : AppCompatActivity() {
         ): Boolean {
 
             return minCharacterPasswordValidation(
+                this,
                 edtPassword,
                 password,
                 layoutPassword,
@@ -209,6 +211,7 @@ class PasswordEditActivity : AppCompatActivity() {
         ): Boolean {
 
             return newPasswordSameWithNewConfirmPassword(
+                this,
                 newConfirmEdtPassword,
                 newConfirmPassword,
                 newConfirmLayoutPassword,

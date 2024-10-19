@@ -1,12 +1,16 @@
 package com.yogadimas.simastekom.viewmodel.admin
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.yogadimas.simastekom.api.ApiConfig
-import com.yogadimas.simastekom.event.Event
-import com.yogadimas.simastekom.helper.getErrors
+import com.yogadimas.simastekom.common.event.Event
+import com.yogadimas.simastekom.common.helper.getErrors
+import com.yogadimas.simastekom.common.state.State
+import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.model.responses.AdminResponse
 import com.yogadimas.simastekom.model.responses.CampusData
@@ -21,15 +25,23 @@ import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
+import com.yogadimas.simastekom.repository.AdminStudentRepository
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.SharingStarted
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.distinctUntilChanged
+import kotlinx.coroutines.flow.stateIn
+import kotlinx.coroutines.launch
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AdminViewModel : ViewModel() {
+class AdminViewModel(private val adminStudentRepository: AdminStudentRepository) : ViewModel() {
 
-    lateinit var token: String
+    var token: String = ""
 
     private val _adminData = MutableLiveData<Event<AdminData?>>()
     val adminData: LiveData<Event<AdminData?>> = _adminData
@@ -64,6 +76,8 @@ class AdminViewModel : ViewModel() {
     private val _snackbarText = MutableLiveData<Event<String>>()
     val errorsSnackbarText: LiveData<Event<String>> = _snackbarText
 
+
+    /** ADMIN */
     fun login(id: String, password: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().login(id, password)
@@ -309,6 +323,107 @@ class AdminViewModel : ViewModel() {
 
     }
 
+    /** ADMIN STUDENT PAGINATION */
+    private val _errorStateFlow = MutableStateFlow<String?>(null)
+    val errorStateFlow: StateFlow<String?> = _errorStateFlow
+
+    fun getAllStudents(token: String, sortBy: String = "asc"): StateFlow<PagingData<StudentData>> {
+        return adminStudentRepository.getAllStudents(token, sortBy, onError = { errorMessage ->
+            _errorStateFlow.value = errorMessage
+        })
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+    fun searchSortStudents(token: String, keyword: String?, sortBy: String?, sortDir: String?): StateFlow<PagingData<StudentData>> {
+        return adminStudentRepository.searchSortStudents(
+            token,
+            keyword,
+            sortBy,
+            sortDir,
+            onError = { errorMessage ->
+                _errorStateFlow.value = errorMessage
+            })
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+    val studentState: SharedFlow<State<StudentData>> = adminStudentRepository.studentState
+    fun getStudentById(token: String, id: String)=  viewModelScope.launch {
+            adminStudentRepository.getStudentById(token, id)
+        }
+    fun updateStudent(token: String, id: String, studentData: StudentData) = viewModelScope.launch {
+        adminStudentRepository.updateStudent(token, id, studentData)
+    }
+    fun addStudent(token: String, studentData: StudentData) = viewModelScope.launch {
+        adminStudentRepository.addStudent(token, studentData)
+    }
+    fun deleteStudent(token: String, id: String)=  viewModelScope.launch {
+        adminStudentRepository.deleteStudent(token, id)
+    }
+
+    /** IDENTITY PERSONAL */
+    fun getIdentitiesPersonal(
+        token: String,
+        keyword: String? = null,
+        sortBy: String? = null,
+        sortDir: String? = null,
+    ): StateFlow<PagingData<IdentityPersonalData>> {
+        val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
+            adminStudentRepository.getIdentitiesPersonal(token, onError = ::handleError)
+
+        } else {
+            adminStudentRepository.getIdentitiesPersonal(token, keyword, sortBy, sortDir, onError = ::handleError)
+        }
+
+        return flow
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+    /** IDENTITY ACADEMIC */
+    fun getIdentitiesAcademic(
+        token: String,
+        keyword: String? = null,
+        sortBy: String? = null,
+        sortDir: String? = null
+    ): StateFlow<PagingData<IdentityAcademicData>> {
+        val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
+            adminStudentRepository.getIdentitiesAcademic(token, onError = ::handleError)
+        } else {
+            adminStudentRepository.getIdentitiesAcademic(token, keyword, sortBy, sortDir, onError = ::handleError)
+        }
+
+        return flow
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+    private fun handleError(errorMessage: String) {
+        _errorStateFlow.value = errorMessage
+    }
+
+
     /** EMPLOYMENT STATUS */
     fun addEmploymentStatus(nameData: NameData) {
         _isLoading.value = true
@@ -358,7 +473,8 @@ class AdminViewModel : ViewModel() {
 
     fun searchSortEmploymentStatus(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().searchSortEmploymentStatus(token, keyword, sortBy, sortDir)
+        val client =
+            ApiConfig.getApiService().searchSortEmploymentStatus(token, keyword, sortBy, sortDir)
         client.enqueue(object : Callback<NameListResponse> {
             override fun onResponse(
                 call: Call<NameListResponse>,
@@ -451,7 +567,10 @@ class AdminViewModel : ViewModel() {
     /** STUDENT STATUS */
     fun addStudentStatus(nameData: NameData) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().addStudentStatus(token, nameData) // Mengubah dari addClassSession menjadi addStudentStatus
+        val client = ApiConfig.getApiService().addStudentStatus(
+            token,
+            nameData
+        ) // Mengubah dari addClassSession menjadi addStudentStatus
         client.enqueue(object : Callback<NameObjectResponse> {
             override fun onResponse(
                 call: Call<NameObjectResponse>,
@@ -471,9 +590,11 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getAllStudentStatuses() {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getAllStudentStatus(token) // Mengubah dari getAllClassSessions menjadi getAllStudentStatuses
+        val client = ApiConfig.getApiService()
+            .getAllStudentStatus(token) // Mengubah dari getAllClassSessions menjadi getAllStudentStatuses
         client.enqueue(object : Callback<NameListResponse> {
             override fun onResponse(
                 call: Call<NameListResponse>,
@@ -493,9 +614,15 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortStudentStatus(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().searchSortStudentStatus(token, keyword, sortBy, sortDir) // Mengubah dari searchSortClassSession menjadi searchSortStudentStatus
+        val client = ApiConfig.getApiService().searchSortStudentStatus(
+            token,
+            keyword,
+            sortBy,
+            sortDir
+        ) // Mengubah dari searchSortClassSession menjadi searchSortStudentStatus
         client.enqueue(object : Callback<NameListResponse> {
             override fun onResponse(
                 call: Call<NameListResponse>,
@@ -515,9 +642,13 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getStudentStatusById(id: Int) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().getStudentStatusById(token, id) // Mengubah dari getClassSessionById menjadi getStudentStatusById
+        val client = ApiConfig.getApiService().getStudentStatusById(
+            token,
+            id
+        ) // Mengubah dari getClassSessionById menjadi getStudentStatusById
         client.enqueue(object : Callback<NameObjectResponse> {
             override fun onResponse(
                 call: Call<NameObjectResponse>,
@@ -537,9 +668,14 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateStudentStatus(id: Int, nameData: NameData) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().updateStudentStatus(token, id, nameData) // Mengubah dari updateClassSession menjadi updateStudentStatus
+        val client = ApiConfig.getApiService().updateStudentStatus(
+            token,
+            id,
+            nameData
+        ) // Mengubah dari updateClassSession menjadi updateStudentStatus
         client.enqueue(object : Callback<NameObjectResponse> {
             override fun onResponse(
                 call: Call<NameObjectResponse>,
@@ -559,9 +695,13 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteStudentStatus(id: Int) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().deleteStudentStatus(token, id) // Mengubah dari deleteClassSession menjadi deleteStudentStatus
+        val client = ApiConfig.getApiService().deleteStudentStatus(
+            token,
+            id
+        ) // Mengubah dari deleteClassSession menjadi deleteStudentStatus
         client.enqueue(object : Callback<NameObjectResponse> {
             override fun onResponse(
                 call: Call<NameObjectResponse>,
@@ -605,6 +745,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getAllLectureMethods() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllLectureMethods(token)
@@ -627,9 +768,11 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortLectureMethod(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().searchSortLectureMethod(token, keyword, sortBy, sortDir)
+        val client =
+            ApiConfig.getApiService().searchSortLectureMethod(token, keyword, sortBy, sortDir)
         client.enqueue(object : Callback<NameListResponse> {
             override fun onResponse(
                 call: Call<NameListResponse>,
@@ -649,6 +792,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getLectureMethodById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getLectureMethodById(token, id)
@@ -671,6 +815,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateLectureMethod(id: Int, nameData: NameData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateLectureMethod(token, id, nameData)
@@ -693,6 +838,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteLectureMethod(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteLectureMethod(token, id)
@@ -716,7 +862,6 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
-
 
 
     /** SEMESTER */
@@ -743,6 +888,7 @@ class AdminViewModel : ViewModel() {
 
         })
     }
+
     fun getAllSemesters() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllSemesters(token)
@@ -766,6 +912,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortSemester(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchSortSemester(token, keyword, sortBy, sortDir)
@@ -789,6 +936,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getSemesterById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getSemesterById(token, id)
@@ -812,6 +960,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateSemester(id: Int, nameData: NameData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateSemester(token, id, nameData)
@@ -835,6 +984,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteSemester(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteSemester(token, id)
@@ -886,6 +1036,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllClassSessions() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllClassSession(token)
@@ -909,9 +1060,11 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortClassSession(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().searchSortClassSession(token, keyword, sortBy, sortDir)
+        val client =
+            ApiConfig.getApiService().searchSortClassSession(token, keyword, sortBy, sortDir)
         client.enqueue(object : Callback<NameListResponse> {
             override fun onResponse(
                 call: Call<NameListResponse>,
@@ -932,6 +1085,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getClassSessionById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getClassSessionById(token, id)
@@ -955,6 +1109,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateClassSession(id: Int, nameData: NameData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateClassSession(token, id, nameData)
@@ -978,6 +1133,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteClassSession(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteClassSession(token, id)
@@ -1028,6 +1184,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllCampuses() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllCampus(token)
@@ -1051,6 +1208,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortCampus(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchSortCampus(token, keyword, sortBy, sortDir)
@@ -1074,6 +1232,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getCampusById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getCampusById(token, id)
@@ -1097,6 +1256,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateCampus(id: Int, campusData: CampusData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateCampus(token, id, campusData)
@@ -1120,6 +1280,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteCampus(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteCampus(token, id)
@@ -1171,6 +1332,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllStudyPrograms() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllStudyPrograms(token)
@@ -1194,9 +1356,11 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortStudyProgram(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().searchSortStudyProgram(token, keyword, sortBy, sortDir)
+        val client =
+            ApiConfig.getApiService().searchSortStudyProgram(token, keyword, sortBy, sortDir)
         client.enqueue(object : Callback<IdentityAcademicListResponse> {
             override fun onResponse(
                 call: Call<IdentityAcademicListResponse>,
@@ -1217,6 +1381,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getStudyProgramById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getStudyProgramById(token, id)
@@ -1240,6 +1405,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateStudyProgram(id: Int, identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateStudyProgram(token, id, identityAcademicData)
@@ -1263,6 +1429,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteStudyProgram(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteStudyProgram(token, id)
@@ -1314,6 +1481,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllLFaculties() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllFaculties(token)
@@ -1337,6 +1505,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getFacultyById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getFacultyById(token, id)
@@ -1359,6 +1528,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateFaculty(id: Int, identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateFaculty(token, id, identityAcademicData)
@@ -1382,6 +1552,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteFaculty(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteFaculty(token, id)
@@ -1433,6 +1604,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllLevels() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllLevels(token)
@@ -1456,6 +1628,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortLevel(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchSortLevel(token, keyword, sortBy, sortDir)
@@ -1479,6 +1652,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getLevelById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getLevelById(token, id)
@@ -1502,6 +1676,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateLevel(id: Int, identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateLevel(token, id, identityAcademicData)
@@ -1525,6 +1700,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteLevel(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteLevel(token, id)
@@ -1576,6 +1752,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllMajors() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllMajors(token)
@@ -1599,6 +1776,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortMajor(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchSortMajor(token, keyword, sortBy, sortDir)
@@ -1622,6 +1800,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getMajorById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getMajorById(token, id)
@@ -1645,6 +1824,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateMajor(id: Int, identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateMajor(token, id, identityAcademicData)
@@ -1668,6 +1848,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteMajor(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteMajor(token, id)
@@ -1719,6 +1900,7 @@ class AdminViewModel : ViewModel() {
         })
 
     }
+
     fun getAllDegrees() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAllDegrees(token)
@@ -1742,6 +1924,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun searchSortDegree(keyword: String?, sortBy: String?, sortDir: String?) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().searchSortDegree(token, keyword, sortBy, sortDir)
@@ -1765,6 +1948,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun getDegreeById(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getDegreeById(token, id)
@@ -1788,6 +1972,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun updateDegree(id: Int, identityAcademicData: IdentityAcademicData) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().updateDegree(token, id, identityAcademicData)
@@ -1811,6 +1996,7 @@ class AdminViewModel : ViewModel() {
             }
         })
     }
+
     fun deleteDegree(id: Int) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().deleteDegree(token, id)

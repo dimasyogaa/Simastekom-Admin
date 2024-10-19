@@ -1,6 +1,8 @@
 package com.yogadimas.simastekom.model.responses
 
+import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
+import kotlinx.parcelize.Parcelize
 
 data class IdentityPersonalResponse(
 
@@ -9,7 +11,11 @@ data class IdentityPersonalResponse(
 
     )
 
+@Parcelize
 data class IdentityPersonalData(
+
+    @field:SerializedName("pengguna_saat_ini")
+    val userCurrent: UserCurrent? = null,
 
     @field:SerializedName("id_pengguna")
     val userId: String? = null,
@@ -17,11 +23,23 @@ data class IdentityPersonalData(
     @field:SerializedName("tipe_pengguna")
     val userType: String? = null,
 
+    @field:SerializedName("nim")
+    var studentIdNumber: String? = null,
+
+    @field:SerializedName("nidn")
+    var lectureIdNumber: String? = null,
+
+    @field:SerializedName("nama_pengguna")
+    var username: String? = null,
+
+    @field:SerializedName("nama")
+    var name: String? = null,
+
     @field:SerializedName("no_ktp")
     val idCardNumber: String? = null,
 
     @field:SerializedName("jenis_kelamin")
-    val gender: String? = null,
+    var gender: String? = null,
 
     @field:SerializedName("agama")
     val religion: String? = null,
@@ -41,6 +59,11 @@ data class IdentityPersonalData(
     @field:SerializedName("is_valid_email")
     val isValidEmail: Boolean = false,
 
+    @field:SerializedName("foto_profil")
+    val profilePicture: String? = null,
+
     @field:SerializedName("is_updated")
     val isUpdated: Boolean = false,
-)
+
+    val isFromAdminStudent: Boolean = false,
+): Parcelable

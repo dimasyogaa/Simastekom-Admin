@@ -66,9 +66,13 @@
     <color name="colorCustomColor1Container">#004C6D</color>
     <color name="colorOnCustomColor1Container">#C8E6FF</color>
 
+
+
     <color name="colorFixedGreen">#41B06E</color>
+    <color name="colorFixedBlue">#1B72B1</color>
     <color name="colorFixedSoftBlue">#CFE2FF</color>
     <color name="colorFixedSoftYellow">#FFF3CD</color>
     <color name="colorFixedBlack">#181C20</color>
+
 
 </resources>

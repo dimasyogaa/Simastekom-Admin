@@ -22,7 +22,7 @@
         app:layout_constraintTop_toBottomOf="@+id/tv_title">
 
         <com.google.android.material.textfield.TextInputEditText
-            android:id="@+id/edt_layout_batch"
+            android:id="@+id/edt_batch"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="@string/text_hint_batch"
@@ -203,6 +203,55 @@
         android:drawableStart="@drawable/z_ic_save"
         android:text="@string/btn_text_save"
         android:textSize="16sp" />
+
+
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/div1"
+        android:layout_width="match_parent"
+        android:layout_height="16dp"
+        android:layout_marginTop="32dp"
+        app:dividerColor="?attr/colorSurfaceContainerHigh"
+        app:layout_constraintEnd_toEndOf="@+id/btn_save"
+        app:layout_constraintStart_toStartOf="@+id/btn_save"
+        app:layout_constraintTop_toBottomOf="@+id/btn_save" />
+
+
+    <LinearLayout
+        android:id="@+id/layout_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintEnd_toEndOf="@+id/div1"
+        app:layout_constraintStart_toStartOf="@+id/div1"
+        app:layout_constraintTop_toBottomOf="@+id/div1">
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/btn_profile_picture"
+            style="@style/content.MaterialTextView_Button"
+            android:text="@string/profile_photo"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            style="@style/content"/>
+
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/btn_identity_personal"
+            style="@style/content.MaterialTextView_Button"
+            android:text="@string/text_identity_personal"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            style="@style/content"/>
+
+        <com.google.android.material.textview.MaterialTextView
+            android:id="@+id/btn_identity_parent"
+            style="@style/content.MaterialTextView_Button"
+            android:text="@string/text_identity_parent"/>
+
+        <com.google.android.material.divider.MaterialDivider
+            style="@style/content"/>
+
+    </LinearLayout>
 
 
 

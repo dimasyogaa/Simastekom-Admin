@@ -19,8 +19,8 @@ android {
 
         buildConfigField("boolean", "DEBUG", "true")
 
-//        buildConfigField("String", "BASE_URL", "\"http://192.168.50.160:8000\"")
-        buildConfigField("String", "BASE_URL", "\"http://192.168.50.140:8000\"")
+        buildConfigField("String", "BASE_URL", "\"http://192.168.158.106:8000\"")
+//        buildConfigField("String", "BASE_URL", "\"http://192.168.50.138:8000\"")
         buildConfigField("String", "API", "\"/api/\"")
 
     }
@@ -50,6 +50,13 @@ android {
 }
 
 dependencies {
+
+    implementation(libs.koin.android)
+
+
+    implementation(libs.androidx.paging.runtime.ktx)
+
+
     implementation(libs.androidx.swiperefreshlayout)
 
 

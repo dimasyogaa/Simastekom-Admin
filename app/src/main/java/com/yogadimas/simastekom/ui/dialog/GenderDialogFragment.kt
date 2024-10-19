@@ -8,9 +8,10 @@ import android.view.ViewGroup
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.lifecycleScope
 import com.yogadimas.simastekom.R
+import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.databinding.DialogFragmentGenderBinding
-import com.yogadimas.simastekom.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
+import com.yogadimas.simastekom.ui.student.StudentManipulationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -31,7 +32,8 @@ class GenderDialogFragment : DialogFragment() {
 
         if (parentActivity is IdentityPersonalEditActivity) {
             this.optionDialogListener = parentActivity
-
+        } else if (parentActivity is StudentManipulationActivity) {
+            this.optionDialogListener = parentActivity
         }
 
     }
@@ -48,7 +50,7 @@ class GenderDialogFragment : DialogFragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialog?.window?.setBackgroundDrawableResource(R.drawable.dialog_background_rounded)
+        dialog?.window?.setBackgroundDrawableResource(R.drawable.background_dialog_rounded)
 
         binding.apply {
 
