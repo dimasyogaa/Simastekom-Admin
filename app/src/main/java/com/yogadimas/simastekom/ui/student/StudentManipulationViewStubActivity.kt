@@ -685,12 +685,12 @@ class StudentManipulationViewStubActivity : AppCompatActivity(), OnOptionDialogL
 
         if (data.isUpdated || data.isDeleted) {
             val success = getString(R.string.text_success)
-            val label = getString(R.string.title_student)
+            val label = getString(R.string.text_student)
             val resultIntent = Intent()
 
             val msg = when {
-                data.isUpdated -> R.string.text_alert_change
-                else -> R.string.text_alert_delete
+                data.isUpdated -> R.string.text_alert_update_format
+                else -> R.string.text_alert_delete_format
             }
 
             resultIntent.putExtra(
@@ -1247,7 +1247,7 @@ class StudentManipulationViewStubActivity : AppCompatActivity(), OnOptionDialogL
         binding.apply {
             hideKeyboard()
             showAlertDialog(
-                getString(R.string.format_string_strip_string, studentIdName, fullname),
+                getString(R.string.text_string_strip_string_format, studentIdName, fullname),
                 STATUS_DELETED,
                 id ?: "0"
             )
@@ -1325,13 +1325,13 @@ class StudentManipulationViewStubActivity : AppCompatActivity(), OnOptionDialogL
                 val color = ContextCompat.getColor(this, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

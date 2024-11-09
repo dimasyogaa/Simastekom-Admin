@@ -4,7 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
-data class IdentityPersonalResponse(
+data class IdentityPersonalObjectResponse(
 
     @field:SerializedName("data")
     val identityPersonalData: IdentityPersonalData,
@@ -54,7 +54,7 @@ data class IdentityPersonalData(
     val placeDateBirth: String? = null,
 
     @field:SerializedName("alamat")
-    val address: String? = null,
+    val address: AddressData? = null,
 
     @field:SerializedName("is_valid_email")
     val isValidEmail: Boolean = false,
@@ -62,8 +62,15 @@ data class IdentityPersonalData(
     @field:SerializedName("foto_profil")
     val profilePicture: String? = null,
 
+    @field:SerializedName("is_added")
+    val isAdded: Boolean = false,
+
     @field:SerializedName("is_updated")
     val isUpdated: Boolean = false,
 
+    @field:SerializedName("is_deleted")
+    val isDeleted: Boolean = false,
+
     val isFromAdminStudent: Boolean = false,
+
 ): Parcelable

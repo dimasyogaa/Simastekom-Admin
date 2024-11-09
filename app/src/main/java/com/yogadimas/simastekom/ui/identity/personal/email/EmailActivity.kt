@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -19,17 +18,17 @@ import com.google.android.material.snackbar.Snackbar
 import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ActivityEmailBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.helper.getParcelableExtra
 import com.yogadimas.simastekom.common.helper.hideKeyboard
 import com.yogadimas.simastekom.common.helper.isValidFormatEmail
 import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.databinding.ActivityEmailBinding
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity.Companion.KEY_ADMIN_STUDENT
 import com.yogadimas.simastekom.ui.login.LoginActivity
-import com.yogadimas.simastekom.ui.profile.ProfileFragment
+import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -52,6 +51,7 @@ class EmailActivity : AppCompatActivity() {
     private var dialog: AlertDialog? = null
 
     private var email: String? = null
+    private var tokenMode: Boolean = false
 
     private val digits = 6
 
@@ -63,9 +63,11 @@ class EmailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
+        identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
 
         if (savedInstanceState != null) {
             email = savedInstanceState.getString(KEY_EMAIL_VALID)
+            tokenMode = savedInstanceState.getBoolean(KEY_BUNDLE_MODE_TOKEN)
 
         }
 
@@ -105,6 +107,8 @@ class EmailActivity : AppCompatActivity() {
             }
         }
     }
+
+
 
     private fun emailView(isVisible: Boolean = false) {
         binding.apply {
@@ -153,94 +157,94 @@ class EmailActivity : AppCompatActivity() {
 
             })
         }
-
-        authViewModel.getUser().observe(this) {
-            if (email == null) {
-                var (token, userId, userType) = it
-                if (token == AuthPreferences.DEFAULT_VALUE) {
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    startActivity(intent)
-                } else {
-                    adminViewModel.token = token
-                    if (identityPersonalData?.isFromAdminStudent == true) {
-                        identityPersonalData?.let { data ->
-                            userType = data.userType.orEmpty()
-                            userId = data.userId.orEmpty()
+        if (!tokenMode) {
+            authViewModel.getUser().observe(this) {
+                if (email == null) {
+                    var (token, userId, userType) = it
+                    if (token == AuthPreferences.DEFAULT_VALUE) {
+                        val intent = Intent(this, LoginActivity::class.java)
+                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+                        startActivity(intent)
+                    } else {
+                        adminViewModel.token = token
+                        if (identityPersonalData?.isFromAdminStudent == true) {
+                            identityPersonalData?.let { data ->
+                                userType = data.userType.orEmpty()
+                                userId = data.userId.orEmpty()
+                                adminViewModel.getIdentityPersonal(userType, userId)
+                            }
+                        } else {
                             adminViewModel.getIdentityPersonal(userType, userId)
                         }
-                    } else {
-                        adminViewModel.getIdentityPersonal(userType, userId)
-                    }
-                    binding.btnGetTokenViaEmail.setOnClickListener { view ->
-                        hideKeyboard(view)
-                        if (checkValidatedEmail(binding.edtEmail.text.toString().trim())) {
-                            adminViewModel.verifyEmail(
-                                userType,
-                                userId,
-                                binding.edtEmail.text.toString().trim()
-                            )
+                        binding.btnGetTokenViaEmail.setOnClickListener { view ->
+                            hideKeyboard(view)
+                            if (checkValidatedEmail(binding.edtEmail.text.toString().trim())) {
+                                adminViewModel.verifyEmail(
+                                    userType,
+                                    userId,
+                                    binding.edtEmail.text.toString().trim()
+                                )
+                            }
                         }
-
                     }
                 }
             }
-        }
 
 
-        adminViewModel.isLoading.observe(this) {
-            if (!binding.edtToken.isVisible) {
-                isLoading = it
-                showLoadingMain(it, VIEW_EMAIL)
-            }
-        }
-
-        adminViewModel.identityPersonal.observe(this) { eventData ->
-            if (email == null) {
-                eventData.getContentIfNotHandled()?.let {
-
-                    if (isLoading) {
-                        isVisibleAllView(false, VIEW_EMAIL)
-                    } else {
-                        isVisibleAllView(true, VIEW_EMAIL)
-                    }
-                    failedToConnect(false)
-
-                    if (it.isValidEmail) {
-                        email = it.email
-                        emailView()
-                    }
+            adminViewModel.isLoading.observe(this) {
+                if (!binding.edtToken.isVisible) {
+                    isLoading = it
+                    showLoadingMain(it, VIEW_EMAIL)
                 }
             }
-        }
 
-        adminViewModel.errors.observe(this) { eventError ->
-            if (email == null) {
-                eventError.getContentIfNotHandled()?.let { data ->
-                    if (data.errors != null) {
-                        if (!binding.edtToken.isVisible) {
-                            val listMessage = data.errors.message.orEmpty()
+            adminViewModel.identityPersonal.observe(this) { eventData ->
+                if (email == null) {
+                    eventData.getContentIfNotHandled()?.let {
+
+                        if (isLoading) {
+                            isVisibleAllView(false, VIEW_EMAIL)
+                        } else {
                             isVisibleAllView(true, VIEW_EMAIL)
-                            failedToConnect(false)
-                            showAlertDialog(listMessage[0], STATUS_ERROR)
+                        }
+                        failedToConnect(false)
+
+                        if (it.isValidEmail) {
+                            email = it.email
+                            emailView()
                         }
                     }
                 }
             }
-        }
 
-        adminViewModel.errorsSnackbarText.observe(this) { eventString ->
-            if (email == null) {
-                eventString.getContentIfNotHandled()?.let { snackBarText ->
-                    hideKeyboard()
-                    isVisibleAllView(false, VIEW_EMAIL)
-                    failedToConnect(true)
-                    Snackbar.make(
-                        binding.root as ViewGroup,
-                        snackBarText,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
+            adminViewModel.errors.observe(this) { eventError ->
+                if (email == null) {
+                    eventError.getContentIfNotHandled()?.let { data ->
+                        if (data.errors != null) {
+                            if (!binding.edtToken.isVisible) {
+                                val listMessage = data.errors.message.orEmpty()
+                                isVisibleAllView(true, VIEW_EMAIL)
+                                failedToConnect(false)
+                                showAlertDialog(listMessage[0], STATUS_ERROR)
+                            }
+                        }
+                    }
+                }
+            }
 
+            adminViewModel.errorsSnackbarText.observe(this) { eventString ->
+                if (email == null) {
+                    eventString.getContentIfNotHandled()?.let { snackBarText ->
+                        hideKeyboard()
+                        isVisibleAllView(false, VIEW_EMAIL)
+                        failedToConnect(true)
+                        Snackbar.make(
+                            binding.root as ViewGroup,
+                            snackBarText,
+                            Snackbar.LENGTH_SHORT
+                        ).show()
+
+                    }
                 }
             }
         }
@@ -249,6 +253,7 @@ class EmailActivity : AppCompatActivity() {
     }
 
     private fun tokenView() {
+        tokenMode = true
         binding.apply {
 
             tvInstructionTokenResetPassword1.visibility = View.VISIBLE
@@ -269,39 +274,37 @@ class EmailActivity : AppCompatActivity() {
     private fun tokenLogic() {
 
 
+        fun minCharacterTokenValidation(
+            token: String,
+            layout: TextInputLayout,
+            message: String,
+            min: Int,
+            send: Boolean = false,
+        ): Boolean {
 
-
-            fun minCharacterTokenValidation(
-                token: String,
-                layout: TextInputLayout,
-                message: String,
-                min: Int,
-                send: Boolean = false,
-            ): Boolean {
-
-                var isValid = true
-                if (token.isNotEmpty() &&
-                    token.length >= min
-                ) {
-                    layout.error = null
-                    layout.isErrorEnabled = false
-                } else if (token.isEmpty() && !send) {
-                    layout.error = null
-                    layout.isErrorEnabled = false
-                } else if (token.isEmpty() && send) {
-                    layout.isErrorEnabled = true
-                    layout.error = message
-                    isValid = false
-                } else {
-                    layout.isErrorEnabled = true
-                    layout.error = message
-                    isValid = false
-                }
-
-                binding.btnVerifyToken.isEnabled = isValid
-
-                return isValid
+            var isValid = true
+            if (token.isNotEmpty() &&
+                token.length >= min
+            ) {
+                layout.error = null
+                layout.isErrorEnabled = false
+            } else if (token.isEmpty() && !send) {
+                layout.error = null
+                layout.isErrorEnabled = false
+            } else if (token.isEmpty() && send) {
+                layout.isErrorEnabled = true
+                layout.error = message
+                isValid = false
+            } else {
+                layout.isErrorEnabled = true
+                layout.error = message
+                isValid = false
             }
+
+            binding.btnVerifyToken.isEnabled = isValid
+
+            return isValid
+        }
         binding.apply {
             btnVerifyToken.isEnabled = edtToken.text.toString().isNotEmpty()
             edtToken.addTextChangedListener(object : TextWatcher {
@@ -313,7 +316,8 @@ class EmailActivity : AppCompatActivity() {
                             binding.inputLayoutToken,
                             stringFormatMin(getString(R.string.text_label_token)),
                             digits
-                        )) {
+                        )
+                    ) {
                         inputLayoutEmail.error = null
                         inputLayoutEmail.isErrorEnabled = false
                         btnVerifyToken.isEnabled = true
@@ -329,16 +333,6 @@ class EmailActivity : AppCompatActivity() {
             })
         }
 
-
-        // binding.edtToken.addTextChangedListener(object : TextWatcher {
-        //     override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-        //
-        //     override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-        //
-        //     }
-        //
-        //     override fun afterTextChanged(p0: Editable?) {}
-        // })
 
         authViewModel.getUser().observe(this) {
             if (email != null) {
@@ -512,7 +506,7 @@ class EmailActivity : AppCompatActivity() {
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
@@ -561,8 +555,8 @@ class EmailActivity : AppCompatActivity() {
         clearFocus()
     }
 
-    private fun showLoadingMain(boolean: Boolean, view: String) {
-        showLoading(binding.mainProgressBar, boolean)
+    private fun showLoadingMain(boolean: Boolean, view: String) = binding.apply {
+        showLoading(mainProgressBar, boolean)
         if (boolean) {
             isVisibleAllView(false, view)
             failedToConnect(false)
@@ -614,11 +608,11 @@ class EmailActivity : AppCompatActivity() {
     }
 
     private fun stringFormatMin(string: String): String {
-        return String.format(getString(R.string.six_digits_field), string, digits)
+        return String.format(getString(R.string.text_six_digits_field_format), string, digits)
     }
 
     private fun stringFormatRequired(string: String): String {
-        return String.format(getString(R.string.empty_field), string)
+        return String.format(getString(R.string.text_empty_field_format), string)
     }
 
     override fun onStop() {
@@ -632,11 +626,14 @@ class EmailActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putString(KEY_EMAIL_VALID, email)
+        outState.putBoolean(KEY_BUNDLE_MODE_TOKEN, tokenMode)
         super.onSaveInstanceState(outState)
     }
 
     companion object {
         private const val KEY_EMAIL_VALID = "key_email_valid"
+
+        private const val KEY_BUNDLE_MODE_TOKEN = "key_bundle_mode_token"
 
 
         const val VIEW_EMAIL = "email"

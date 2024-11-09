@@ -8,22 +8,32 @@ import android.view.ViewTreeObserver
 import android.widget.Toast
 
 object ToastHelper {
-    fun showCustomToast(activity: Activity, message: String) {
-        val toast = Toast.makeText(activity, message, Toast.LENGTH_SHORT)
+    private var currentToast: Toast? = null
 
+    fun showCustomToast(activity: Activity, message: String) {
+        // Batalkan Toast sebelumnya jika ada
+        currentToast?.cancel()
+
+        // Buat Toast baru
+        val toast = Toast.makeText(activity, message, Toast.LENGTH_SHORT)
+        currentToast = toast // Simpan referensi ke Toast yang sekarang
         toast.show()
 
         val rootView = activity.window.decorView.findViewById<View>(android.R.id.content)
+
         rootView.viewTreeObserver.addOnGlobalLayoutListener(object : ViewTreeObserver.OnGlobalLayoutListener {
             override fun onGlobalLayout() {
                 val rect = Rect()
                 rootView.getWindowVisibleDisplayFrame(rect)
                 val heightDiff = rootView.height - (rect.bottom - rect.top)
 
-                // Check if keyboard is opened
+                // Cek apakah keyboard terbuka
                 if (heightDiff > 200) {
-                    toast.cancel() // Cancel the toast if keyboard is open
-                    rootView.viewTreeObserver.removeOnGlobalLayoutListener(this) // Remove listener to prevent memory leaks
+                    currentToast?.cancel() // Batalkan Toast jika keyboard terbuka
+                    currentToast = null // Reset referensi Toast
+
+                    // Hapus listener untuk mencegah kebocoran memori
+                    rootView.viewTreeObserver.removeOnGlobalLayoutListener(this)
                 }
             }
         })

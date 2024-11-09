@@ -13,9 +13,10 @@ import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.setStripIfNull
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.databinding.ActivityIdentityPersonalDetailBinding
-import com.yogadimas.simastekom.model.Address
+import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
@@ -86,15 +87,13 @@ class IdentityPersonalDetailActivity : AppCompatActivity() {
                     isVisibleAllView(false)
                 } else {
                     binding.apply {
-                        tvPhone.text = formatData(it.phone.orEmpty())
-                        tvEmail.text = formatData(it.email.orEmpty())
-                        tvIdCardNumber.text = formatData(it.idCardNumber.orEmpty())
-                        tvPlaceDateBirth.text = formatData(it.placeDateBirth.orEmpty())
-                        tvAddressHome.text = formatData(Address.parse(it.address).toView())
-
-                        // tvAddressHome.text = formatData(it.address.orEmpty())
+                        tvPhone.text = it.phone.setStripIfNull()
+                        tvEmail.text = it.email.setStripIfNull()
+                        tvIdCardNumber.text = it.idCardNumber.setStripIfNull()
+                        tvPlaceDateBirth.text = it.placeDateBirth.setStripIfNull()
+                        tvAddressHome.text = AddressData.getAddressData(it.address).setStripIfNull()
                         setGender(it.gender.orEmpty())
-                        tvReligion.text = formatData(it.religion.orEmpty())
+                        tvReligion.text = it.religion.setStripIfNull()
                     }
 
                 }
@@ -127,7 +126,6 @@ class IdentityPersonalDetailActivity : AppCompatActivity() {
         }
     }
 
-    private fun formatData(it: String): CharSequence = it.ifEmpty { "-" }
 
     private fun setGender(gender: String?) {
         binding.apply {
@@ -167,7 +165,7 @@ class IdentityPersonalDetailActivity : AppCompatActivity() {
             dialogAlert = MaterialAlertDialogBuilder(this)
                 .setCancelable(false)
                 .setIcon(ContextCompat.getDrawable(this, R.drawable.z_ic_warning))
-                .setTitle(getString(R.string.title_dialog_login_again))
+                .setTitle(getString(R.string.text_login_again))
                 .setMessage(errorMessage)
                 .setPositiveButton(getString(R.string.text_ok)) { _, _ ->
                     isAlertDialogShow = false

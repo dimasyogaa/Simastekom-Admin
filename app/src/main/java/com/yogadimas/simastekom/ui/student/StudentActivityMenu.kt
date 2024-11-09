@@ -5,10 +5,11 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
+import com.yogadimas.simastekom.ui.identity.address.AddressHomeActivity
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalActivity
+import com.yogadimas.simastekom.ui.identity.address.AddressHomeEditActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.StudentIdentityAcademicMenuActivity
-import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
-import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramMenuActivity
+import com.yogadimas.simastekom.ui.student.identity.parent.StudentIdentityParentActivity
 import com.yogadimas.simastekom.ui.student.status.employment.EmploymentStatusActivity
 import com.yogadimas.simastekom.ui.student.status.student.StudentStatusActivity
 
@@ -25,46 +26,45 @@ class StudentActivityMenu : AppCompatActivity() {
         binding.apply {
             toolbar.setNavigationOnClickListener { finish() }
 
+            // Helper function to handle startActivity
+            fun navigateTo(activityClass: Class<*>, role: String? = null) {
+                val intent = Intent(this@StudentActivityMenu, activityClass)
+                role?.let { roleValue ->
+                    intent.putExtra(AddressHomeActivity.KEY_EXTRA_ROLE, roleValue)
+                }
+                startActivity(intent)
+            }
+
+            btnStudent.setOnClickListener {
+                navigateTo(StudentActivity::class.java)
+            }
+
             btnIdentityPersonal.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        IdentityPersonalActivity::class.java
-                    ).putExtra(IdentityPersonalActivity.KEY_EXTRA_ROLE, Role.STUDENT.value)
-                )
+                navigateTo(IdentityPersonalActivity::class.java, Role.STUDENT.value)
             }
 
             btnIdentityAcademic.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        StudentIdentityAcademicMenuActivity::class.java
-                    )
-                )
+                navigateTo(StudentIdentityAcademicMenuActivity::class.java)
             }
+
+            btnIdentityParent.setOnClickListener {
+                navigateTo(StudentIdentityParentActivity::class.java)
+            }
+
             btnStudentStatus.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        StudentStatusActivity::class.java
-                    )
-                )
+                navigateTo(StudentStatusActivity::class.java)
             }
+
             btnEmploymentStatus.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        EmploymentStatusActivity::class.java
-                    )
-                )
+                navigateTo(EmploymentStatusActivity::class.java)
             }
-            btnStudent.setOnClickListener {
-                startActivity(
-                    Intent(
-                        this@StudentActivityMenu,
-                        StudentActivity::class.java
-                    )
-                )
+
+            btnAddressHomePersonal.setOnClickListener {
+                navigateTo(AddressHomeActivity::class.java, Role.STUDENT.value)
+            }
+
+            btnAddressHomeParent.setOnClickListener {
+                navigateTo(AddressHomeActivity::class.java, Role.PARENT.value)
             }
         }
 

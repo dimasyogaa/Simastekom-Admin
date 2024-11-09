@@ -43,7 +43,7 @@ tools:context=".ui.student.status.employment.EmploymentStatusActivity">
                 android:id="@+id/searchBar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="@string/searchbar_hint" />
+                android:hint="@string/text_searchbar_hint" />
 
             <HorizontalScrollView
                 android:layout_width="match_parent"
@@ -99,7 +99,7 @@ tools:context=".ui.student.status.employment.EmploymentStatusActivity">
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/searchbar_hint"
+        android:hint="@string/text_searchbar_hint"
         app:layout_anchor="@id/searchBar">
 
 

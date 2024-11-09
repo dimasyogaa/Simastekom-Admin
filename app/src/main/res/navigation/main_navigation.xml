@@ -8,14 +8,14 @@
 
     <fragment
         android:id="@+id/actionFragment"
-        android:name="com.yogadimas.simastekom.ui.action.ActionFragment"
-        android:label="@string/title_action"
+        android:name="com.yogadimas.simastekom.ui.mainpage.action.ActionFragment"
+        android:label="@string/text_action"
         tools:layout="@layout/fragment_action"/>
 
     <fragment
         android:id="@+id/profileFragment"
-        android:name="com.yogadimas.simastekom.ui.profile.ProfileFragment"
-        android:label="@string/title_profile"
+        android:name="com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment"
+        android:label="@string/text_profile"
         tools:layout="@layout/fragment_profile">
 
         <action

@@ -100,7 +100,7 @@
             android:layout_marginHorizontal="14dp"
             android:layout_marginTop="20dp"
             android:drawableStart="@drawable/z_ic_save"
-            android:text="@string/btn_text_get_token_via_email"
+            android:text="@string/text_get_token_via_email"
             android:textSize="16sp" />
 
         <TextView
@@ -176,11 +176,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="80dp"
             android:layout_marginTop="24dp"
-            android:text="@string/btn_text_verify_token"
+            android:text="@string/text_verify_token"
             android:textSize="18sp" />
 
         <com.google.android.material.progressindicator.CircularProgressIndicator
-            android:id="@+id/mainProgressBar"
+            android:id="@+id/main_progress_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
@@ -190,6 +190,7 @@
             android:scaleY="0.75"
             android:visibility="gone"
             app:trackThickness="4dp" />
+
 
         <include
             android:id="@+id/view_handle"

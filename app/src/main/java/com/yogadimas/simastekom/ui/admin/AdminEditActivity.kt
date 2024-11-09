@@ -124,7 +124,7 @@ class AdminEditActivity : AppCompatActivity() {
                     if (p0 != null) {
                         if (isContainsSpace(p0)) {
                             inputLayoutId.error = getString(
-                                R.string.text_cannot_contain_spaces,
+                                R.string.text_cannot_contain_spaces_format,
                                 getString(R.string.text_label_id_username)
                             )
                             inputLayoutId.isErrorEnabled = true
@@ -315,7 +315,7 @@ class AdminEditActivity : AppCompatActivity() {
     private fun checkValidated(id: String, name: String): Boolean {
 
         fun stringFormat(string: String): String {
-            return String.format(getString(R.string.mandatory_field), string)
+            return String.format(getString(R.string.text_mandatory_field_format), string)
         }
 
         fun checkInputIsEmpty(
@@ -418,13 +418,13 @@ class AdminEditActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
-                message = getString(R.string.text_alert_update_data, title)
+                message = getString(R.string.text_alert_update_data_format, title)
             }
 
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

@@ -18,7 +18,7 @@ import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.helper.onTextChange
 import com.yogadimas.simastekom.common.helper.sendMessage
 import com.yogadimas.simastekom.common.helper.showLoading
-import com.yogadimas.simastekom.ui.forgotpassword.ForgotPasswordActivity
+import com.yogadimas.simastekom.ui.password.ForgotPasswordActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -154,7 +154,7 @@ class LoginActivity : AppCompatActivity() {
             dialog = MaterialAlertDialogBuilder(this)
                 .setCancelable(true)
                 .setIcon(ContextCompat.getDrawable(this, R.drawable.z_ic_warning))
-                .setTitle(getString(R.string.title_dialog_login_failed))
+                .setTitle(getString(R.string.text_login_failed))
                 .setMessage(error)
                 .setPositiveButton(getString(R.string.text_ok)) { _, _ ->     dialog = null;return@setPositiveButton }
                 .create()
@@ -164,7 +164,7 @@ class LoginActivity : AppCompatActivity() {
     }
 
     private fun stringFormat(string: String): String {
-        return String.format(getString(R.string.empty_field), string)
+        return String.format(getString(R.string.text_empty_field_format), string)
     }
 
     override fun onStop() {

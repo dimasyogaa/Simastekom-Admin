@@ -171,7 +171,7 @@
             android:layout_marginHorizontal="14dp"
             android:layout_marginTop="20dp"
             android:drawableStart="@drawable/z_ic_save"
-            android:text="@string/btn_text_save"
+            android:text="@string/text_save"
             android:textSize="16sp" />
 
 

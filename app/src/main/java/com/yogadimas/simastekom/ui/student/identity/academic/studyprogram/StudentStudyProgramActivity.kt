@@ -213,7 +213,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
                     val success = getString(R.string.text_success)
                     val studyProgram = getString(R.string.title_study_program)
                     showAlertDialog(
-                        getString(R.string.text_alert_delete, success, studyProgram),
+                        getString(R.string.text_alert_delete_format, success, studyProgram),
                         STATUS_SUCCESS
                     )
                     lifecycleScope.launch {
@@ -318,7 +318,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_SUCCESS -> {
@@ -333,7 +333,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

@@ -4,32 +4,32 @@
 
     <string name="text_user">Pengguna</string>
 
-    <string name="title_classes">Kelas</string>
-    <string name="title_profile">Profil</string>
-    <string name="title_action">Aksi</string>
+    <string name="text_classes">Kelas</string>
+    <string name="text_profile">Profil</string>
+    <string name="text_action">Aksi</string>
 
-    <string name="title_admin">Admin</string>
-    <string name="title_student">Mahasiswa</string>
-    <string name="title_lecture">Dosen</string>
+    <string name="text_admin">Admin</string>
+    <string name="text_student">Mahasiswa</string>
+    <string name="text_lecture">Dosen</string>
 
-    <string name="title_admin_data">Data Admin</string>
-    <string name="title_student_data">Data Mahasiswa</string>
-    <string name="title_lecture_data">Data Dosen</string>
+    <string name="text_admin_data">Data Admin</string>
+    <string name="text_student_data">Data Mahasiswa</string>
+    <string name="text_lecture_data">Data Dosen</string>
 
-    <string name="btn_text_login">Login</string>
-    <string name="btn_text_logout">Logout</string>
-    <string name="title_dialog_login_failed">Login Gagal</string>
-    <string name="title_dialog_login_again">Login Ulang</string>
-    <string name="title_dialog_logout_failed">Logout Gagal</string>
-    <string name="btn_text_get_token_via_email">Dapatkan Token Melalui Email</string>
+    <string name="text_login">Login</string>
+    <string name="text_logout">Logout</string>
+    <string name="text_login_failed">Login Gagal</string>
+    <string name="text_login_again">Login Ulang</string>
+    <string name="text_logout_failed">Logout Gagal</string>
+    <string name="text_get_token_via_email">Dapatkan Token Melalui Email</string>
     <string name="text_label_token">Token</string>
     <string name="text_hint_token">Masukkan token valid anda…</string>
     <string name="text_instruction_token_reset_password_1">Masukkan token atau kode konfirmasi 6 digit yang kami kirimkan ke email anda yaitu:</string>
     <string name="text_instruction_token_reset_password_2">Mungkin butuh waktu sampai satu menit bagi Anda untuk menerima kode ini. Jika Anda tidak melihat email ini di kotak masuk Anda dalam waktu 15 menit, cari di folder spam Anda. Jika Anda menemukannya di sana, tolong tandai email tersebut sebagai \"Bukan Spam\".</string>
-    <string name="btn_text_verify_token">Verifikasi Token</string>
+    <string name="text_verify_token">Verifikasi Token</string>
 
-    <string name="btn_text_change_photo">Ganti Foto</string>
-    <string name="btn_text_delete_photo">Hapus Foto</string>
+    <string name="text_change_photo">Ganti Foto</string>
+    <string name="text_delete_photo">Hapus Foto</string>
 
     <string name="text_label_id_username">Nama Pengguna</string>
     <string name="text_hint_id_username">Masukkan nama pengguna anda…</string>
@@ -56,7 +56,7 @@
     <string name="text_hint_fullname">Masukkan nama lengkap…</string>
 
     <string name="text_label_phone">Nomor WA</string>
-    <string name="text_hint_phone">Masukkan nomor wa anda…</string>
+    <string name="text_hint_phone">Masukkan nomor wa…</string>
 
     <string name="text_label_email">Email</string>
     <string name="text_hint_email">Masukkan email valid anda…</string>
@@ -80,14 +80,15 @@
 
 
     <string name="text_address_home">Alamat Rumah</string>
+    <string name="text_address_home_this">Alamat Rumah ini</string>
     <string name="text_label_province">Provinsi</string>
-    <string name="text_hint_province">Masukkan provinsi anda…</string>
+    <string name="text_hint_province">Masukkan provinsi…</string>
     <string name="text_label_city_regency">Kota/Kabupaten</string>
-    <string name="text_hint_city_regency">Masukkan kota/kabupaten anda…</string>
+    <string name="text_hint_city_regency">Masukkan kota/kabupaten…</string>
     <string name="text_label_district">Kecamatan</string>
-    <string name="text_hint_district">Masukkan kecamatan anda…</string>
+    <string name="text_hint_district">Masukkan kecamatan…</string>
     <string name="text_label_village">Desa/Kelurahan</string>
-    <string name="text_hint_village">Masukkan desa/kelurahan anda…</string>
+    <string name="text_hint_village">Masukkan desa/kelurahan…</string>
     <string name="text_label_rw">RW</string>
     <string name="text_hint_rw">00</string>
     <string name="text_label_rt">RT</string>
@@ -127,16 +128,32 @@
     <string name="text_hint_choose_employment_status">Pilih status pekerjaan…</string>
     <string name="text_hint_employment_status">Masukkan status pekerjaan…</string>
 
+    <string name="text_label_father_id_card_number">Nomor KTP Ayah</string>
+    <string name="text_hint_father_id_card_number">Masukkan nomor KTP ayah anda…</string>
+
+    <string name="text_label_father_name">Nama Ayah</string>
+    <string name="text_hint_father_name">Masukkan nama ayah anda…</string>
+
+    <string name="text_label_mother_id_card_number">Nomor KTP Ibu</string>
+    <string name="text_hint_mother_id_card_number">Masukkan nomor KTP ibu anda…</string>
+
+    <string name="text_label_mother_name">Nama Ibu</string>
+    <string name="text_hint_mother_name">Masukkan nama ibu anda…</string>
+
+    <string name="text_label_parent_occupation">Pekerjaan Orang Tua</string>
+    <string name="text_hint_parent_occupation">Masukkan pekerjaan orang tua anda…</string>
+
     <string name="text_ok">OK</string>
     <string name="text_cancel">Batal</string>
 
-    <string name="btn_text_edit">Edit</string>
-    <string name="btn_text_save">Simpan</string>
+    <string name="text_edit">Edit</string>
+    <string name="text_save">Simpan</string>
 
     <string name="text_account">Akun</string>
 
     <string name="text_identity_personal">Identitas Pribadi</string>
     <string name="text_identity_parent">Identitas Orang Tua</string>
+    <string name="text_identity_parent_this">Identitas Orang Tua ini</string>
     <string name="text_identity_academic">Identitas Akademik</string>
 
     <string name="text_identity_academic_data">Data Identitas Akademik</string>
@@ -154,6 +171,7 @@
     <string name="text_with_identity_format">" dengan identitas %1$s"</string>
 
     <string name="text_student_name_format">Mahasiswa %s</string>
+    <string name="text_student_name_parent_format">Orang Tua dari Mahasiswa %s</string>
     <string name="text_admin_name_format">%s</string>
     <string name="text_lecture_name_format">Dosen %s</string>
     <string name="text_technician">Teknisi</string>
@@ -163,36 +181,36 @@
     <string name="text_time_Evening">Sore</string>
     <string name="text_time_NIght">Malam</string>
 
-    <string name="text_sign">tanda %1$s</string>
+    <string name="text_sign_format">tanda %1$s</string>
 
     <string name="text_success">Berhasil</string>
     <string name="text_failed">Gagal</string>
     <string name="text_error">%1$s Error</string>
 
-    <string name="failed_to_connect">Gagal Terhubung</string>
-    <string name="refresh">Refresh</string>
+    <string name="text_failed_to_connect">Gagal Terhubung</string>
+    <string name="text_refresh">Refresh</string>
     <string name="text_loading">Sedang memuat…</string>
 
-    <string name="empty_field">Masukkan %s anda</string>
-    <string name="mandatory_field">%s wajib diisi</string>
-    <string name="cannot_be_less_than">tidak boleh kurang dari</string>
-    <string name="min_character_field">%s tidak boleh kurang dari %d karakter</string>
-    <string name="six_digits_field">%s harus memiliki %d digit</string>
+    <string name="text_empty_field_format">Masukkan %s anda</string>
+    <string name="text_mandatory_field_format">%s wajib diisi</string>
+    <string name="text_cannot_be_less_than_format">tidak boleh kurang dari</string>
+    <string name="text_min_character_field_format">%s tidak boleh kurang dari %d karakter</string>
+    <string name="text_six_digits_field_format">%s harus memiliki %d digit</string>
 
-    <string name="text_alert_create_new_password">%1$s membuat password baru</string>
-    <string name="text_alert_change_password">%1$s mengubah password</string>
+    <string name="text_alert_create_new_password_format">%1$s membuat password baru</string>
+    <string name="text_alert_change_password_format">%1$s mengubah password</string>
 
-    <string name="what_you_entered_is_not_correct">%1$s yang anda masukkan belum benar</string>
-    <string name="text_cannot_contain_spaces">%1$s tidak boleh mengandung spasi</string>
-    <string name="text_cannot_contain_spaces_early">Tidak boleh ada spasi di awal %1$s</string>
+    <string name="text_what_you_entered_is_not_correct_format">%1$s yang anda masukkan belum benar</string>
+    <string name="text_cannot_contain_spaces_format">%1$s tidak boleh mengandung spasi</string>
+    <string name="text_cannot_contain_spaces_early_format">Tidak boleh ada spasi di awal %1$s</string>
     <string name="text_error_format">%1$s tidak boleh ada %2$s</string>
 
 
     <string name="text_please_login_again">Silakan login kembali</string>
     <string name="text_const_unauthorized">unauthorized</string>
 
-    <string name="next">Next</string>
-    <string name="previous">Previous</string>
+    <string name="text_next">Next</string>
+    <string name="text_previous">Previous</string>
 
     <string name="text_buddhism">Budha</string>
     <string name="text_hinduism">Hindu</string>
@@ -202,7 +220,7 @@
     <string name="text_confucianism">Konghucu</string>
 
 
-    <string name="lorem_ipsum">
+    <string name="text_lorem_ipsum">
         Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nam in scelerisque sem. Mauris
         volutpat, dolor id interdum ullamcorper, risus dolor egestas lectus, sit amet mattis purus
         dui nec risus. Maecenas non sodales nisi, vel dictum dolor. Class aptent taciti sociosqu ad
@@ -243,8 +261,8 @@
     <string name="text_country_code">kode negara</string>
 
     <string name="text_instruction_phone_1">Isi No Hp/WA tanpa karakter -,.,(,)</string>
-    <string name="text_instruction_phone_2">Khusus nomor luar negeri Wajib diawali + dan %1$s</string>
-    <string name="text_instruction_phone_3">Contoh yang benar:\n%1$s\n%2$s\n+65777888999 (contoh nomor luar negeri Singapura)</string>
+    <string name="text_instruction_phone_2_format">Khusus nomor luar negeri Wajib diawali + dan %1$s</string>
+    <string name="text_instruction_phone_3_format">Contoh yang benar:\n%1$s\n%2$s\n+65777888999 (contoh nomor luar negeri Singapura)</string>
 
     <string name="text_instruction_email">Perubahan email akan diperbarui jika sudah melakukan verifikasi dengan pengisian token yang dikirimkan melalui email</string>
     <string name="text_instruction">Petunjuk</string>
@@ -258,18 +276,18 @@
     <string name="text_dummy_place_birth">Semarang, 12 Januari 1993</string>
     <string name="text_dummy_address_home">Semarang, Jawa Tengah</string>
 
-    <string name="placeholder_value_is_not_empty">%1$s : %2$s</string>
+    <string name="text_placeholder_value_is_not_empty_format">%1$s : %2$s</string>
     <string name="text_instruction_reset_password_send_token_to_email">Anda bisa membuat password baru jika sudah melakukan verifikasi dengan pengisian token yang dikirimkan melalui email</string>
 
     <string name="text_changes_not_saved">Perubahan belum disimpan</string>
     <string name="text_exit_not_saved">Anda yakin ingin keluar tanpa menyimpan perubahan?</string>
     <string name="text_question_do_you_want_to_leave_this_account">Anda ingin keluar dari akun ini?</string>
     <string name="text_question_do_you_want_to_back_profile_page">Anda ingin kembali ke halaman profil tanpa menyimpan perubahan?</string>
-    <string name="text_question_do_you_want_to_delete">Anda ingin menghapus %1$s?</string>
+    <string name="text_question_do_you_want_to_delete_format">Anda ingin menghapus %1$s?</string>
 
-    <string name="searchbar_hint_student">Masukkan nim mahasiswa</string>
+    <string name="text_searchbar_hint_student">Masukkan nim mahasiswa</string>
 
-    <string name="searchbar_hint">Cari</string>
+    <string name="text_searchbar_hint">Cari</string>
 
     <string name="title_search">Cari</string>
 
@@ -305,26 +323,29 @@
     <string name="text_change_or_delete">Ubah/Hapus</string>
     <string name="text_delete">Hapus</string>
 
-    <string name="text_alert_add">%1$s menambah %2$s</string>
-    <string name="text_alert_change">%1$s mengubah %2$s</string>
-    <string name="text_alert_delete">%1$s menghapus %2$s</string>
+    <string name="text_add_format">Tambah %1$s</string>
+    <string name="text_change_format">Ubah %1$s</string>
 
-    <string name="text_alert_update_data">%1$s mengubah data</string>
+    <string name="text_alert_add_format">%1$s menambah %2$s</string>
+    <string name="text_alert_update_format">%1$s mengubah %2$s</string>
+    <string name="text_alert_delete_format">%1$s menghapus %2$s</string>
+
+    <string name="text_alert_update_data_format">%1$s mengubah data</string>
 
     <string name="text_to_add">Menambah</string>
     <string name="text_to_delete">Menghapus</string>
 
     <string name="text_label_code">Kode</string>
     <string name="text_hint_code">Masukkan kode…</string>
-    <string name="format_string_strip_string">%1$s - %2$s</string>
+    <string name="text_string_strip_string_format">%1$s - %2$s</string>
     <string name="text_max_char_5">Maksimal 5 karakter</string>
     <string name="text_max_char_10">Maksimal 10 karakter</string>
     <string name="text_newest">Terbaru</string>
     <string name="text_oldest">Terlama</string>
-    <string name="from_z_to_a">Dari Z ke A</string>
-    <string name="from_a_to_z">Dari A ke Z</string>
+    <string name="text_from_z_to_a">Dari Z ke A</string>
+    <string name="text_from_a_to_z">Dari A ke Z</string>
     <string name="text_sort_by">Urutkan Berdasarkan</string>
-    <string name="format_level_major_degree">%1$s %2$s (%3$s)</string>
+    <string name="text_level_major_degree_format">%1$s %2$s (%3$s)</string>
 
     <string name="text_address">Alamat</string>
     <string name="text_semester_number">Nomor Semester</string>
@@ -334,11 +355,12 @@
     <string name="retry">Coba lagi</string>
     <string name="occurred_failure_when_accessing_data">Terjadi kegagalan ketika mengakses data %1$s</string>
     <string name="text_not_found">Tidak ditemukan</string>
+    <string name="text_no_data_yet">Belum ada data</string>
     <string name="not_found_state">State Not Found</string>
 
     <string name="text_confirm_the_new_password_matches_the_new_password_you_entered">Konfirmasi Password Baru sesuai dengan Password Baru yang anda masukkan</string>
     <string name="text_make_sure_confirm_your_new_password_matches_the_new_password_you_entered">Pastikan Konfirmasi Password Baru sesuai dengan Password Baru yang anda masukkan sebelumnya</string>
-    <string name="text_make_sure_confirm_matches_entered">Pastikan Konfirmasi %1$s sesuai dengan %1$s yang anda masukkan sebelumnya</string>
+    <string name="text_make_sure_confirm_matches_entered_format">Pastikan Konfirmasi %1$s sesuai dengan %1$s yang anda masukkan sebelumnya</string>
 
     <string name="text_id_format">Id %1$s</string>
     <string name="text_student_id_number_format">NIM %1$s</string>
@@ -350,10 +372,16 @@
     <string name="text_hint_lecture_id_number">Masukkan Nomor Induk Dosen Nasional…</string>
     <string name="text_more">Selengkapnya</string>
     <string name="text_close">Tutup</string>
-    <string name="profile_photo">Foto Profil</string>
-    <string name="technician_08988136896">08988136896</string>
-    <string name="technician_628988136896">628988136896</string>
-    <string name="text_message_send_message">Selamat %1$s %2$s, perkenalkan saya %3$s%4$s</string>
+    <string name="text_profile_photo">Foto Profil</string>
+    <string name="number_technician_08988136896">08988136896</string>
+    <string name="number_technician_628988136896">628988136896</string>
+    <string name="text_message_send_message_format">Selamat %1$s %2$s, perkenalkan saya %3$s%4$s</string>
+
+    <string name="text_personal">Pribadi</string>
+    <string name="text_parent">Orang Tua</string>
+
+    <string name="text_address_home_personal">Alamat Rumah Pribadi</string>
+    <string name="text_address_home_parent">Alamat Rumah Orang Tua</string>
 
 
 </resources>

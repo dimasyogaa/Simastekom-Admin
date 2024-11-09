@@ -221,7 +221,7 @@ class PasswordEditActivity : AppCompatActivity() {
         }
 
         fun stringFormat(string: String): String {
-            return String.format(getString(R.string.min_character_field), string, min)
+            return String.format(getString(R.string.text_min_character_field_format), string, min)
         }
 
         oldEdtPassword = binding.edtOldPassword
@@ -322,14 +322,14 @@ class PasswordEditActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
-                message = getString(R.string.text_alert_change_password, title)
+                message = getString(R.string.text_alert_change_password_format, title)
             }
 
             STATUS_ERROR -> {
                 icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
                 title = getString(R.string.text_error, "")
                 message = getString(
-                    R.string.what_you_entered_is_not_correct,
+                    R.string.text_what_you_entered_is_not_correct_format,
                     getString(R.string.text_label_old_password)
                 )
             }

@@ -1,12 +1,12 @@
 package com.yogadimas.simastekom.common.helper
 
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.JsonParser
 import com.yogadimas.simastekom.model.responses.Errors
 import org.json.JSONObject
 
 fun getErrors(response: String): Errors {
-
     val gson = Gson()
     val jsonParser = JsonParser()
 

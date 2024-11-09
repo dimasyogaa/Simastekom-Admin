@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
-    tools:context=".ui.identity.personal.phone.PhoneActivity">
+    tools:context=".ui.identity.phone.PhoneActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -94,7 +94,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="8dp"
-                    android:text="@string/text_instruction_phone_2"
+                    android:text="@string/text_instruction_phone_2_format"
                     android:textColor="@color/colorFixedBlack" />
 
                 <TextView
@@ -104,7 +104,7 @@
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="20dp"
                     android:lineSpacingExtra="8dp"
-                    android:text="@string/text_instruction_phone_3"
+                    android:text="@string/text_instruction_phone_3_format"
                     android:textColor="@color/colorFixedBlack" />
 
             </LinearLayout>
@@ -121,7 +121,7 @@
             android:layout_marginHorizontal="14dp"
             android:layout_marginTop="20dp"
             android:drawableStart="@drawable/z_ic_save"
-            android:text="@string/btn_text_save"
+            android:text="@string/text_save"
             android:textSize="16sp" />
 
 

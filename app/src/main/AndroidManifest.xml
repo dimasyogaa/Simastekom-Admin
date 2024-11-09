@@ -30,13 +30,16 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
-            android:name=".ui.identity.parent.IdentityParentEditActivity"
+            android:name=".ui.identity.address.AddressHomeActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.identity.parent.IdentityParentDetailActivity"
+            android:name=".ui.student.identity.parent.StudentIdentityParentEditActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.identity.parent.IdentityParentActivity"
+            android:name=".ui.student.identity.parent.StudentIdentityParentDetailActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.student.identity.parent.StudentIdentityParentActivity"
             android:exported="false" />
         <activity
             android:name=".ui.identity.personal.IdentityPersonalActivity"
@@ -132,7 +135,7 @@
             android:name=".ui.identity.personal.IdentityPersonalDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.identity.personal.address.AddressHomeActivity"
+            android:name=".ui.identity.address.AddressHomeEditActivity"
             android:exported="false"
             android:windowSoftInputMode="adjustResize" />
         <activity
@@ -142,7 +145,7 @@
             android:name=".ui.identity.personal.email.EmailActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.identity.personal.phone.PhoneActivity"
+            android:name=".ui.identity.phone.PhoneActivity"
             android:exported="false" />
         <activity
             android:name=".ui.identity.personal.IdentityPersonalEditActivity"
@@ -155,7 +158,7 @@
             android:name=".ui.password.ResetPasswordEditActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.forgotpassword.ForgotPasswordActivity"
+            android:name=".ui.password.ForgotPasswordActivity"
             android:exported="false" />
         <activity
             android:name=".ui.password.PasswordEditActivity"

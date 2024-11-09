@@ -1,5 +1,7 @@
 package com.yogadimas.simastekom.viewmodel.admin
 
+
+import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -7,10 +9,11 @@ import androidx.lifecycle.viewModelScope
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.yogadimas.simastekom.api.ApiConfig
+import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.common.event.Event
 import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.common.state.State
-import com.yogadimas.simastekom.model.responses.StudentData
+import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.model.responses.AdminResponse
 import com.yogadimas.simastekom.model.responses.CampusData
@@ -21,10 +24,13 @@ import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
+import com.yogadimas.simastekom.model.responses.IdentityPersonalObjectResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
+import com.yogadimas.simastekom.model.responses.StudentData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
+import com.yogadimas.simastekom.repository.AdminAllUserTypeRoleRepository
 import com.yogadimas.simastekom.repository.AdminStudentRepository
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -39,9 +45,13 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-class AdminViewModel(private val adminStudentRepository: AdminStudentRepository) : ViewModel() {
+class AdminViewModel(
+    private val adminStudentRepository: AdminStudentRepository,
+    private val adminAllUserTypeRoleRepository: AdminAllUserTypeRoleRepository,
+) : ViewModel() {
 
     var token: String = ""
+    var intentData: String = ""
 
     private val _adminData = MutableLiveData<Event<AdminData?>>()
     val adminData: LiveData<Event<AdminData?>> = _adminData
@@ -202,126 +212,6 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
 
     }
 
-    fun getIdentityPersonal(userType: String, userId: String) {
-        _isLoading.value = true
-        val client = ApiConfig.getApiService().getIdentityPersonal(token, userType, userId)
-        client.enqueue(object : Callback<IdentityPersonalResponse> {
-            override fun onResponse(
-                call: Call<IdentityPersonalResponse>,
-                response: Response<IdentityPersonalResponse>,
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
-                } else {
-                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
-                }
-            }
-
-            override fun onFailure(call: Call<IdentityPersonalResponse>, t: Throwable) {
-                _isLoading.value = false
-                _snackbarText.value = Event(t.message.toString())
-            }
-        })
-    }
-
-    fun updateIdentityPersonal(
-        userType: String, userId: String, identityPersonal: IdentityPersonalData,
-    ) {
-
-        _isLoading.value = true
-        val client =
-            ApiConfig.getApiService()
-                .updateIdentityPersonal(token, userType, userId, identityPersonal)
-
-
-        client.enqueue(object : Callback<IdentityPersonalResponse> {
-            override fun onResponse(
-                call: Call<IdentityPersonalResponse>,
-                response: Response<IdentityPersonalResponse>,
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
-                } else {
-                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
-                }
-            }
-
-            override fun onFailure(call: Call<IdentityPersonalResponse>, t: Throwable) {
-                _isLoading.value = false
-                _snackbarText.value = Event(t.message.toString())
-            }
-
-        })
-
-    }
-
-    fun verifyEmail(userType: String, userId: String, email: String) {
-
-        _isLoading.value = true
-        val client =
-            ApiConfig.getApiService()
-                .verifyEmail(token, userType, userId, email)
-
-
-        client.enqueue(object : Callback<IdentityPersonalResponse> {
-            override fun onResponse(
-                call: Call<IdentityPersonalResponse>,
-                response: Response<IdentityPersonalResponse>,
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
-                } else {
-                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
-                }
-            }
-
-            override fun onFailure(call: Call<IdentityPersonalResponse>, t: Throwable) {
-                _isLoading.value = false
-                _snackbarText.value = Event(t.message.toString())
-            }
-
-        })
-
-    }
-
-
-    fun verifyEmailCheckToken(
-        userType: String,
-        userId: String,
-        email: String,
-        tokenVerifyEmail: String,
-    ) {
-
-        _isLoading.value = true
-        val client =
-            ApiConfig.getApiService()
-                .verifyEmailCheckToken(token, userType, userId, email, tokenVerifyEmail)
-
-
-        client.enqueue(object : Callback<IdentityPersonalResponse> {
-            override fun onResponse(
-                call: Call<IdentityPersonalResponse>,
-                response: Response<IdentityPersonalResponse>,
-            ) {
-                _isLoading.value = false
-                if (response.isSuccessful) {
-                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
-                } else {
-                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
-                }
-            }
-
-            override fun onFailure(call: Call<IdentityPersonalResponse>, t: Throwable) {
-                _isLoading.value = false
-                _snackbarText.value = Event(t.message.toString())
-            }
-
-        })
-
-    }
 
     /** ADMIN STUDENT PAGINATION */
     private val _errorStateFlow = MutableStateFlow<String?>(null)
@@ -340,7 +230,12 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
             )
     }
 
-    fun searchSortStudents(token: String, keyword: String?, sortBy: String?, sortDir: String?): StateFlow<PagingData<StudentData>> {
+    fun searchSortStudents(
+        token: String,
+        keyword: String?,
+        sortBy: String?,
+        sortDir: String?,
+    ): StateFlow<PagingData<StudentData>> {
         return adminStudentRepository.searchSortStudents(
             token,
             keyword,
@@ -359,16 +254,19 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
     }
 
     val studentState: SharedFlow<State<StudentData>> = adminStudentRepository.studentState
-    fun getStudentById(token: String, id: String)=  viewModelScope.launch {
-            adminStudentRepository.getStudentById(token, id)
-        }
+    fun getStudentById(token: String, id: String) = viewModelScope.launch {
+        adminStudentRepository.getStudentById(token, id)
+    }
+
     fun updateStudent(token: String, id: String, studentData: StudentData) = viewModelScope.launch {
         adminStudentRepository.updateStudent(token, id, studentData)
     }
+
     fun addStudent(token: String, studentData: StudentData) = viewModelScope.launch {
         adminStudentRepository.addStudent(token, studentData)
     }
-    fun deleteStudent(token: String, id: String)=  viewModelScope.launch {
+
+    fun deleteStudent(token: String, id: String) = viewModelScope.launch {
         adminStudentRepository.deleteStudent(token, id)
     }
 
@@ -378,12 +276,24 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
         keyword: String? = null,
         sortBy: String? = null,
         sortDir: String? = null,
+        role: Role,
     ): StateFlow<PagingData<IdentityPersonalData>> {
         val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
-            adminStudentRepository.getIdentitiesPersonal(token, onError = ::handleError)
+            adminAllUserTypeRoleRepository.getIdentitiesPersonal(
+                token,
+                role = role,
+                onError = ::handleError
+            )
 
         } else {
-            adminStudentRepository.getIdentitiesPersonal(token, keyword, sortBy, sortDir, onError = ::handleError)
+            adminAllUserTypeRoleRepository.getIdentitiesPersonal(
+                token,
+                keyword,
+                sortBy,
+                sortDir,
+                role,
+                onError = ::handleError
+            )
         }
 
         return flow
@@ -395,18 +305,157 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
                 initialValue = PagingData.empty()
             )
     }
+
+    fun getIdentityPersonal(userType: String, userId: String) {
+        _isLoading.value = true
+        val client = ApiConfig.getApiService().getIdentityPersonal(token, userType, userId)
+        client.enqueue(object : Callback<IdentityPersonalObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityPersonalObjectResponse>,
+                response: Response<IdentityPersonalObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityPersonalObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+        })
+    }
+
+    fun updateIdentityPersonal(
+        userType: String, userId: String, identityPersonal: IdentityPersonalData,
+    ) {
+
+        _isLoading.value = true
+        val client =
+            ApiConfig.getApiService()
+                .updateIdentityPersonal(token, userType, userId, identityPersonal)
+
+
+        client.enqueue(object : Callback<IdentityPersonalObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityPersonalObjectResponse>,
+                response: Response<IdentityPersonalObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityPersonalObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+
+    fun deleteIdentityPersonalAddress(userType: String, userId: String) {
+        adminAllUserTypeRoleRepository.deleteIdentityPersonalAddress(
+            token,
+            userType,
+            userId,
+            _identityPersonal,
+            _isLoading,
+            _errors,
+            _snackbarText
+        )
+    }
+
+    fun verifyEmail(userType: String, userId: String, email: String) {
+
+        _isLoading.value = true
+        val client =
+            ApiConfig.getApiService()
+                .verifyEmail(token, userType, userId, email)
+
+
+        client.enqueue(object : Callback<IdentityPersonalObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityPersonalObjectResponse>,
+                response: Response<IdentityPersonalObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityPersonalObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+
+    fun verifyEmailCheckToken(
+        userType: String,
+        userId: String,
+        email: String,
+        tokenVerifyEmail: String,
+    ) {
+
+        _isLoading.value = true
+        val client =
+            ApiConfig.getApiService()
+                .verifyEmailCheckToken(token, userType, userId, email, tokenVerifyEmail)
+
+
+        client.enqueue(object : Callback<IdentityPersonalObjectResponse> {
+            override fun onResponse(
+                call: Call<IdentityPersonalObjectResponse>,
+                response: Response<IdentityPersonalObjectResponse>,
+            ) {
+                _isLoading.value = false
+                if (response.isSuccessful) {
+                    _identityPersonal.value = Event(response.body()?.identityPersonalData)
+                } else {
+                    _errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
+                }
+            }
+
+            override fun onFailure(call: Call<IdentityPersonalObjectResponse>, t: Throwable) {
+                _isLoading.value = false
+                _snackbarText.value = Event(t.message.toString())
+            }
+
+        })
+
+    }
+
 
     /** IDENTITY ACADEMIC */
     fun getIdentitiesAcademic(
         token: String,
         keyword: String? = null,
         sortBy: String? = null,
-        sortDir: String? = null
+        sortDir: String? = null,
     ): StateFlow<PagingData<IdentityAcademicData>> {
         val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
             adminStudentRepository.getIdentitiesAcademic(token, onError = ::handleError)
         } else {
-            adminStudentRepository.getIdentitiesAcademic(token, keyword, sortBy, sortDir, onError = ::handleError)
+            adminStudentRepository.getIdentitiesAcademic(
+                token,
+                keyword,
+                sortBy,
+                sortDir,
+                onError = ::handleError
+            )
         }
 
         return flow
@@ -419,10 +468,108 @@ class AdminViewModel(private val adminStudentRepository: AdminStudentRepository)
             )
     }
 
+
+    /** IDENTITY PARENT */
+    val studentIdentityParentState: SharedFlow<State<StudentIdentityParentData>> =
+        adminStudentRepository.studentIdentityParentState
+
+    fun getStudentIdentitiesParent(
+        token: String,
+        keyword: String? = null,
+        sortBy: String? = null,
+        sortDir: String? = null,
+    ): StateFlow<PagingData<StudentIdentityParentData>> {
+        val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
+            adminStudentRepository.getStudentIdentitiesParent(token, onError = ::handleError)
+        } else {
+            adminStudentRepository.getStudentIdentitiesParent(
+                token,
+                keyword,
+                sortBy,
+                sortDir,
+                onError = ::handleError
+            )
+        }
+
+        return flow
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+    fun addStudentIdentityParent(token: String, data: StudentIdentityParentData) =
+        viewModelScope.launch {
+            adminStudentRepository.addStudentIdentityParent(token, data)
+        }
+
+    fun getStudentIdentityParentById(token: String, id: String) = viewModelScope.launch {
+        adminStudentRepository.getStudentIdentityParentById(token, id)
+    }
+
+    fun updateStudentIdentityParent(token: String, id: String, data: StudentIdentityParentData) =
+        viewModelScope.launch {
+            adminStudentRepository.updateStudentIdentityParent(token, id, data)
+        }
+
+    fun deleteStudentIdentityParent(token: String, id: String) = viewModelScope.launch {
+        adminStudentRepository.deleteStudentIdentityParent(token, id)
+    }
+
+
+    fun getStudentIdentityParentByIdLiveData(token: String, id: String) =
+        adminStudentRepository.getStudentIdentityParentByIdLiveData(token, id)
+
+    fun updateStudentIdentityParentLiveData(
+        token: String,
+        id: String,
+        data: StudentIdentityParentData,
+    ) =
+        adminStudentRepository.updateStudentIdentityParentLiveData(token, id, data)
+
+    fun deleteStudentIdentityParentAddressLiveData(token: String, id: String) =
+        adminStudentRepository.deleteStudentIdentityParentAddressLiveData(token, id)
+
+
+    /** ADDRESS */
+    fun getAddresses(
+        token: String,
+        keyword: String? = null,
+        sortBy: String? = null,
+        sortDir: String? = null,
+        role: Role,
+    ): StateFlow<PagingData<AddressData>> {
+        val flow = if (keyword.isNullOrEmpty() && sortBy == null) {
+            adminAllUserTypeRoleRepository.getAddresses(token, role = role, onError = ::handleError)
+
+        } else {
+            adminAllUserTypeRoleRepository.getAddresses(
+                token,
+                keyword,
+                sortBy,
+                sortDir,
+                role,
+                onError = ::handleError
+            )
+        }
+
+        return flow
+            .distinctUntilChanged()
+            .cachedIn(viewModelScope)
+            .stateIn(
+                scope = viewModelScope,
+                started = SharingStarted.Lazily,
+                initialValue = PagingData.empty()
+            )
+    }
+
+
     private fun handleError(errorMessage: String) {
         _errorStateFlow.value = errorMessage
     }
-
 
     /** EMPLOYMENT STATUS */
     fun addEmploymentStatus(nameData: NameData) {

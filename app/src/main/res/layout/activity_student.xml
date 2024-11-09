@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/top_appbar_refresh_menu"
             app:navigationIcon="@drawable/z_ic_back"
-            app:title="@string/title_student">
+            app:title="@string/text_student">
 
 
         </com.google.android.material.appbar.MaterialToolbar>
@@ -44,7 +44,7 @@
                     android:id="@+id/searchBar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:hint="@string/searchbar_hint" />
+                    android:hint="@string/text_searchbar_hint" />
 
                 <HorizontalScrollView
                     android:layout_width="match_parent"
@@ -125,7 +125,7 @@
         android:id="@+id/searchView"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:hint="@string/searchbar_hint"
+        android:hint="@string/text_searchbar_hint"
         app:layout_anchor="@id/searchBar">
 
 

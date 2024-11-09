@@ -1,38 +1,35 @@
 package com.yogadimas.simastekom.ui.identity.personal
 
-import android.app.Activity
-import android.graphics.Rect
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
-import android.view.ViewTreeObserver
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.adapter.student.identitypersonal.IdentityPersonalAdapter
+import com.yogadimas.simastekom.adapter.identitypersonal.IdentityPersonalAdapter
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.enums.FieldType
 import com.yogadimas.simastekom.common.enums.Role
-import com.yogadimas.simastekom.common.enums.SortDir
 import com.yogadimas.simastekom.common.enums.SortBy
+import com.yogadimas.simastekom.common.enums.SortDir
+import com.yogadimas.simastekom.common.helper.SnackBarHelper
 import com.yogadimas.simastekom.common.helper.ToastHelper
 import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.sendMessage
@@ -40,7 +37,6 @@ import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.paging.LoadingStateAdapter
 import com.yogadimas.simastekom.databinding.ActivityIdentityPersonalBinding
 import com.yogadimas.simastekom.model.responses.UserCurrent
-import com.yogadimas.simastekom.ui.student.StudentManipulationActivity.Companion.KEY_EXTRA_ID
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -55,6 +51,7 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityIdentityPersonalBinding
 
+    private val context = this@IdentityPersonalActivity
 
     private val adminViewModel: AdminViewModel by viewModel()
 
@@ -62,118 +59,62 @@ class IdentityPersonalActivity : AppCompatActivity() {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
+    private var loadStateListener: ((CombinedLoadStates) -> Unit)? = null
+
     private lateinit var identityPersonalAdapter: IdentityPersonalAdapter
-    private var snackbar: Snackbar? = null
+
     private var dialog: AlertDialog? = null
     private var isAlertDialogShow = false
-    private lateinit var role: String
+
+    private lateinit var userTypeRole: String
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityIdentityPersonalBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        role = intent.getStringExtra(KEY_EXTRA_ROLE) ?: Role.STUDENT.value
+        val roleFromIntent = intent.getStringExtra(KEY_EXTRA_ROLE) ?: Role.STUDENT.value
 
+        adminViewModel.intentData = roleFromIntent
+
+        userTypeRole = adminViewModel.intentData
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
                     val token = getToken()
-                    token?.let { mainCall(it) }
+                    token?.let { setMainContent(it, Role.fromValue(userTypeRole) ?: Role.STUDENT) }
                 }
             }
-
-
         }
 
     }
-
 
     private suspend fun getToken(): String? {
         val user = authViewModel.getUser().asFlow().first()
         val token = user.first
         return if (token == AuthPreferences.DEFAULT_VALUE) {
-            goToLogin(this@IdentityPersonalActivity)
+            goToLogin(context)
             null
         } else {
             token
         }
     }
 
-    private fun mainCall(token: String) {
+    private fun setMainContent(token: String, role: Role) {
+        setToolbar(token, role)
+        setSearch(token, role)
+        setSort(token, role)
+
         binding.apply {
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
-
-            toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getData(token)
-                true
-            }
-
-            searchView.setupWithSearchBar(searchBar)
-            searchView
-                .editText
-                .setOnEditorActionListener { _, _, _ ->
-                    searchBar.setText(searchView.text)
-                    lifecycleScope.launch {
-                        searchView.hide()
-                        adminViewModel.getIdentitiesPersonal(
-                            token,
-                            binding.searchView.text.toString().trim(),
-                            null,
-                            null
-                        ).collectLatest { pagingData ->
-                            identityPersonalAdapter.submitData(pagingData)
-                        }
-
-                    }
-
-                    false
-                }
-
-            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-            val roleAdmin = Role.ADMIN.value
-            val roleLecture = Role.LECTURE.value
-            chipUser.text = when(role) {
-                roleAdmin ->  getString(R.string.text_label_id_username)
-                roleLecture ->  getString(R.string.text_label_lecture_id_number)
-                else ->  getString(R.string.text_label_student_id_number)
-            }
-            listOf(chipSortBy, chipUser).forEach { chipId ->
-                chipId.setOnCheckedChangeListener { chip, isChecked ->
-
-
-                    val (userSortBy, userSortDirTextMenu) = when (role) {
-                        roleAdmin -> SortBy.USERNAME.value to R.menu.top_appbar_sort_asc_desc_menu
-                        roleLecture -> SortBy.LECTURE_ID_NUMBER.value to R.menu.top_appbar_sort_smallest_largest_menu
-                        else -> SortBy.STUDENT_ID_NUMBER.value to R.menu.top_appbar_sort_smallest_largest_menu
-                    }
-                    if (isChecked) {
-                        val menuRes = when (chipId) {
-                            chipSortBy -> R.menu.top_appbar_sort_by_menu
-                            chipUser -> userSortDirTextMenu
-                            else -> null
-                        }
-                        menuRes?.let {
-                            showMenu(chip, it, token, if (chipId == chipSortBy) SortBy.CREATED_AT.value else userSortBy)
-                        }
-                    }
-                }
-            }
-
-
-
-
             rvIdentityPersonal.layoutManager =
-                LinearLayoutManager(this@IdentityPersonalActivity)
+                LinearLayoutManager(context)
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getData(token) }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { setObserveData(token, role) }
         }
         identityPersonalAdapter = IdentityPersonalAdapter { data, fieldType ->
 
-            val userTypeReceiver: Role? = when(data.userType) {
+            val userTypeReceiver: Role? = when (data.userType) {
                 Role.ADMIN.value -> Role.ADMIN
                 Role.LECTURE.value -> Role.LECTURE
                 Role.STUDENT.value -> Role.STUDENT
@@ -181,26 +122,35 @@ class IdentityPersonalActivity : AppCompatActivity() {
             }
 
             val userCurrent = data.userCurrent ?: UserCurrent()
-            when(fieldType) {
+            when (fieldType) {
                 FieldType.EMAIL -> {
                     sendMessage(
-                        userCurrent = UserCurrent(userCurrent.userType, userCurrent.name, userCurrent.identity),
+                        userCurrent = UserCurrent(
+                            userCurrent.userType,
+                            userCurrent.name,
+                            userCurrent.identity
+                        ),
                         emailAddress = data.email,
                         receiverRole = userTypeReceiver,
                         receiverName = data.name,
                         receiverLectureGender = data.gender,
                         isWhatsApp = false,
-                        context = this@IdentityPersonalActivity
+                        context = context
                     )
                 }
+
                 FieldType.PHONE -> {
                     sendMessage(
-                        userCurrent = UserCurrent(userCurrent.userType, userCurrent.name, userCurrent.identity),
+                        userCurrent = UserCurrent(
+                            userCurrent.userType,
+                            userCurrent.name,
+                            userCurrent.identity
+                        ),
                         receiverPhoneNumber = data.phone,
                         receiverRole = userTypeReceiver,
                         receiverName = data.name,
                         receiverLectureGender = data.gender,
-                        context = this@IdentityPersonalActivity
+                        context = context
                     )
                 }
             }
@@ -208,6 +158,79 @@ class IdentityPersonalActivity : AppCompatActivity() {
         }
 
 
+        onBackPressedDispatcher()
+
+        setObserveData(token, role)
+    }
+
+    private fun setToolbar(token: String, role: Role) = binding.toolbar.apply {
+        setNavigationOnClickListener { finish() }
+        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+            setObserveData(token, role)
+            true
+        }
+    }
+
+    private fun setSearch(token: String, role: Role) = binding.searchView.apply {
+        val searchBar = binding.searchBar
+        setupWithSearchBar(searchBar)
+        editText
+            .setOnEditorActionListener { _, _, _ ->
+                searchBar.setText(text)
+                lifecycleScope.launch {
+                    hide()
+                    adminViewModel.getIdentitiesPersonal(
+                        token,
+                        binding.searchView.text.toString().trim(),
+                        null,
+                        null,
+                        role
+                    ).collectLatest { pagingData ->
+                        identityPersonalAdapter.submitData(pagingData)
+                    }
+
+                }
+
+                false
+            }
+    }
+
+    private fun setSort(token: String, role: Role) = binding.apply {
+        chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+        chipUser.text = when (role) {
+            Role.ADMIN -> getString(R.string.text_label_id_username)
+            Role.LECTURE -> getString(R.string.text_label_lecture_id_number)
+            else -> getString(R.string.text_label_student_id_number)
+        }
+        listOf(chipSortBy, chipUser).forEach { chipId ->
+            chipId.setOnCheckedChangeListener { chip, isChecked ->
+                val (userSortBy, userSortDirTextMenu) = when (role) {
+                    Role.ADMIN -> SortBy.USERNAME.value to R.menu.top_appbar_sort_asc_desc_menu
+                    Role.LECTURE -> SortBy.LECTURE_ID_NUMBER.value to R.menu.top_appbar_sort_smallest_largest_menu
+                    else -> SortBy.STUDENT_ID_NUMBER.value to R.menu.top_appbar_sort_smallest_largest_menu
+                }
+                if (isChecked) {
+                    val menuRes = when (chipId) {
+                        chipSortBy -> R.menu.top_appbar_sort_by_menu
+                        chipUser -> userSortDirTextMenu
+                        else -> null
+                    }
+                    menuRes?.let {
+                        showMenu(
+                            chip,
+                            it,
+                            token,
+                            if (chipId == chipSortBy) SortBy.CREATED_AT.value else userSortBy,
+                            role
+                        )
+                    }
+                }
+            }
+        }
+    }
+
+
+    private fun onBackPressedDispatcher() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 binding.apply {
@@ -220,14 +243,13 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
             }
         }
-        onBackPressedDispatcher.addCallback(this, callback)
-
-        getData(token)
+        onBackPressedDispatcher.addCallback(context, callback)
     }
 
-    private fun getData(token: String) {
 
-        setSearchBarViewNull()
+    private fun setObserveData(token: String, role: Role) {
+
+        clearSearch()
 
 
         val footerAdapter = LoadingStateAdapter {
@@ -239,100 +261,13 @@ class IdentityPersonalActivity : AppCompatActivity() {
         )
 
 
-        identityPersonalAdapter.addLoadStateListener { loadState ->
-            // Cek jika data berhasil dimuat
-            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading &&
-                    identityPersonalAdapter.itemCount > 0
-
-            // Cek jika sedang dalam proses loading data pertama kali
-            val isLoading = loadState.source.refresh is LoadState.Loading
-
-            // Cek jika terjadi error
-            val isError = loadState.source.append is LoadState.Error ||
-                    loadState.source.prepend is LoadState.Error ||
-                    loadState.source.refresh is LoadState.Error
-
-
-            val isEmptyData =
-                loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityPersonalAdapter.itemCount == 0
-
-
-
-            when {
-                isLoading -> {
-                    showLoadingMain(true)
-                }
-
-                isDataLoaded -> {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            isVisibleAllView(true)
-                            showLoadingMain(false)
-                        }
-                    }
-
-
-                }
-
-                isError -> {
-                    showLoadingMain(false)
-                    // Terjadi error di tengah pagination
-                    val errorState = when {
-                        loadState.source.append is LoadState.Error -> loadState.source.append as LoadState.Error
-                        loadState.source.prepend is LoadState.Error -> loadState.source.prepend as LoadState.Error
-                        loadState.source.refresh is LoadState.Error -> loadState.source.refresh as LoadState.Error
-                        else -> null
-                    }
-                    errorState?.let {
-                        errorState.error.localizedMessage?.let { message ->
-                            if (message.contains(ErrorCode.UNAUTHORIZED.value)) {
-                                isVisibleAllView(true)
-                                failedToConnect(false)
-                                showAlertDialog(
-                                    getString(R.string.text_const_unauthorized)
-                                )
-                            } else {
-                                if (identityPersonalAdapter.itemCount == 0) {
-                                    // Error terjadi sejak awal, tampilkan error dan sembunyikan view lainnya
-                                    failedToConnect(true)
-                                    isVisibleAllView(false)
-                                } else {
-                                    // Error terjadi di tengah pagination, tampilkan pesan error
-                                    failedToConnect(false)
-                                }
-                                showSnackBarError(
-                                    message = message
-                                )
-                            }
-                        }
-
-                    }
-                }
-
-                isEmptyData -> {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            isVisibleAllView(true)
-                            showLoadingMain(false)
-                            ToastHelper.showCustomToast(this@IdentityPersonalActivity,  getString(R.string.text_not_found))
-
-
-
-
-                        }
-
-
-                    }
-                }
-
-            }
-        }
+        observePaging()
 
 
         lifecycleScope.launch {
             launch {
 
-                adminViewModel.getIdentitiesPersonal(token).collectLatest { pagingData ->
+                adminViewModel.getIdentitiesPersonal(token, role = role).collectLatest { pagingData ->
                     identityPersonalAdapter.submitData(pagingData)
                 }
 
@@ -345,8 +280,8 @@ class IdentityPersonalActivity : AppCompatActivity() {
                 adminViewModel.errorStateFlow.collect { errorMessage ->
                     errorMessage?.let {
                         if (errorMessage.contains(ErrorCode.UNAUTHORIZED.value)) {
-                            isVisibleAllView(true)
-                            failedToConnect(false)
+                            showDefaultView(true)
+                            showFailedConnectView(false)
                             showAlertDialog(
                                 getString(R.string.text_const_unauthorized)
                             )
@@ -357,11 +292,60 @@ class IdentityPersonalActivity : AppCompatActivity() {
         }
     }
 
+    private fun observePaging() {
+        loadStateListener?.let { identityPersonalAdapter.removeLoadStateListener(it) }
+        loadStateListener = { loadState ->
+            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading && identityPersonalAdapter.itemCount > 0
+            val isLoading = loadState.source.refresh is LoadState.Loading
+            val isError = listOf(loadState.source.append, loadState.source.prepend, loadState.source.refresh).any { it is LoadState.Error }
+            val isEmptyData = loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityPersonalAdapter.itemCount == 0
 
-    private fun setSearchBarViewNull() {
+            when {
+                isLoading -> showLoadingView(true)
+
+                isDataLoaded -> {
+                    showDefaultView(true)
+                    showLoadingView(false)
+                }
+
+                isError -> {
+                    showLoadingView(false)
+                    val errorState = (loadState.source.append as? LoadState.Error)
+                        ?: (loadState.source.prepend as? LoadState.Error)
+                        ?: (loadState.source.refresh as? LoadState.Error)
+
+                    errorState?.error?.localizedMessage?.let { message ->
+                        if (message.contains(ErrorCode.UNAUTHORIZED.value)) {
+                            showDefaultView(true)
+                            showFailedConnectView(false)
+                            showAlertDialog(getString(R.string.text_const_unauthorized))
+                        } else {
+                            val isEmpty = identityPersonalAdapter.itemCount == 0
+                            val isNotEmpty = identityPersonalAdapter.itemCount > 0
+                            showFailedConnectView(isEmpty)
+                            showDefaultView(isNotEmpty)
+                            showSnackBarError(message)
+                        }
+                    }
+                }
+
+                isEmptyData -> {
+                    showDefaultView(true)
+                    showLoadingView(false)
+                    ToastHelper.showCustomToast(context, getString(R.string.text_not_found))
+                }
+            }
+        }
+        identityPersonalAdapter.addLoadStateListener(loadStateListener!!)
+    }
+
+
+
+    private fun clearSearch() {
         binding.searchBar.setText(null)
         binding.searchView.setText(null)
     }
+
 
     private fun showAlertDialog(msg: String = "") {
 
@@ -373,18 +357,18 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
 
         if (unauthorized) {
-            icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-            title = getString(R.string.title_dialog_login_again)
+            icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
+            title = getString(R.string.text_login_again)
             message = getString(R.string.text_please_login_again)
         } else {
-            icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+            icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
             title = getString(R.string.text_error, "")
             message = msg
         }
 
 
         if (dialog == null) {
-            dialog = MaterialAlertDialogBuilder(this).apply {
+            dialog = MaterialAlertDialogBuilder(context).apply {
                 setCancelable(false)
                 setIcon(icon)
                 setTitle(title)
@@ -398,10 +382,10 @@ class IdentityPersonalActivity : AppCompatActivity() {
                             null,
                             null
                         )
-                        goToLogin(this@IdentityPersonalActivity)
+                        goToLogin(context)
                     } else {
                         lifecycleScope.launch {
-                            getToken()?.let { getData(it) }
+                            getToken()?.let { setObserveData(it, Role.fromValue(userTypeRole) ?: Role.STUDENT) }
                         }
                         return@setPositiveButton
                     }
@@ -419,17 +403,17 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
     }
 
-    private fun showLoadingMain(isLoading: Boolean) {
+    private fun showLoadingView(isLoading: Boolean) {
         val shouldShowLoading = isLoading && !isAlertDialogShow
         showLoading(binding.mainProgressBar, shouldShowLoading)
 
         if (isLoading) {
-            isVisibleAllView(false)
-            failedToConnect(false)
+            showDefaultView(false)
+            showFailedConnectView(false)
         }
     }
 
-    private fun isVisibleAllView(isVisible: Boolean) {
+    private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
@@ -445,34 +429,20 @@ class IdentityPersonalActivity : AppCompatActivity() {
         }
     }
 
-    private fun failedToConnect(boolean: Boolean) {
-        if (boolean) {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.VISIBLE
-        } else {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.GONE
-        }
-
+    private fun showFailedConnectView(boolean: Boolean) {
+        binding.viewHandle.viewFailedConnect.root.isVisible = boolean
     }
 
     private fun showSnackBarError(message: String) {
-        initSnackBar(message)
-        snackbar?.show()
+        SnackBarHelper.display(
+            viewGroup = binding.root as ViewGroup,
+            message = message,
+            lifecycleOwner = context,
+        )
     }
 
-    private fun initSnackBar(message: String) {
-        try {
-            snackbar = Snackbar.make(
-                this@IdentityPersonalActivity,
-                binding.root as ViewGroup,
-                message,
-                Snackbar.LENGTH_LONG
-            )
-        } catch (_: Exception) {
-        }
-    }
-
-    private fun showMenu(v: View, menuRes: Int, token: String, sortBy: String) {
-        val popup = PopupMenu(this@IdentityPersonalActivity, v)
+    private fun showMenu(v: View, menuRes: Int, token: String, sortBy: String, role: Role) {
+        val popup = PopupMenu(context, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
@@ -483,7 +453,8 @@ class IdentityPersonalActivity : AppCompatActivity() {
                             token,
                             binding.searchView.text.toString().trim(),
                             sortBy,
-                            SortDir.ASC.value
+                            SortDir.ASC.value,
+                            role
                         ).collectLatest { pagingData ->
                             identityPersonalAdapter.submitData(pagingData)
                         }
@@ -498,7 +469,8 @@ class IdentityPersonalActivity : AppCompatActivity() {
                             token,
                             binding.searchView.text.toString().trim(),
                             sortBy,
-                            SortDir.DESC.value
+                            SortDir.DESC.value,
+                            role
                         ).collectLatest { pagingData ->
                             identityPersonalAdapter.submitData(pagingData)
                         }
@@ -526,7 +498,6 @@ class IdentityPersonalActivity : AppCompatActivity() {
             dialog = null
         }
     }
-
 
     companion object {
         const val KEY_EXTRA_ROLE = "key_extra_role"

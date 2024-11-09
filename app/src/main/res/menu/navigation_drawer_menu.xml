@@ -6,7 +6,7 @@
         <item
             android:id="@+id/actionFragment"
             android:icon="@drawable/z_ic_action"
-            android:title="@string/title_action"
+            android:title="@string/text_action"
             app:showAsAction="ifRoom" />
 
     </group>
@@ -23,18 +23,18 @@
                 android:id="@+id/logoutMenu"
                 android:checkable="false"
                 android:icon="@drawable/z_ic_logout"
-                android:title="@string/btn_text_logout"
+                android:title="@string/text_logout"
                 app:showAsAction="ifRoom" />
         </menu>
     </item>
 
-    <item android:title="@string/refresh">
+    <item android:title="@string/text_refresh">
         <menu>
             <item
                 android:id="@+id/refreshMenu"
                 android:checkable="false"
                 android:icon="@drawable/z_ic_refresh"
-                android:title="@string/refresh"
+                android:title="@string/text_refresh"
                 app:showAsAction="ifRoom" />
         </menu>
 

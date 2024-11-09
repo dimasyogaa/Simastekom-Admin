@@ -34,7 +34,7 @@ class StudyProgramManipulationAdapter(private val itemClickCallback: OnItemClick
                 tvCode.text = data.code
                 tvFaculty.text = data.facultyName
                 tvLevelMajorDegree.text = itemView.context.getString(
-                    R.string.format_level_major_degree,
+                    R.string.text_level_major_degree_format,
                     data.levelName,
                     data.majorName,
                     data.degreeName

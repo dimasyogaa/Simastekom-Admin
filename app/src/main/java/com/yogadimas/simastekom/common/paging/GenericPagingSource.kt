@@ -2,9 +2,7 @@ package com.yogadimas.simastekom.common.paging
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import com.yogadimas.simastekom.api.ApiService
 import com.yogadimas.simastekom.model.responses.PaginationResponse
-import com.yogadimas.simastekom.repository.AdminStudentRepository.Companion.PAGE_SIZE
 
 class GenericPagingSource<T : Any>(
     private val token: String,
@@ -33,7 +31,7 @@ class GenericPagingSource<T : Any>(
             val nextKey = if (response.meta?.currentPage == response.meta?.lastPage) {
                 null
             } else {
-                page + (params.loadSize / PAGE_SIZE)
+                page + (params.loadSize /  Constant.PAGE_SIZE)
             }
 
             LoadResult.Page(

@@ -185,7 +185,7 @@ fun newPasswordSameWithNewConfirmPassword(
     } else if (password.isEmpty() && save) {
         layout.isErrorEnabled = true
         layout.error =
-            context.getString(R.string.text_make_sure_confirm_matches_entered, context.getString(R.string.text_label_new_password))
+            context.getString(R.string.text_make_sure_confirm_matches_entered_format, context.getString(R.string.text_label_new_password))
         isValid = false
     } else {
         layout.error = null

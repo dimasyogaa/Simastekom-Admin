@@ -213,7 +213,7 @@ class StudentDegreeActivity : AppCompatActivity() {
                     val success = getString(R.string.text_success)
                     val degree = getString(R.string.title_degree)
                     showAlertDialog(
-                        getString(R.string.text_alert_delete, success, degree),
+                        getString(R.string.text_alert_delete_format, success, degree),
                         STATUS_SUCCESS
                     )
                     lifecycleScope.launch {
@@ -283,7 +283,7 @@ class StudentDegreeActivity : AppCompatActivity() {
 
                 override fun onDeleteClicked(data: IdentityAcademicData) {
                     showAlertDialog(
-                        getString(R.string.format_string_strip_string, data.code, data.name),
+                        getString(R.string.text_string_strip_string_format, data.code, data.name),
                         STATUS_DELETED,
                         data.id ?: 0
                     )
@@ -309,7 +309,7 @@ class StudentDegreeActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_SUCCESS -> {
@@ -324,7 +324,7 @@ class StudentDegreeActivity : AppCompatActivity() {
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

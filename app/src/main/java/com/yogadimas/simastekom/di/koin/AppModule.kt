@@ -2,6 +2,7 @@ package com.yogadimas.simastekom.di.koin
 
 import com.yogadimas.simastekom.api.ApiConfig
 import com.yogadimas.simastekom.repository.AdminStudentRepository
+import com.yogadimas.simastekom.repository.AdminAllUserTypeRoleRepository
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import org.koin.core.module.dsl.singleOf
 import org.koin.core.module.dsl.viewModelOf
@@ -22,6 +23,7 @@ val appModule = module {
 
     // Provide AdminStudentRepository
     singleOf(::AdminStudentRepository)
+    singleOf(::AdminAllUserTypeRoleRepository)
 
     // Provide AdminViewModel
     viewModelOf(::AdminViewModel)

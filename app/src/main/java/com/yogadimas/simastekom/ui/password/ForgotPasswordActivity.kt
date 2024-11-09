@@ -1,11 +1,10 @@
-package com.yogadimas.simastekom.ui.forgotpassword
+package com.yogadimas.simastekom.ui.password
 
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -22,8 +21,6 @@ import com.yogadimas.simastekom.databinding.ActivityForgotPasswordBinding
 import com.yogadimas.simastekom.common.helper.isValidFormatEmail
 import com.yogadimas.simastekom.common.helper.onTextChange
 import com.yogadimas.simastekom.common.helper.showLoading
-import com.yogadimas.simastekom.ui.identity.personal.email.EmailActivity
-import com.yogadimas.simastekom.ui.password.ResetPasswordEditActivity
 import com.yogadimas.simastekom.viewmodel.forgotpassword.ForgotPasswordViewModel
 
 class ForgotPasswordActivity : AppCompatActivity() {
@@ -374,11 +371,11 @@ class ForgotPasswordActivity : AppCompatActivity() {
     }
 
     private fun stringFormatMin(string: String): String {
-        return String.format(getString(R.string.six_digits_field), string, digits)
+        return String.format(getString(R.string.text_six_digits_field_format), string, digits)
     }
 
     private fun stringFormatRequired(string: String): String {
-        return String.format(getString(R.string.empty_field), string)
+        return String.format(getString(R.string.text_empty_field_format), string)
     }
 
     override fun onStop() {

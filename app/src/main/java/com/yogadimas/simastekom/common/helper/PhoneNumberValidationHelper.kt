@@ -1,7 +1,6 @@
 package com.yogadimas.simastekom.common.helper
 
 import android.content.Context
-import android.util.Log
 import android.widget.EditText
 import com.google.android.material.textfield.TextInputLayout
 import com.yogadimas.simastekom.R
@@ -37,7 +36,7 @@ class PhoneNumberValidationHelper(
             return Pair(
                 false,
                 context.getString(
-                    R.string.text_cannot_contain_spaces,
+                    R.string.text_cannot_contain_spaces_format,
                     context.getString(R.string.text_label_phone)
                 )
             )
@@ -51,7 +50,7 @@ class PhoneNumberValidationHelper(
                     context.getString(
                         R.string.text_error_format,
                         context.getString(R.string.text_label_phone),
-                        context.getString(R.string.text_sign, char.symbol)
+                        context.getString(R.string.text_sign_format, char.symbol)
                     )
                 )
             }

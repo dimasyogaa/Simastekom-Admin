@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_label_province"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_province"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_province"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_province" />
+
+    <TextView
+        android:id="@+id/tv_label_city_regency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_city_regency"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_city_regency"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_city_regency" />
+
+
+    <TextView
+        android:id="@+id/tv_label_district"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_district"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_district"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_district" />
+
+    <TextView
+        android:id="@+id/tv_label_village"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_village"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_village"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_village" />
+
+
+    <TextView
+        android:id="@+id/tv_label_rw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_rw"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_rw"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_rw" />
+
+    <TextView
+        android:id="@+id/tv_label_rt"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_rt"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_rt"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_rt" />
+
+    <TextView
+        android:id="@+id/tv_label_street"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_street"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_street"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_street" />
+
+    <TextView
+        android:id="@+id/tv_label_other_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_address_other_detail"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_other_detail"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_address_other_detail" />
+
+</LinearLayout>

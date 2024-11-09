@@ -157,7 +157,7 @@ class ResetPasswordEditActivity : AppCompatActivity() {
         }
 
         fun stringFormat(string: String): String {
-            return String.format(getString(R.string.min_character_field), string, digits)
+            return String.format(getString(R.string.text_min_character_field_format), string, digits)
         }
 
 
@@ -218,7 +218,7 @@ class ResetPasswordEditActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
-                message = getString(R.string.text_alert_create_new_password, title)
+                message = getString(R.string.text_alert_create_new_password_format, title)
             }
 
             STATUS_ERROR -> {

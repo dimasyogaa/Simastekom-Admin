@@ -3,8 +3,8 @@ package com.yogadimas.simastekom.common.paging.student
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.yogadimas.simastekom.api.ApiService
+import com.yogadimas.simastekom.common.paging.Constant
 import com.yogadimas.simastekom.model.responses.StudentData
-import com.yogadimas.simastekom.repository.AdminStudentRepository.Companion.PAGE_SIZE
 
 
 class StudentSearchSortPagingSource(
@@ -28,7 +28,7 @@ class StudentSearchSortPagingSource(
             val nextKey = if (response.meta?.currentPage == response.meta?.lastPage) {
                 null
             } else {
-                page + (params.loadSize / PAGE_SIZE)
+                page + (params.loadSize / Constant.PAGE_SIZE)
             }
             LoadResult.Page(
                 data = students.filterNotNull(),

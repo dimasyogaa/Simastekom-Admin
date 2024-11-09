@@ -179,7 +179,7 @@
     </style>
 
 
-    <style name="CustomButtonTextButtonMenu" parent="Widget.Material3.Button.TextButton">
+    <style name="CustomButtonTextButtonMore" parent="Widget.Material3.Button.TextButton">
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textAlignment">textStart</item>
@@ -188,5 +188,12 @@
         <item name="cornerRadius">10dp</item>
         <item name="rippleColor">@null</item>
     </style>
+
+    <style name="CustomButtonTextButtonError" parent="Widget.Material3.Button.TextButton">
+        <item name="rippleColor">@color/md_theme_error_transparent_0_1</item>
+    </style>
+
+
+
 
 </resources>

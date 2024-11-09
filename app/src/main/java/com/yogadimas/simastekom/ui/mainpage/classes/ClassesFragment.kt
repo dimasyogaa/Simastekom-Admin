@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.classes
+package com.yogadimas.simastekom.ui.mainpage.classes
 
 import android.os.Bundle
 import android.view.LayoutInflater

@@ -32,8 +32,6 @@
                 android:id="@+id/tv_student_id_number"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="NIM"
                 android:textSize="14sp"
@@ -43,8 +41,6 @@
                 android:id="@+id/tv_study_program"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Program Studi"
                 android:textSize="14sp"/>
@@ -53,8 +49,6 @@
                 android:id="@+id/tv_batch"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Angkatan"
                 android:textSize="14sp" />
@@ -63,8 +57,6 @@
                 android:id="@+id/tv_class_session"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Sesi Kelas"
                 android:textSize="14sp" />
@@ -73,8 +65,6 @@
                 android:id="@+id/tv_semester"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Semester"
                 android:textSize="14sp" />
@@ -83,8 +73,6 @@
                 android:id="@+id/tv_lecture_method"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Metode Kuliah"
                 android:textSize="14sp" />
@@ -93,8 +81,6 @@
                 android:id="@+id/tv_campus"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:ellipsize="end"
-                android:maxLines="1"
                 android:padding="4dp"
                 tools:text="Kampus"
                 android:textSize="14sp" />

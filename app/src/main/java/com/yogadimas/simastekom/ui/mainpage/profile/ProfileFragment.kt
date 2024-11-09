@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.profile
+package com.yogadimas.simastekom.ui.mainpage.profile
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -198,7 +198,7 @@ class ProfileFragment : Fragment() {
             )
                 .setCancelable(false)
                 .setIcon(ContextCompat.getDrawable(requireContext(), R.drawable.z_ic_logout))
-                .setTitle(getString(R.string.btn_text_logout))
+                .setTitle(getString(R.string.text_logout))
                 .setMessage(getString(R.string.text_question_do_you_want_to_leave_this_account))
                 .setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
                     isAlertDialogShow = false

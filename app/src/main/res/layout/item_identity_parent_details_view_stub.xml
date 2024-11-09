@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_label_father_id_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_father_id_card_number"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_father_id_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="No KTP" />
+
+    <TextView
+        android:id="@+id/tv_label_father_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_father_name"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_father_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Nama Ayah" />
+
+    <TextView
+        android:id="@+id/tv_label_mother_id_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_mother_id_card_number"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_mother_id_card_number"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="No KTP" />
+
+    <TextView
+        android:id="@+id/tv_label_mother_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_mother_name"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_mother_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Nama Ibu" />
+
+    <TextView
+        android:id="@+id/tv_label_occupation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_parent_occupation"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_occupation"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Pekerjaan" />
+
+
+
+    <TextView
+        android:id="@+id/tv_label_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_address"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_address"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="10dp"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="Alamat" />
+
+
+    <TextView
+        android:id="@+id/tv_label_phone"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="4dp"
+        android:text="@string/text_label_phone"
+        android:textSize="14sp" />
+
+    <TextView
+        android:id="@+id/tv_phone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="20dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        android:paddingHorizontal="4dp"
+        android:paddingVertical="2dp"
+        android:textSize="14sp"
+        android:textStyle="bold"
+        tools:text="@string/text_label_phone" />
+
+</LinearLayout>

@@ -1,6 +1,7 @@
 package com.yogadimas.simastekom.ui.student
 
 import android.app.Activity
+import android.content.Context
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -8,6 +9,7 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Parcelable
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -35,6 +37,7 @@ import com.yogadimas.simastekom.common.helper.getParcelableCompat
 import com.yogadimas.simastekom.common.helper.getParcelableExtra
 import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.hideKeyboard
+import com.yogadimas.simastekom.common.helper.movePageWithParcelable
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.common.state.State
@@ -43,9 +46,10 @@ import com.yogadimas.simastekom.databinding.LayoutHandleDataConnectionBinding
 import com.yogadimas.simastekom.databinding.LayoutStudentManipulationTextInputs1Binding
 import com.yogadimas.simastekom.databinding.LayoutStudentManipulationTextInputs2Binding
 import com.yogadimas.simastekom.model.ErrorData
-import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.model.responses.StudentData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
 import com.yogadimas.simastekom.ui.dialog.GenderDialogFragment
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
@@ -53,6 +57,7 @@ import com.yogadimas.simastekom.ui.student.identity.academic.classsession.ClassS
 import com.yogadimas.simastekom.ui.student.identity.academic.lecturemethod.LectureMethodActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.semester.SemesterActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.studyprogram.StudentStudyProgramActivity
+import com.yogadimas.simastekom.ui.student.identity.parent.StudentIdentityParentEditActivity
 import com.yogadimas.simastekom.ui.student.status.employment.EmploymentStatusActivity
 import com.yogadimas.simastekom.ui.student.status.student.StudentStatusActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -69,6 +74,8 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerInterface {
 
     private lateinit var binding: ActivityStudentManipulationBinding
+    
+    private val context = this@StudentManipulationActivity
 
     private lateinit var includeViewRefreshBinding: LayoutHandleDataConnectionBinding
 
@@ -195,7 +202,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         data: Intent,
         key: String,
         updateStudentData: (StudentData) -> Unit,
-        editText: TextInputEditText?
+        editText: TextInputEditText?,
     ) {
         val studentData = getParcelableExtra<StudentData>(data, key)
         studentData?.let {
@@ -254,12 +261,10 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         val user = authViewModel.getUser().asFlow().first()
         val token = user.first
         return if (token == AuthPreferences.DEFAULT_VALUE) {
-            goToLogin(this@StudentManipulationActivity)
+            goToLogin(context)
             null
         } else token
     }
-
-
 
 
     private fun addMode() = executeMode { validToken ->
@@ -313,13 +318,13 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
         if (data.isAdded || data.isUpdated || data.isDeleted) {
             val success = getString(R.string.text_success)
-            val label = getString(R.string.title_student)
+            val label = getString(R.string.text_student)
             val resultIntent = Intent()
 
             val msg = when {
-                data.isAdded -> R.string.text_alert_add
-                data.isUpdated -> R.string.text_alert_change
-                else -> R.string.text_alert_delete
+                data.isAdded -> R.string.text_alert_add_format
+                data.isUpdated -> R.string.text_alert_update_format
+                else -> R.string.text_alert_delete_format
             }
 
             resultIntent.putExtra(
@@ -422,10 +427,10 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                 getToken()?.let { token -> displayData(token, data) }
             }
             setVisibilityViewStub(true)
-        } else if (message.contains(getString(R.string.cannot_be_less_than))) {
+        } else if (message.contains(getString(R.string.text_cannot_be_less_than_format))) {
             isDialogShowingOrientationErrorClient400 = true
             message = getString(
-                R.string.min_character_field,
+                R.string.text_min_character_field_format,
                 getString(R.string.text_label_password),
                 minCharacterPassword
             )
@@ -494,7 +499,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
     private fun setupFirstInputLayout(
         vsb1: LayoutStudentManipulationTextInputs1Binding,
-        data: StudentData
+        data: StudentData,
     ) {
         vsb1.apply {
             if (isEditDeleteMode) {
@@ -503,16 +508,16 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                 edtPassword.isVisible = false
                 inputLayoutConfirmPassword.isVisible = false
                 edtConfirmPassword.isVisible = false
-                animateViewStub(this)
+                animateViewStub(this@apply)
 
                 edtFullname.setText(data.fullName)
-                setGender(this, data.gender)
+                setGender(this@apply, data.gender)
                 edtStudentIdNumber.setText(data.studentIdNumber)
                 edtStudyProgram.setText(data.studyProgramName)
 
 
             } else {
-                animateViewStub(this)
+                animateViewStub(this@apply)
 
                 val studentDataValue = studentData ?: StudentData()
 
@@ -520,7 +525,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                     edtFullname.setText(it.fullName)
                     edtPassword.setText(it.password)
                     edtConfirmPassword.setText(it.confirmPassword)
-                    setGender(this, it.gender)
+                    setGender(this@apply, it.gender)
                     edtStudentIdNumber.setText(it.studentIdNumber)
                     edtStudyProgram.setText(it.studyProgramName)
                 }
@@ -550,7 +555,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
     private fun setupSecondInputLayout(
         vsb2: LayoutStudentManipulationTextInputs2Binding,
         data: StudentData,
-        token: String
+        token: String,
     ) {
         animateViewStub(vStub2Binding)
         vsb2.apply {
@@ -566,26 +571,30 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
                 div1.isVisible = true
                 layoutNavigation.isVisible = true
-                fun sendDataParcelable() {
-                    val identityPersonalDataParcelable = IdentityPersonalData(
-                        userId = data.id,
-                        userType = data.userType,
-                        isFromAdminStudent = true
+
+
+//                btnProfilePicture.setOnClickListener {sendDataParcelable()}
+                btnIdentityPersonal.setOnClickListener {
+                    movePageWithParcelable(
+                        IdentityPersonalEditActivity.KEY_ADMIN_STUDENT,
+                        IdentityPersonalEditActivity::class.java,
+                        IdentityPersonalData(
+                            userId = data.id,
+                            userType = data.userType,
+                            isFromAdminStudent = true
+                        )
                     )
-                    startActivity(
-                        Intent(
-                            this@StudentManipulationActivity,
-                            IdentityPersonalEditActivity::class.java
-                        ).apply {
-                            putExtra(
-                                IdentityPersonalEditActivity.KEY_ADMIN_STUDENT,
-                                identityPersonalDataParcelable
-                            )
-                        })
                 }
-                btnProfilePicture.setOnClickListener {sendDataParcelable()}
-                btnIdentityPersonal.setOnClickListener {sendDataParcelable()}
-                btnIdentityParent.setOnClickListener {sendDataParcelable()}
+                btnIdentityParent.setOnClickListener {
+                    movePageWithParcelable(
+                        StudentIdentityParentEditActivity.KEY_ADMIN_STUDENT_PARENT,
+                        StudentIdentityParentEditActivity::class.java,
+                        StudentIdentityParentData(
+                            userId = data.id,
+                            isFromAdminStudent = true
+                        )
+                    )
+                }
 
             } else {
                 val studentDataValue = studentData ?: StudentData()
@@ -675,11 +684,11 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
     private fun <T> setInputLauncher(
         textInputEditText: TextInputEditText,
         key: String,
-        activityClass: Class<T>
+        activityClass: Class<T>,
     ) {
         textInputEditText.setOnClickListener {
             hideKeyboard()
-            val intent = Intent(this@StudentManipulationActivity, activityClass).apply {
+            val intent = Intent(context, activityClass).apply {
                 putExtra(key, true)
             }
             resultLauncher.launch(intent)
@@ -687,7 +696,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
     }
 
     private fun save(
-        token: String
+        token: String,
     ) {
         hideKeyboard()
 
@@ -711,7 +720,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                     isDialogShowingOrientationErrorClient400 = true
                     showAlertDialog(
                         getString(
-                            R.string.text_make_sure_confirm_matches_entered,
+                            R.string.text_make_sure_confirm_matches_entered_format,
                             getString(R.string.text_label_password)
                         ),
                         STATUS_ERROR
@@ -736,7 +745,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         binding.apply {
             hideKeyboard()
             showAlertDialog(
-                getString(R.string.format_string_strip_string, studentIdNumber, name),
+                getString(R.string.text_string_strip_string_format, studentIdNumber, name),
                 STATUS_DELETED,
                 id ?: "0"
             )
@@ -745,7 +754,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
     private fun Activity.hideKeyboard() {
         clearFocusFromAllInputs()
-        hideKeyboard(currentFocus ?: View(this))
+        hideKeyboard(currentFocus ?: View(context))
     }
 
     private fun clearFocusFromAllInputs() {
@@ -810,21 +819,21 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         var icon: Drawable? = null
         when (status) {
             STATUS_DELETED -> {
-                icon = ContextCompat.getDrawable(this, R.drawable.z_ic_delete)
+                icon = ContextCompat.getDrawable(context, R.drawable.z_ic_delete)
                 val wrappedDrawable = DrawableCompat.wrap(icon!!).mutate()
-                val color = ContextCompat.getColor(this, R.color.md_theme_error)
+                val color = ContextCompat.getColor(context, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_ERROR -> {
                 if (unauthorized) {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
                     title = getString(R.string.text_error, "")
                     message = msg
                 }
@@ -834,7 +843,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
         if (dialog == null) {
 
-            dialog = MaterialAlertDialogBuilder(this).apply {
+            dialog = MaterialAlertDialogBuilder(context).apply {
                 setCancelable(false)
                 setIcon(icon)
                 setTitle(title)
@@ -859,7 +868,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                                         null,
                                         null
                                     )
-                                    goToLogin(this@StudentManipulationActivity)
+                                    goToLogin(context)
                                 } else {
                                     isDialogShowingOrientationErrorClient400 = false
                                     return@setPositiveButton
@@ -925,7 +934,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
 
     private fun setGender(
         viewBinding1: LayoutStudentManipulationTextInputs1Binding,
-        gender: String?
+        gender: String?,
     ) {
         viewBinding1.apply {
             if (gender != null) {
@@ -977,7 +986,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         when (category) {
             GenderDialogFragment.KEY_OPTION_GENDER -> {
                 vStub1Binding?.apply {
-                    setGender(this, text)
+                    setGender(this@apply, text)
                     edtGender.setText(text)
                 }
             }

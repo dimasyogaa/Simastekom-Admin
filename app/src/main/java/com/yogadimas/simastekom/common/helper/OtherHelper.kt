@@ -8,6 +8,7 @@ import android.content.res.Resources
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
+import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
@@ -20,13 +21,17 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
+import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.enums.Phone
 import com.yogadimas.simastekom.common.enums.Role
+import com.yogadimas.simastekom.common.enums.SpecialCharacter
 import com.yogadimas.simastekom.common.enums.Str
-import com.yogadimas.simastekom.model.Address
+import com.yogadimas.simastekom.model.backup.Address
+import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.UserCurrent
 import com.yogadimas.simastekom.ui.login.LoginActivity
+import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -36,26 +41,51 @@ import java.util.TimeZone
 
 fun showLoading(progressBar: ProgressBar, isLoading: Boolean) {
     progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+}
+fun showLoadingFade(progressBar: ProgressBar, isLoading: Boolean) {
+    progressBar.apply {
+        if (isLoading) {
+            animate().alpha(1.0f).setDuration(300)
+        } else {
+            alpha = 0f
+        }
 
+    }
 }
 
 fun Editable?.dataString(): String = this.toString().trim()
+fun String?.setStripIfNull(): String {
+    return if (!this.isNullOrEmpty()) this else SpecialCharacter.STRIP.symbol.toString()
+}
+
+
+
 
 fun Context.hideKeyboard(view: View) {
     val inputMethodManager = getSystemService(Activity.INPUT_METHOD_SERVICE) as InputMethodManager
     inputMethodManager.hideSoftInputFromWindow(view.windowToken, 0)
 }
 
-
 fun Address.getFormattedString(): String {
     return "$province,$cityRegency,$district,$village,$rw,$rt,$street,$otherDetailAddress"
 }
-
 
 fun isLandscape(): Boolean {
     return Resources.getSystem().configuration.orientation == Configuration.ORIENTATION_LANDSCAPE
 }
 
+fun formatDataMaterialTextview(label: String, value: String, context: Context): SpannableString {
+    return if (value.isNotEmpty()) {
+        setBold(
+            context.getString(R.string.text_placeholder_value_is_not_empty_format, label, value),
+            listOf(value),
+
+            )
+    } else {
+        SpannableString(label)
+    }
+
+}
 fun setBold(sentence: String, keywords: List<String>, context: Context? = null): SpannableString {
     val spannableString = SpannableString(sentence)
 
@@ -104,6 +134,15 @@ fun goToLogin(context: Context) {
     intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
     context.startActivity(intent)
 }
+fun goToProfileFragment(context: Context) {
+    val intent = Intent(context, MainActivity::class.java)
+    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+    intent.putExtra(MainActivity.KEY_PAGE, ProfileFragment.NAME_FRAGMENT)
+    context.startActivity(intent)
+}
+fun Context.movePageWithParcelable( key: String, destination: Class<*>?, data: Parcelable?) {
+    startActivity( Intent(this, destination).apply {putExtra(key, data)})
+}
 
 inline fun <reified T : Parcelable> getParcelableExtra(data: Intent, key: String): T? {
     return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -113,7 +152,6 @@ inline fun <reified T : Parcelable> getParcelableExtra(data: Intent, key: String
         data.getParcelableExtra(key)
     }
 }
-
 inline fun <reified T : Parcelable> Bundle.getParcelableCompat(key: String): T? {
     return if (Build.VERSION.SDK_INT >= 33) {
         getParcelable(key, T::class.java)
@@ -142,6 +180,8 @@ fun sendMessage(
             { name -> getString(R.string.text_lecture_name_format, name) }
         val setStudent: (String?) -> String =
             { name -> getString(R.string.text_student_name_format, name) }
+        val setStudentParent: (String?) -> String =
+            { name -> getString(R.string.text_student_name_parent_format, name) }
         val misterLecture = getString(R.string.text_lecture_mister_format, receiverName)
         val madamLecture = getString(R.string.text_lecture_madam_format, receiverName)
         val technician = getString(R.string.text_technician)
@@ -169,6 +209,7 @@ fun sendMessage(
                 null -> setLecture(receiverName)
                 else -> setLecture(receiverName)
             }
+            Role.PARENT -> setStudentParent(receiverName)
 
             null -> technician
         }
@@ -177,7 +218,7 @@ fun sendMessage(
             getString(R.string.text_with_identity_format, userCurrent.identity) else emptyString
         val message =
             getString(
-                R.string.text_message_send_message,
+                R.string.text_message_send_message_format,
                 getTimeOfDayCurrent(this),
                 receiverGreeting,
                 roleIntroduction,
@@ -220,9 +261,9 @@ private fun sendEmail(
 ) {
     context.apply {
         val simastekom = "SIMASTEKOM"
-        val admin = getString(R.string.title_admin)
-        val lecture = getString(R.string.title_lecture)
-        val student = getString(R.string.title_student)
+        val admin = getString(R.string.text_admin)
+        val lecture = getString(R.string.text_lecture)
+        val student = getString(R.string.text_student)
 
         val mailTo = Str.MAILTO.value
         val setSubject: (String, String) -> String =
@@ -284,6 +325,10 @@ private fun formatPhoneNumber(input: String): String {
 
         else -> cleanInput // Jika format sudah benar, kembalikan nomor aslinya
     }
+}
+
+ fun colorToHex(color: Int): String {
+    return String.format("#%06X", 0xFFFFFF and color)
 }
 
 

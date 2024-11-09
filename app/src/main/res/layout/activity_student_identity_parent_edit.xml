@@ -1,0 +1,259 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    tools:context=".ui.student.identity.parent.StudentIdentityParentEditActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingBottom="50dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:menu="@menu/top_appbar_profile_navigation_menu"
+                app:navigationIcon="@drawable/z_ic_close"
+                app:title="@string/text_identity_parent" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_father_id_card_number"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_father_id_card_number"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/appBarLayout"
+            app:layout_constraintStart_toStartOf="@id/appBarLayout"
+            app:layout_constraintTop_toBottomOf="@+id/appBarLayout"
+            app:startIconDrawable="@drawable/z_ic_id_card">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_father_id_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:hint="@string/text_hint_father_id_card_number"
+                android:imeOptions="actionNext"
+                android:inputType="numberPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_father_name"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_father_name"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/input_layout_father_id_card_number"
+            app:layout_constraintStart_toStartOf="@+id/input_layout_father_id_card_number"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_father_id_card_number"
+            app:startIconDrawable="@drawable/z_ic_person">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_father_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_mother_name"
+                android:inputType="textCapWords" />
+
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_mother_id_card_number"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_mother_id_card_number"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@id/input_layout_father_name"
+            app:layout_constraintStart_toStartOf="@id/input_layout_father_name"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_father_name"
+            app:startIconDrawable="@drawable/z_ic_id_card">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_mother_id_card_number"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:digits="0123456789"
+                android:hint="@string/text_hint_mother_id_card_number"
+                android:imeOptions="actionNext"
+                android:inputType="numberPassword" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_mother_name"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_mother_name"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/input_layout_mother_id_card_number"
+            app:layout_constraintStart_toStartOf="@+id/input_layout_mother_id_card_number"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_mother_id_card_number"
+            app:startIconDrawable="@drawable/z_ic_person">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_mother_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_mother_name"
+                android:inputType="textCapWords" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_parent_occupation"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_parent_occupation"
+            app:expandedHintEnabled="false"
+            app:layout_constraintEnd_toEndOf="@+id/input_layout_mother_name"
+            app:layout_constraintStart_toStartOf="@+id/input_layout_mother_name"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_mother_name"
+            app:startIconDrawable="@drawable/z_ic_occupation">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_parent_occupation"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_parent_occupation"
+                android:inputType="textCapWords"/>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div1"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            android:layout_marginTop="32dp"
+            app:dividerColor="?attr/colorSurfaceContainerHigh"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/input_layout_parent_occupation" />
+
+        <LinearLayout
+            android:id="@+id/layout_navigation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintEnd_toEndOf="@+id/div1"
+            app:layout_constraintStart_toStartOf="@+id/div1"
+            app:layout_constraintTop_toBottomOf="@+id/div1">
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_phone"
+                style="@style/content.MaterialTextView_Button"
+                android:text="@string/text_label_phone" />
+
+
+            <com.google.android.material.divider.MaterialDivider style="@style/content" />
+
+
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_address_home"
+                style="@style/content.MaterialTextView_Button"
+                android:text="@string/text_address_home" />
+
+
+            <com.google.android.material.divider.MaterialDivider style="@style/content" />
+
+        </LinearLayout>
+
+
+        <com.google.android.material.divider.MaterialDivider
+            android:id="@+id/div2"
+            android:layout_width="match_parent"
+            android:layout_height="16dp"
+            app:dividerColor="?attr/colorSurfaceContainerHigh"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_navigation" />
+
+        <Button
+            android:id="@+id/btn_delete"
+            style="@style/CustomButtonTextButtonError"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="12dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/text_delete"
+            android:textColor="@color/md_theme_error"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toStartOf="@+id/btn_save"
+            app:layout_constraintTop_toBottomOf="@+id/div2"/>
+
+        <Button
+            android:id="@+id/btn_save"
+            style="@style/Widget.Material3.Button.TextButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="12dp"
+            android:layout_marginTop="20dp"
+            android:text="@string/text_save"
+            android:textSize="16sp"
+            app:layout_constraintEnd_toEndOf="@+id/div2"
+            app:layout_constraintTop_toBottomOf="@+id/div2" />
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/mainProgressBar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="45dp"
+            android:alpha="0"
+            android:indeterminate="true"
+            android:scaleX="0.75"
+            android:scaleY="0.75"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout"
+            app:trackThickness="4dp" />
+
+        <include
+            android:id="@+id/view_handle"
+            layout="@layout/layout_handle_data_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</ScrollView>

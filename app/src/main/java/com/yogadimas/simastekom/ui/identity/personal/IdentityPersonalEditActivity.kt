@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.text.SpannableString
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.EditorInfo
@@ -22,22 +21,22 @@ import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.helper.formatDataMaterialTextview
 import com.yogadimas.simastekom.common.helper.getParcelableCompat
 import com.yogadimas.simastekom.common.helper.getParcelableExtra
 import com.yogadimas.simastekom.common.helper.hideKeyboard
-import com.yogadimas.simastekom.common.helper.setBold
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.databinding.ActivityIdentityPersonalEditBinding
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.ui.dialog.GenderDialogFragment
 import com.yogadimas.simastekom.ui.dialog.ReligionDialogFragment
-import com.yogadimas.simastekom.ui.identity.personal.address.AddressHomeActivity
+import com.yogadimas.simastekom.ui.identity.address.AddressHomeEditActivity
 import com.yogadimas.simastekom.ui.identity.personal.birth.PlaceDateBirthActivity
 import com.yogadimas.simastekom.ui.identity.personal.email.EmailActivity
-import com.yogadimas.simastekom.ui.identity.personal.phone.PhoneActivity
+import com.yogadimas.simastekom.ui.identity.phone.PhoneActivity
 import com.yogadimas.simastekom.ui.login.LoginActivity
-import com.yogadimas.simastekom.ui.profile.ProfileFragment
+import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -73,15 +72,29 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
     ) { result ->
-        if (result.resultCode == PhoneActivity.KEY_RESULT_CODE && result.data != null) {
-            val successText =
-                result.data?.getStringExtra(PhoneActivity.KEY_EXTRA_SUCCESS).orEmpty()
-            showAlertDialog(successText, STATUS_SUCCESS, true)
-        } else if (result.resultCode == EmailActivity.KEY_RESULT_CODE && result.data != null) {
-            val successText =
-                result.data?.getStringExtra(EmailActivity.KEY_EXTRA_SUCCESS).orEmpty()
-            showAlertDialog(successText, STATUS_SUCCESS, true)
+        val resultCode = result.resultCode
+        val resultData = result.data
+        val doesItProduceValue: (Int) -> Boolean =
+            { key -> resultCode == key && resultData != null }
+
+        fun showAlertDialogCallback(key: String, isDeleted: Boolean = false) {
+            alertSuccessCallback(key = key, resultData = resultData, isDeleted = isDeleted)
         }
+
+        when {
+            doesItProduceValue(PhoneActivity.KEY_RESULT_CODE) -> {
+                showAlertDialogCallback(PhoneActivity.KEY_EXTRA_SUCCESS)
+            }
+
+            doesItProduceValue(EmailActivity.KEY_RESULT_CODE) -> {
+                showAlertDialogCallback(EmailActivity.KEY_EXTRA_SUCCESS)
+            }
+
+            doesItProduceValue(AddressHomeEditActivity.KEY_RESULT_CODE_DELETED) -> {
+                showAlertDialogCallback(AddressHomeEditActivity.KEY_EXTRA_SUCCESS, true)
+            }
+        }
+
     }
 
 
@@ -99,7 +112,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         }
 
 
-        getUser()
+        observeData()
 
         binding.apply {
 
@@ -166,20 +179,29 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
             }
             tvPlaceDateBirth.setOnClickListener {
                 startActivity(
-                    Intent(this@IdentityPersonalEditActivity, PlaceDateBirthActivity::class.java).apply {
+                    Intent(
+                        this@IdentityPersonalEditActivity,
+                        PlaceDateBirthActivity::class.java
+                    ).apply {
                         putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
                     }
                 )
             }
             tvAddressHome.setOnClickListener {
-                startActivity(
-                    Intent(this@IdentityPersonalEditActivity, AddressHomeActivity::class.java).apply {
-                        putExtra(KEY_ADMIN_STUDENT, identityPersonalData)
+                resultLauncher.launch(
+                    Intent(
+                        this@IdentityPersonalEditActivity,
+                        AddressHomeEditActivity::class.java
+                    ).apply {
+                        putExtra(
+                            KEY_ADMIN_STUDENT,
+                            identityPersonalData
+                        )
                     }
                 )
             }
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getUser() }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { observeData() }
         }
 
     }
@@ -196,7 +218,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
 
-    private fun getUser() {
+    private fun observeData() {
         authViewModel.getUser().observe(this) {
             var (token, userId, userType) = it
             if (token == AuthPreferences.DEFAULT_VALUE) {
@@ -206,7 +228,6 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
             } else {
                 adminViewModel.token = token
                 if (identityPersonalData?.isFromAdminStudent == true) {
-
                     identityPersonalData?.let { data ->
                         userType = data.userType.orEmpty()
                         userId = data.userId.orEmpty()
@@ -223,17 +244,17 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
         adminViewModel.isLoading.observe(this) {
             isLoading = it
-            showLoadingMain(it)
+            showLoadingView(it)
         }
 
         adminViewModel.identityPersonal.observe(this) { eventData ->
             eventData.getContentIfNotHandled()?.let {
                 if (isLoading) {
-                    isVisibleAllView(false)
+                    showDefaultView(false)
                 } else {
-                    isVisibleAllView(true)
+                    showDefaultView(true)
                 }
-                failedToConnect(false)
+                showFailedConnectView(false)
 
 
                 binding.apply {
@@ -246,9 +267,17 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                     }
                     edtReligion.setText(it.religion)
                     tvPhone.text =
-                        formatData(getString(R.string.text_label_phone), it.phone.orEmpty())
+                        formatDataMaterialTextview(
+                            getString(R.string.text_label_phone),
+                            it.phone.orEmpty(),
+                            this@IdentityPersonalEditActivity
+                        )
                     tvEmail.text =
-                        formatData(getString(R.string.text_label_email), it.email.orEmpty())
+                        formatDataMaterialTextview(
+                            getString(R.string.text_label_email),
+                            it.email.orEmpty(),
+                            this@IdentityPersonalEditActivity
+                        )
                 }
 
 
@@ -277,8 +306,8 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                             listMessage = errors.gender
                         }
                     }
-                    isVisibleAllView(true)
-                    failedToConnect(false)
+                    showDefaultView(true)
+                    showFailedConnectView(false)
                     showAlertDialog(listMessage[0], STATUS_ERROR)
                 }
             }
@@ -287,8 +316,8 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         adminViewModel.errorsSnackbarText.observe(this) { eventString ->
             eventString.getContentIfNotHandled()?.let { snackBarText ->
                 hideKeyboard()
-                isVisibleAllView(false)
-                failedToConnect(true)
+                showDefaultView(false)
+                showFailedConnectView(true)
                 Snackbar.make(
                     binding.root as ViewGroup,
                     snackBarText,
@@ -320,61 +349,19 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         )
     }
 
-    override fun onOptionChosen(text: String, category: String) {
-        when (category) {
-            GenderDialogFragment.KEY_OPTION_GENDER -> {
-                setGender(text)
-                binding.edtGender.setText(text)
-            }
 
-            ReligionDialogFragment.KEY_OPTION_RELIGION -> {
-                binding.edtReligion.setText(text)
-            }
-        }
-
+    private fun alertSuccessCallback(key: String, resultData: Intent?, isDeleted: Boolean) {
+        val message = resultData?.getStringExtra(key).orEmpty()
+        showAlertDialog(msg = message, status = STATUS_SUCCESS, isCallback = true, isDeleted)
     }
 
-    private fun setGender(gender: String?) {
-        binding.apply {
-            if (gender != null) {
-                when (gender.lowercase()) {
-                    getString(R.string.text_man).lowercase() -> {
-                        inputLayoutGender.startIconDrawable =
-                            ContextCompat.getDrawable(
-                                this@IdentityPersonalEditActivity,
-                                R.drawable.z_ic_man
-                            )
-                        edtGender.setText(getString(R.string.text_man))
-                    }
 
-                    getString(R.string.text_woman).lowercase() -> {
-                        inputLayoutGender.startIconDrawable =
-                            ContextCompat.getDrawable(
-                                this@IdentityPersonalEditActivity,
-                                R.drawable.z_ic_woman
-                            )
-                        edtGender.setText(getString(R.string.text_woman))
-                    }
-                }
-            }
-        }
-    }
-
-    private fun formatData(label: String, value: String): SpannableString {
-        return if (value.isNotEmpty()) {
-            setBold(
-                getString(R.string.placeholder_value_is_not_empty, label, value),
-                listOf(value),
-                this@IdentityPersonalEditActivity
-            )
-        } else {
-            SpannableString(label)
-        }
-
-    }
-
-    private fun showAlertDialog(msg: String = "", status: String, isCallback: Boolean = false) {
-
+    private fun showAlertDialog(
+        msg: String = "",
+        status: String,
+        isCallback: Boolean = false,
+        isDeleted: Boolean = false,
+    ) {
         val unauthorized = msg == getString(R.string.text_const_unauthorized)
         var title = ""
         var message = ""
@@ -386,11 +373,13 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                 val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
-                message = if (msg.isNotEmpty() && isCallback) {
-                    getString(R.string.text_alert_change, title, msg)
-                } else {
-                    getString(R.string.text_alert_update_data, title)
+                message = when {
+                    msg.isNotEmpty() && isCallback -> when {
+                        isDeleted -> msg
+                        else -> getString(R.string.text_alert_update_format, title, msg)
+                    }
 
+                    else -> getString(R.string.text_alert_update_data_format, title)
                 }
 
             }
@@ -398,7 +387,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
@@ -462,15 +451,16 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         clearFocus()
     }
 
-    private fun showLoadingMain(boolean: Boolean) {
+
+    private fun showLoadingView(boolean: Boolean) {
         showLoading(binding.mainProgressBar, boolean)
         if (boolean) {
-            isVisibleAllView(false)
-            failedToConnect(false)
+            showDefaultView(false)
+            showFailedConnectView(false)
         }
     }
 
-    private fun isVisibleAllView(boolean: Boolean) {
+    private fun showDefaultView(boolean: Boolean) {
         binding.apply {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
@@ -492,7 +482,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         }
     }
 
-    private fun failedToConnect(boolean: Boolean) {
+    private fun showFailedConnectView(boolean: Boolean) {
         if (boolean) {
             binding.viewHandle.viewFailedConnect.root.visibility = View.VISIBLE
         } else {
@@ -502,7 +492,31 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
 
+    private fun setGender(gender: String?) {
+        binding.apply {
+            if (gender != null) {
+                when (gender.lowercase()) {
+                    getString(R.string.text_man).lowercase() -> {
+                        inputLayoutGender.startIconDrawable =
+                            ContextCompat.getDrawable(
+                                this@IdentityPersonalEditActivity,
+                                R.drawable.z_ic_man
+                            )
+                        edtGender.setText(getString(R.string.text_man))
+                    }
 
+                    getString(R.string.text_woman).lowercase() -> {
+                        inputLayoutGender.startIconDrawable =
+                            ContextCompat.getDrawable(
+                                this@IdentityPersonalEditActivity,
+                                R.drawable.z_ic_woman
+                            )
+                        edtGender.setText(getString(R.string.text_woman))
+                    }
+                }
+            }
+        }
+    }
 
     private fun checkingIsGenderGone(block: () -> Unit) {
         if (identityPersonalData?.isFromAdminStudent != true) {
@@ -518,6 +532,20 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         inputLayoutGender.startIconDrawable = null
         inputLayoutGender.endIconMode = TextInputLayout.END_ICON_NONE
         inputLayoutGender.requestLayout()
+    }
+
+    override fun onOptionChosen(text: String, category: String) {
+        when (category) {
+            GenderDialogFragment.KEY_OPTION_GENDER -> {
+                setGender(text)
+                binding.edtGender.setText(text)
+            }
+
+            ReligionDialogFragment.KEY_OPTION_RELIGION -> {
+                binding.edtReligion.setText(text)
+            }
+        }
+
     }
 
     override fun onStop() {

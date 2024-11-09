@@ -1,5 +1,6 @@
 package com.yogadimas.simastekom.api
 
+import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.StudentObjectResponse
 import com.yogadimas.simastekom.model.responses.AdminResponse
@@ -9,8 +10,10 @@ import com.yogadimas.simastekom.model.responses.CampusObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import com.yogadimas.simastekom.model.responses.IdentityPersonalResponse
+import com.yogadimas.simastekom.model.responses.IdentityPersonalObjectResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
@@ -74,7 +77,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Path("penggunaType") userType: String,
         @Path("penggunaId") userId: String,
-    ): Call<IdentityPersonalResponse>
+    ): Call<IdentityPersonalObjectResponse>
 
 
     @PUT("identitas-pribadi/{penggunaType}/{penggunaId}")
@@ -83,7 +86,14 @@ interface ApiService {
         @Path("penggunaType") userType: String,
         @Path("penggunaId") userId: String,
         @Body identityPersonal: IdentityPersonalData,
-    ): Call<IdentityPersonalResponse>
+    ): Call<IdentityPersonalObjectResponse>
+
+    @DELETE("identitas-pribadi/{penggunaType}/{penggunaId}/address")
+    fun deleteIdentityPersonalAddress(
+        @Header("Authorization") token: String,
+        @Path("penggunaType") userType: String,
+        @Path("penggunaId") userId: String,
+    ): Call<IdentityPersonalObjectResponse>
 
     @FormUrlEncoded
     @POST("identitas-pribadi/{penggunaType}/{penggunaId}/verify-email")
@@ -92,7 +102,7 @@ interface ApiService {
         @Path("penggunaType") userType: String,
         @Path("penggunaId") userId: String,
         @Field("email") email: String,
-    ): Call<IdentityPersonalResponse>
+    ): Call<IdentityPersonalObjectResponse>
 
     @FormUrlEncoded
     @POST("identitas-pribadi/{penggunaType}/{penggunaId}/verify-email/check-token")
@@ -102,7 +112,9 @@ interface ApiService {
         @Path("penggunaId") userId: String,
         @Field("email") email: String,
         @Field("token") tokenVerifyEmail: String,
-    ): Call<IdentityPersonalResponse>
+    ): Call<IdentityPersonalObjectResponse>
+
+
 
     /** Student */
     @GET("student")
@@ -170,6 +182,7 @@ interface ApiService {
         @Query("user-type") userType: String,
     ): PaginationResponse<IdentityPersonalData>
 
+
     /** Identity Academic */
     @GET("identity-academic")
     suspend fun getAllIdentitiesAcademic(
@@ -187,6 +200,80 @@ interface ApiService {
         @Query("sort-by") sortBy: String?,
         @Query("sort-dir") sortDir: String?,
     ): PaginationResponse<IdentityAcademicData>
+
+    /** Identity Parent */
+    @POST("identity-parent")
+    suspend fun addStudentIdentityParent(
+        @Header("Authorization") token: String,
+        @Body studentIdentityParentData: StudentIdentityParentData
+    ): Response<StudentIdentityParentObjectResponse>
+
+    @GET("identity-parent")
+    suspend fun getAllStudentIdentitiesParent(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int
+    ): PaginationResponse<StudentIdentityParentData>
+
+    @GET("identity-parent/search-sort")
+    suspend fun searchSortStudentIdentitiesParent(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<StudentIdentityParentData>
+
+    @GET("identity-parent/{id}")
+    suspend fun getStudentIdentityParentById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<StudentIdentityParentObjectResponse>
+
+    @PUT("identity-parent/{id}")
+    suspend fun updateStudentIdentityParent(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body studentIdentityParentData: StudentIdentityParentData
+    ): Response<StudentIdentityParentObjectResponse>
+
+
+    @DELETE("identity-parent/{id}")
+    suspend fun deleteStudentIdentityParent(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<StudentIdentityParentObjectResponse>
+
+    @DELETE("identity-parent/{id}/address")
+    suspend fun deleteStudentIdentityParentAddress(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<StudentIdentityParentObjectResponse>
+
+    /** Address */
+    @GET("address")
+    suspend fun getAllAddresses(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("user-type") userType: String
+    ): PaginationResponse<AddressData>
+
+    @GET("address/search-sort")
+    suspend fun searchSortAddresses(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+        @Query("user-type") userType: String,
+    ): PaginationResponse<AddressData>
+
+
+
+
 
 
     /** Employment Status */

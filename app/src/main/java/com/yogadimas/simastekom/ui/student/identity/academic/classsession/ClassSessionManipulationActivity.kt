@@ -12,7 +12,6 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
@@ -178,9 +177,9 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
                     val resultIntent = Intent()
 
                     val msg = when {
-                        it.isAdded -> R.string.text_alert_add
-                        it.isUpdated -> R.string.text_alert_change
-                        else -> R.string.text_alert_delete
+                        it.isAdded -> R.string.text_alert_add_format
+                        it.isUpdated -> R.string.text_alert_update_format
+                        else -> R.string.text_alert_delete_format
                     }
 
                     resultIntent.putExtra(
@@ -291,13 +290,13 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
                 val color = ContextCompat.getColor(this, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

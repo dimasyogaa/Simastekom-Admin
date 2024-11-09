@@ -30,10 +30,10 @@ import com.yogadimas.simastekom.databinding.ActivityMainBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
-import com.yogadimas.simastekom.ui.action.ActionFragment
+import com.yogadimas.simastekom.ui.mainpage.action.ActionFragment
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.password.PasswordEditActivity
-import com.yogadimas.simastekom.ui.profile.ProfileFragment
+import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -332,7 +332,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
             dialogAlert = MaterialAlertDialogBuilder(this)
                 .setCancelable(false)
                 .setIcon(ContextCompat.getDrawable(this, R.drawable.z_ic_warning))
-                .setTitle(getString(R.string.title_dialog_login_again))
+                .setTitle(getString(R.string.text_login_again))
                 .setMessage(errorMessage)
                 .setPositiveButton(getString(R.string.text_ok)) { _, _ ->
                     dialogHasBeenShow = false
@@ -357,7 +357,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
             )
                 .setCancelable(false)
                 .setIcon(ContextCompat.getDrawable(this@MainActivity, R.drawable.z_ic_logout))
-                .setTitle(getString(R.string.btn_text_logout))
+                .setTitle(getString(R.string.text_logout))
                 .setMessage("Anda ingin keluar dari akun ini?")
                 .setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
                     dialogHasBeenShow = false

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
@@ -33,7 +32,7 @@ import com.yogadimas.simastekom.model.PlaceBirth
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity.Companion.KEY_ADMIN_STUDENT
 import com.yogadimas.simastekom.ui.login.LoginActivity
-import com.yogadimas.simastekom.ui.profile.ProfileFragment
+import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -210,7 +209,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                                 inputLayoutPlaceBirth.isErrorEnabled = hasLeadingSpace
                             }
                             inputLayoutPlaceBirth.error = when {
-                                hasLeadingSpace -> getString(R.string.text_cannot_contain_spaces_early, getString(R.string.text_label_place_birth))
+                                hasLeadingSpace -> getString(R.string.text_cannot_contain_spaces_early_format, getString(R.string.text_label_place_birth))
                                 isEmpty -> null
                                 else -> null
                             }
@@ -344,7 +343,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
                 message = getString(
-                    R.string.text_alert_change,
+                    R.string.text_alert_update_format,
                     title,
                     getString(R.string.text_place_date_birth)
                 )
@@ -353,7 +352,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)

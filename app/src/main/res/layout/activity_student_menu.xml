@@ -35,7 +35,7 @@
         <Button
             android:id="@+id/btn_student"
             style="@style/CustomButtonFilledMenu"
-            android:text="@string/title_student_data" />
+            android:text="@string/text_student_data" />
 
 
         <Button
@@ -63,6 +63,18 @@
             android:id="@+id/btn_employment_status"
             style="@style/CustomButtonTonalMenu"
             android:text="@string/text_label_employment_status"/>
+
+
+
+        <Button
+            android:id="@+id/btn_address_home_personal"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_address_home_personal"/>
+
+        <Button
+            android:id="@+id/btn_address_home_parent"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_address_home_parent"/>
 
 
 

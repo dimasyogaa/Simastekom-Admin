@@ -12,20 +12,22 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.adapter.student.identityacademic.IdentityAcademicAdapter
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.enums.SortDir
+import com.yogadimas.simastekom.common.helper.SnackBarHelper
 import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.paging.LoadingStateAdapter
@@ -43,24 +45,25 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StudentIdentityAcademicActivity : AppCompatActivity() {
     private lateinit var binding: ActivityStudentIdentityAcademicBinding
 
+    private val context = this@StudentIdentityAcademicActivity
+
     private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
+    private var loadStateListener: ((CombinedLoadStates) -> Unit)? = null
+
     private lateinit var identityAcademicAdapter: IdentityAcademicAdapter
-    private var snackbar: Snackbar? = null
+
     private var dialog: AlertDialog? = null
     private var isAlertDialogShow = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding = ActivityStudentIdentityAcademicBinding.inflate(layoutInflater)
         setContentView(binding.root)
-
-
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -80,7 +83,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
         val user = authViewModel.getUser().asFlow().first()
         val token = user.first
         return if (token == AuthPreferences.DEFAULT_VALUE) {
-            goToLogin(this@StudentIdentityAcademicActivity)
+            goToLogin(context)
             null
         } else {
             token
@@ -89,67 +92,80 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
     private fun mainCall(token: String) {
         binding.apply {
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
+            setToolbar(token)
+            setSearch(token)
+            setSort(token)
 
-            toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getData(token)
-                true
-            }
+            rvIdentityAcademic.layoutManager = LinearLayoutManager(context)
 
-            searchView.setupWithSearchBar(searchBar)
-            searchView
-                .editText
-                .setOnEditorActionListener { _, _, _ ->
-                    searchBar.setText(searchView.text)
-                    lifecycleScope.launch {
-                        searchView.hide()
-                        adminViewModel.getIdentitiesAcademic(
-                            token,
-                            binding.searchView.text.toString().trim(),
-                            null,
-                            null
-                        ).collectLatest { pagingData ->
-                            identityAcademicAdapter.submitData(pagingData)
-                        }
-
-                    }
-
-                    false
-                }
-
-            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-            listOf(chipSortBy, chipStudentIdNumber).forEach { chipId ->
-                chipId.setOnCheckedChangeListener { chip, isChecked ->
-                    if (isChecked) {
-                        when (chipId) {
-                            chipSortBy -> {
-                                showMenu(
-                                    chip, R.menu.top_appbar_sort_by_menu, token, "created_at"
-                                )
-                            }
-
-                            chipStudentIdNumber -> {
-                                showMenu(
-                                    chip, R.menu.top_appbar_sort_smallest_largest_menu, token, "nim"
-                                )
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
-            rvIdentityAcademic.layoutManager =
-                LinearLayoutManager(this@StudentIdentityAcademicActivity)
-
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getData(token) }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { setObserveData(token) }
         }
+
         identityAcademicAdapter = IdentityAcademicAdapter()
 
+        onBackPressedDispatcher()
 
+        setObserveData(token)
+    }
+
+
+    private fun ActivityStudentIdentityAcademicBinding.setSearch(token: String) {
+        searchView.setupWithSearchBar(searchBar)
+        searchView
+            .editText
+            .setOnEditorActionListener { _, _, _ ->
+                searchBar.setText(searchView.text)
+                lifecycleScope.launch {
+                    searchView.hide()
+                    adminViewModel.getIdentitiesAcademic(
+                        token,
+                        binding.searchView.text.toString().trim(),
+                        null,
+                        null
+                    ).collectLatest { pagingData ->
+                        identityAcademicAdapter.submitData(pagingData)
+                    }
+
+                }
+
+                false
+            }
+    }
+
+    private fun ActivityStudentIdentityAcademicBinding.setToolbar(token: String) {
+        toolbar.setNavigationOnClickListener { finish() }
+        toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+            setObserveData(token)
+            true
+        }
+    }
+
+    private fun ActivityStudentIdentityAcademicBinding.setSort(token: String) {
+        chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+        listOf(chipSortBy, chipStudentIdNumber).forEach { chipId ->
+            chipId.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    when (chipId) {
+                        chipSortBy -> {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_by_menu, token, "created_at"
+                            )
+                        }
+
+                        chipStudentIdNumber -> {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_smallest_largest_menu, token, "nim"
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    private fun onBackPressedDispatcher() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 binding.apply {
@@ -162,15 +178,12 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
             }
         }
-        onBackPressedDispatcher.addCallback(this, callback)
-
-        getData(token)
+        onBackPressedDispatcher.addCallback(context, callback)
     }
 
-    private fun getData(token: String) {
+    private fun setObserveData(token: String) {
 
-        setSearchBarViewNull()
-
+        clearSearch()
 
         val footerAdapter = LoadingStateAdapter {
             identityAcademicAdapter.retry()
@@ -180,11 +193,38 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
             footer = footerAdapter
         )
 
+        observePaging()
+
+        lifecycleScope.launch {
+            launch {
+
+                adminViewModel.getIdentitiesAcademic(token).collectLatest { pagingData ->
+                    identityAcademicAdapter.submitData(pagingData)
+                }
+
+            }
 
 
+            // Mengelola error dari errorStateFlow
+            launch {
+                adminViewModel.errorStateFlow.collect { errorMessage ->
+                    errorMessage?.let {
+                        if (errorMessage.contains(ErrorCode.UNAUTHORIZED.value)) {
+                            showDefaultView(true)
+                            showFailedConnectView(false)
+                            showAlertDialog(
+                                getString(R.string.text_const_unauthorized)
+                            )
+                        }
+                    }
+                }
+            }
+        }
+    }
 
-
-        identityAcademicAdapter.addLoadStateListener { loadState ->
+    private fun observePaging() {
+        loadStateListener?.let { identityAcademicAdapter.removeLoadStateListener(it) }
+        loadStateListener = { loadState ->
             // Cek jika data berhasil dimuat
             val isDataLoaded = loadState.source.refresh is LoadState.NotLoading &&
                     identityAcademicAdapter.itemCount > 0
@@ -202,17 +242,16 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
                 loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityAcademicAdapter.itemCount == 0
 
 
-
             when {
                 isLoading -> {
-                    showLoadingMain(true)
+                    showLoadingView(true)
                 }
 
                 isDataLoaded -> {
                     lifecycleScope.launch {
                         withContext(Dispatchers.Main) {
-                            isVisibleAllView(true)
-                            showLoadingMain(false)
+                            showDefaultView(true)
+                            showLoadingView(false)
                         }
                     }
 
@@ -220,7 +259,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
                 }
 
                 isError -> {
-                    showLoadingMain(false)
+                    showLoadingView(false)
                     // Terjadi error di tengah pagination
                     val errorState = when {
                         loadState.source.append is LoadState.Error -> loadState.source.append as LoadState.Error
@@ -231,19 +270,19 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
                     errorState?.let {
                         errorState.error.localizedMessage?.let { message ->
                             if (message.contains("401")) {
-                                isVisibleAllView(true)
-                                failedToConnect(false)
+                                showDefaultView(true)
+                                showFailedConnectView(false)
                                 showAlertDialog(
                                     getString(R.string.text_const_unauthorized)
                                 )
                             } else {
                                 if (identityAcademicAdapter.itemCount == 0) {
                                     // Error terjadi sejak awal, tampilkan error dan sembunyikan view lainnya
-                                    failedToConnect(true)
-                                    isVisibleAllView(false)
+                                    showFailedConnectView(true)
+                                    showDefaultView(false)
                                 } else {
                                     // Error terjadi di tengah pagination, tampilkan pesan error
-                                    failedToConnect(false)
+                                    showFailedConnectView(false)
                                 }
                                 showSnackBarError(
                                     message = message
@@ -257,10 +296,10 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
                 isEmptyData -> {
                     lifecycleScope.launch {
                         withContext(Dispatchers.Main) {
-                            isVisibleAllView(true)
-                            showLoadingMain(false)
+                            showDefaultView(true)
+                            showLoadingView(false)
                             Toast.makeText(
-                                this@StudentIdentityAcademicActivity,
+                                context,
                                 getString(R.string.text_not_found), Toast.LENGTH_SHORT
                             ).show()
 
@@ -272,37 +311,10 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
             }
         }
-
-
-        lifecycleScope.launch {
-            launch {
-
-                adminViewModel.getIdentitiesAcademic(token).collectLatest { pagingData ->
-                    identityAcademicAdapter.submitData(pagingData)
-                }
-
-            }
-
-
-            // Mengelola error dari errorStateFlow
-            launch {
-                adminViewModel.errorStateFlow.collect { errorMessage ->
-                    errorMessage?.let {
-                        if (errorMessage.contains(ErrorCode.UNAUTHORIZED.value)) {
-                            isVisibleAllView(true)
-                            failedToConnect(false)
-                            showAlertDialog(
-                                getString(R.string.text_const_unauthorized)
-                            )
-                        }
-                    }
-                }
-            }
-        }
+        identityAcademicAdapter.addLoadStateListener(loadStateListener!!)
     }
 
-
-    private fun setSearchBarViewNull() {
+    private fun clearSearch() {
         binding.searchBar.setText(null)
         binding.searchView.setText(null)
     }
@@ -318,7 +330,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
         if (unauthorized) {
             icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-            title = getString(R.string.title_dialog_login_again)
+            title = getString(R.string.text_login_again)
             message = getString(R.string.text_please_login_again)
         } else {
             icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
@@ -342,10 +354,10 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
                             null,
                             null
                         )
-                        goToLogin(this@StudentIdentityAcademicActivity)
+                        goToLogin(context)
                     } else {
                         lifecycleScope.launch {
-                            getToken()?.let { getData(it) }
+                            getToken()?.let { setObserveData(it) }
                         }
                         return@setPositiveButton
                     }
@@ -363,17 +375,17 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
     }
 
-    private fun showLoadingMain(isLoading: Boolean) {
+    private fun showLoadingView(isLoading: Boolean) {
         val shouldShowLoading = isLoading && !isAlertDialogShow
         showLoading(binding.mainProgressBar, shouldShowLoading)
 
         if (isLoading) {
-            isVisibleAllView(false)
-            failedToConnect(false)
+            showDefaultView(false)
+            showFailedConnectView(false)
         }
     }
 
-    private fun isVisibleAllView(isVisible: Boolean) {
+    private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
@@ -389,30 +401,16 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
         }
     }
 
-    private fun failedToConnect(boolean: Boolean) {
-        if (boolean) {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.VISIBLE
-        } else {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.GONE
-        }
-
+    private fun showFailedConnectView(boolean: Boolean) {
+        binding.viewHandle.viewFailedConnect.root.isVisible = boolean
     }
 
     private fun showSnackBarError(message: String) {
-        initSnackBar(message)
-        snackbar?.show()
-    }
-
-    private fun initSnackBar(message: String) {
-        try {
-            snackbar = Snackbar.make(
-                this@StudentIdentityAcademicActivity,
-                binding.root as ViewGroup,
-                message,
-                Snackbar.LENGTH_LONG
-            )
-        } catch (_: Exception) {
-        }
+        SnackBarHelper.display(
+            viewGroup = binding.root as ViewGroup,
+            message = message,
+            lifecycleOwner = context,
+        )
     }
 
     private fun showMenu(v: View, menuRes: Int, token: String, sortBy: String) {

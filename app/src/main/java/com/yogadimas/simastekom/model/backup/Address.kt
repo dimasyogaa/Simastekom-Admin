@@ -1,7 +1,6 @@
-package com.yogadimas.simastekom.model
+package com.yogadimas.simastekom.model.backup
 
 import android.os.Parcelable
-import android.util.Log
 import com.yogadimas.simastekom.common.helper.capitalizeWords
 import kotlinx.parcelize.Parcelize
 
@@ -84,7 +83,7 @@ data class Address(
         fun parse(input: String?): Address {
             val address = Address()
             input?.let {
-                val parts = it.split(", ")
+                val parts = it.split("~ ")
                 if (parts.size == 8) {
                     address.province = parts[7].trim()
                     address.cityRegency = parts[6].trim()
@@ -96,6 +95,9 @@ data class Address(
                     address.street = parts[0].trim()
                 }
             }
+
+
+
 
             return address
         }

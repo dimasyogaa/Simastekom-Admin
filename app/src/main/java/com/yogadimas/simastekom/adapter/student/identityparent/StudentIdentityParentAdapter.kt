@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.adapter.student.identitypersonal
+package com.yogadimas.simastekom.adapter.student.identityparent
 
 import android.animation.ObjectAnimator
 import android.animation.PropertyValuesHolder
@@ -12,28 +12,26 @@ import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.common.enums.FieldType
 import com.yogadimas.simastekom.common.enums.Scale
 import com.yogadimas.simastekom.common.enums.SpecialCharacter
-import com.yogadimas.simastekom.common.interfaces.OnItemClickIdentityPersonalCallback
-import com.yogadimas.simastekom.databinding.ItemIdentityPersonalBinding
-import com.yogadimas.simastekom.databinding.ItemIdentityPersonalDetailsViewStubBinding
-import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.common.interfaces.OnItemClickCallback
+import com.yogadimas.simastekom.databinding.ItemIdentityParentBinding
+import com.yogadimas.simastekom.databinding.ItemIdentityParentDetailsViewStubBinding
+import com.yogadimas.simastekom.model.responses.AddressData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentityPersonalCallback) :
-    PagingDataAdapter<IdentityPersonalData, IdentityPersonalAdapter.ViewHolder>(DIFF_CALLBACK) {
+class StudentIdentityParentAdapter(private val itemClickCallback: OnItemClickCallback<StudentIdentityParentData>) :
+    PagingDataAdapter<StudentIdentityParentData, StudentIdentityParentAdapter.ViewHolder>(DIFF_CALLBACK) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
-            ItemIdentityPersonalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+            ItemIdentityParentBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding, itemClickCallback)
 
     }
@@ -47,37 +45,24 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
     }
 
     class ViewHolder(
-        private val binding: ItemIdentityPersonalBinding,
-        private val itemClickCallback: OnItemClickIdentityPersonalCallback,
+        private val binding: ItemIdentityParentBinding,
+        private val itemClickCallback: OnItemClickCallback<StudentIdentityParentData>,
     ) :
         RecyclerView.ViewHolder(binding.root) {
 
         private var isDetailVisible = false
-        private var detailViewBinding: ItemIdentityPersonalDetailsViewStubBinding? = null
+        private var detailViewBinding: ItemIdentityParentDetailsViewStubBinding? = null
 
         @SuppressLint("SetTextI18n")
         fun bind(
-            data: IdentityPersonalData,
+            data: StudentIdentityParentData,
         ) {
             binding.apply {
                 itemView.context.apply {
-                    val user = data.studentIdNumber ?: data.lectureIdNumber ?: data.username
-                    val labelUser =
-                        if (data.studentIdNumber != null) getString(R.string.text_label_student_id_number) else if (data.lectureIdNumber != null) getString(
-                            R.string.text_label_lecture_id_number
-                        ) else getString(R.string.text_label_id_username)
+                    tvStudentIdNumber.text = data.studentIdNumber
 
-
-                    ivProfile.load(BuildConfig.BASE_URL + data.profilePicture) {
-                        crossfade(true)
-                        placeholder(R.drawable.z_ic_placeholder_profile)
-                        error(R.drawable.z_ic_placeholder_profile)
-                    }
-
-                    tvLabelUser.text = labelUser
-                    tvUser.text = user.toString()
-
-                    btnDetail.text = itemView.context.getString(R.string.text_more)
+                    btnDetail.text = if (!isDetailVisible) getString(R.string.text_more)
+                    else getString(R.string.text_close)
                     btnDetail.setOnClickListener {
                         toggleDetailView(data)
                     }
@@ -85,7 +70,7 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
             }
         }
 
-        private fun toggleDetailView(data: IdentityPersonalData) {
+        private fun toggleDetailView(data: StudentIdentityParentData) {
             if (isDetailVisible) {
                 hideDetailViews()
                 binding.btnDetail.text = itemView.context.getString(R.string.text_more)
@@ -110,72 +95,40 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
 
 
         // Inflate and show the detail views using ViewStub
-        private fun inflateAndShowDetailViews(data: IdentityPersonalData) {
+        private fun inflateAndShowDetailViews(data: StudentIdentityParentData) {
             if (detailViewBinding == null) {
                 // Inflate the ViewStub jika belum di-inflate
                 detailViewBinding =
-                    ItemIdentityPersonalDetailsViewStubBinding.bind(binding.vsItemIdentityPersonalDetails.inflate())
+                    ItemIdentityParentDetailsViewStubBinding.bind(binding.vsItemIdentityParentDetails.inflate())
             }
 
             // Atur data ke detailView
             detailViewBinding?.apply {
-                tvIdCardNumber.text = data.idCardNumber.setValueIfNull()
-                tvGender.text = data.gender.setValueIfNull()
-                tvAddress.text = data.address.setValueIfNull()
-                tvPlaceDateBirth.text = data.placeDateBirth.setValueIfNull()
-                tvReligion.text = data.religion.setValueIfNull()
+                tvFatherIdCardNumber.text = data.idCardNumberFather.setValueIfNull()
+                tvFatherName.text = data.nameFather.setValueIfNull()
+                tvMotherIdCardNumber.text = data.idCardNumberMother.setValueIfNull()
+                tvMotherName.text = data.nameMother.setValueIfNull()
+                tvOccupation.text = data.occupation.setValueIfNull()
+                tvAddress.text = AddressData.getAddressData(data.address).setValueIfNull()
                 CoroutineScope(Dispatchers.Main).launch {
-                    configureEmailView(data)
                     configurePhoneView(data)
                 }
 
             }
 
             // Tampilkan view yang sudah di-inflate
-            binding.vsItemIdentityPersonalDetails.visibility = View.VISIBLE
+            binding.vsItemIdentityParentDetails.visibility = View.VISIBLE
 
         }
 
 
         // Hide the detail views
         private fun hideDetailViews() {
-            binding.vsItemIdentityPersonalDetails.visibility = View.GONE
+            binding.vsItemIdentityParentDetails.visibility = View.GONE
         }
 
-        @SuppressLint("ResourceType")
-        private suspend fun configureEmailView(data: IdentityPersonalData) {
-            detailViewBinding?.tvEmail?.apply {
-                if (!data.email.isNullOrEmpty()) {
-                    isClickable = true
-                    isFocusable = true
-                    stateListAnimator = setAnimationOnClick(itemView.rootView)
-                    setPadding(16.dpToPx(), 8.dpToPx(), 16.dpToPx(), 8.dpToPx())
-                    (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin = 20.dpToPx()
-                    background = ContextCompat.getDrawable(
-                        context,
-                        R.drawable.background_rounded_solid_blue
-                    )
-                    setTextColor(ContextCompat.getColor(context, android.R.color.white))
-                    setOnClickListener {
-                        CoroutineScope(Dispatchers.Main).launch {
-                            delay(100);
-                            itemClickCallback.onItemClicked(data, FieldType.EMAIL)
-                        }
-                    }
 
-
-                } else {
-                    setPadding(4.dpToPx(), 2.dpToPx(), 4.dpToPx(), 2.dpToPx())
-                    (layoutParams as ViewGroup.MarginLayoutParams).bottomMargin = 10.dpToPx()
-                    background = null
-                }
-
-                text = data.email.setValueIfNull()
-
-            }
-        }
-
-        private fun configurePhoneView(data: IdentityPersonalData) {
+        private fun configurePhoneView(data: StudentIdentityParentData) {
             detailViewBinding?.tvPhone?.apply {
                 if (!data.phone.isNullOrEmpty()) {
                     isClickable = true
@@ -192,7 +145,7 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
                     setOnClickListener {
                         CoroutineScope(Dispatchers.Main).launch {
                             delay(50);
-                            itemClickCallback.onItemClicked(data, FieldType.PHONE)
+                            itemClickCallback.onItemClicked(data)
                         }
                     }
                 } else {
@@ -247,17 +200,17 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
 
 
     companion object {
-        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<IdentityPersonalData>() {
+        private val DIFF_CALLBACK = object : DiffUtil.ItemCallback<StudentIdentityParentData>() {
             override fun areItemsTheSame(
-                oldItem: IdentityPersonalData,
-                newItem: IdentityPersonalData,
+                oldItem: StudentIdentityParentData,
+                newItem: StudentIdentityParentData,
             ): Boolean {
                 return oldItem == newItem
             }
 
             override fun areContentsTheSame(
-                oldItem: IdentityPersonalData,
-                newItem: IdentityPersonalData,
+                oldItem: StudentIdentityParentData,
+                newItem: StudentIdentityParentData,
             ): Boolean {
                 return oldItem.userId == newItem.userId
             }

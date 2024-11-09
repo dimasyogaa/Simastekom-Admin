@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.action
+package com.yogadimas.simastekom.ui.mainpage.action
 
 import android.content.Context
 import android.content.Intent

@@ -521,13 +521,13 @@ class AdminEditOldActivity : AppCompatActivity(), OnOptionDialogListenerInterfac
                 val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
-                message = getString(R.string.text_alert_update_data, title)
+                message = getString(R.string.text_alert_update_data_format, title)
             }
 
             STATUS_ERROR -> {
                 if (unauthorized) {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
@@ -647,7 +647,7 @@ class AdminEditOldActivity : AppCompatActivity(), OnOptionDialogListenerInterfac
     private fun checkValidated(id: String, name: String): Boolean {
 
         fun stringFormat(string: String): String {
-            return String.format(getString(R.string.mandatory_field), string)
+            return String.format(getString(R.string.text_mandatory_field_format), string)
         }
 
         fun checkInputIsEmpty(

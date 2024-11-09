@@ -20,24 +20,26 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import androidx.paging.CombinedLoadStates
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
-import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.adapter.student.StudentManipulationAdapter
-import com.yogadimas.simastekom.common.custom.CustomItemDecoration
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.enums.SortDir
+import com.yogadimas.simastekom.common.helper.SnackBarHelper
+import com.yogadimas.simastekom.common.helper.ToastHelper
 import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
 import com.yogadimas.simastekom.common.paging.LoadingStateAdapter
 import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.databinding.ActivityStudentBinding
-import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.Errors
+import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -54,17 +56,21 @@ class StudentActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStudentBinding
 
+    private val context = this@StudentActivity
+
     private val adminViewModel: AdminViewModel by viewModel()
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
 
+    private var loadStateListener: ((CombinedLoadStates) -> Unit)? = null
+
     private lateinit var studentManipulationAdapter: StudentManipulationAdapter
-    private var snackbar: Snackbar? = null
+
     private var dialog: AlertDialog? = null
     private var isAlertDialogShow = false
-    private var isDialogShowingOrientationSuccess = false
+
     private var isCallback = false
     private var isAdded = false
     private var isDeleted = false
@@ -82,18 +88,15 @@ class StudentActivity : AppCompatActivity() {
             } else if (successText.contains(getString(R.string.text_to_delete).lowercase())) {
                 isDeleted = true
             }
-            showAlertDialog(successText, STATUS_SUCCESS)
+            alertSuccess(successText)
         }
     }
-
-    private lateinit var customItemDecoration: CustomItemDecoration
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
-        customItemDecoration = CustomItemDecoration()
 
         lifecycleScope.launch {
             getToken()?.let { token ->
@@ -102,7 +105,7 @@ class StudentActivity : AppCompatActivity() {
                         if (isDeleted) {
                             when (state) {
                                 is State.Loading -> showLoadingIndicator()
-                                is State.Success -> getData(token)
+                                is State.Success -> setObserveData(token, state.data)
                                 is State.ErrorClient -> showErrorClient(state.error)
                                 is State.ErrorServer -> showErrorServer(state.error)
                             }
@@ -114,19 +117,10 @@ class StudentActivity : AppCompatActivity() {
         }
 
         lifecycleScope.launch {
-
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
-                    if (savedInstanceState != null) {
-                        isDialogShowingOrientationSuccess =
-                            savedInstanceState.getBoolean(KEY_DIALOG_SHOWING_SUCCESS)
-                        if (isDialogShowingOrientationSuccess) {
-                            showAlertDialog(status = STATUS_SUCCESS)
-                        }
-                    }
-
                     val token = getToken()
-                    token?.let { mainCall(it) }
+                    token?.let { setMainContent(it) }
                 }
             }
 
@@ -140,92 +134,35 @@ class StudentActivity : AppCompatActivity() {
         val user = authViewModel.getUser().asFlow().first()
         val token = user.first
         return if (token == AuthPreferences.DEFAULT_VALUE) {
-            goToLogin(this@StudentActivity)
+            goToLogin(context)
             null
         } else {
             token
         }
     }
 
-    private fun mainCall(token: String) {
+    private fun setMainContent(token: String) {
         binding.apply {
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
-
-            toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
-                getData(token)
-                true
-            }
-
-            searchView.setupWithSearchBar(searchBar)
-            searchView
-                .editText
-                .setOnEditorActionListener { _, _, _ ->
-                    searchBar.setText(searchView.text)
-                    lifecycleScope.launch {
-                        searchView.hide()
-                        adminViewModel.searchSortStudents(
-                            token,
-                            binding.searchView.text.toString().trim(),
-                            null,
-                            null
-                        ).collectLatest { pagingData ->
-                            studentManipulationAdapter.submitData(pagingData)
-                        }
-
-                    }
-
-                    false
-                }
-
-            chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
-            listOf(chipSortBy, chipStudentIdNumber, chipName, chipMajor).forEach { chipId ->
-                chipId.setOnCheckedChangeListener { chip, isChecked ->
-                    if (isChecked) {
-                        when (chipId) {
-                            chipSortBy -> {
-                                showMenu(
-                                    chip, R.menu.top_appbar_sort_by_menu, token, "created_at"
-                                )
-                            }
-                            chipStudentIdNumber -> {
-                                showMenu(
-                                    chip, R.menu.top_appbar_sort_smallest_largest_menu, token, "nim"
-                                )
-                            }
-                            else -> {
-                                showMenu(
-                                    chip, R.menu.top_appbar_sort_asc_desc_menu, token, when (chipId) {
-                                        chipName -> "nama-lengkap"
-                                        chipMajor -> "jurusan-nama"
-                                        else -> ""
-                                    }
-                                )
-                            }
-                        }
-
-                    }
-                }
-            }
+            setToolbar(token)
+            setSearch(token)
+            setSort(token)
 
             fabAdd.setOnClickListener {
                 resultLauncher.launch(
                     Intent(
-                        this@StudentActivity,
+                        context,
                         StudentManipulationActivity::class.java
                     )
                 )
             }
-            rvStudent.layoutManager = LinearLayoutManager(this@StudentActivity)
-
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getData(token) }
+            rvStudent.layoutManager = LinearLayoutManager(context)
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { setObserveData(token) }
         }
         studentManipulationAdapter =
             StudentManipulationAdapter(object : OnItemClickManipulationCallback<StudentData> {
                 override fun onItemClicked(data: StudentData) {
                     val intent = Intent(
-                        this@StudentActivity,
+                        context,
                         StudentManipulationActivity::class.java
                     ).apply {
                         putExtra(StudentManipulationActivity.KEY_EXTRA_ID, data.id)
@@ -237,15 +174,85 @@ class StudentActivity : AppCompatActivity() {
                 override fun onDeleteClicked(data: StudentData) {
                     val label =
                         "${data.studentIdNumber} | ${data.fullName}"
-                    showAlertDialog(
-                        label,
-                        STATUS_DELETED,
-                        data.id ?: "0"
-                    )
+                    alertDelete(label, data.id ?: "0")
                 }
             })
 
 
+        onBackPressedDispatcher()
+
+        setObserveData(token)
+    }
+
+
+    private fun ActivityStudentBinding.setToolbar(token: String) = toolbar.apply {
+        setNavigationOnClickListener { finish() }
+        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+            setObserveData(token)
+            true
+        }
+    }
+
+    private fun ActivityStudentBinding.setSearch(token: String) = searchView.apply {
+        setupWithSearchBar(searchBar)
+        editText.setOnEditorActionListener { _, _, _ ->
+            searchBar.setText(searchView.text)
+            lifecycleScope.launch {
+                searchView.hide()
+                adminViewModel.searchSortStudents(
+                    token,
+                    binding.searchView.text.toString().trim(),
+                    null,
+                    null
+                ).collectLatest { pagingData ->
+                    studentManipulationAdapter.submitData(pagingData)
+                }
+
+            }
+
+            false
+        }
+    }
+
+    private fun ActivityStudentBinding.setSort(token: String) {
+        chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
+        listOf(chipSortBy, chipStudentIdNumber, chipName, chipMajor).forEach { chipId ->
+            chipId.setOnCheckedChangeListener { chip, isChecked ->
+                if (isChecked) {
+                    when (chipId) {
+                        chipSortBy -> {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_by_menu, token, "created_at"
+                            )
+                        }
+
+                        chipStudentIdNumber -> {
+                            showMenu(
+                                chip, R.menu.top_appbar_sort_smallest_largest_menu, token, "nim"
+                            )
+                        }
+
+                        else -> {
+                            showMenu(
+                                chip,
+                                R.menu.top_appbar_sort_asc_desc_menu,
+                                token,
+                                when (chipId) {
+                                    chipName -> "nama-lengkap"
+                                    chipMajor -> "jurusan-nama"
+                                    else -> ""
+                                }
+                            )
+                        }
+                    }
+
+                }
+            }
+        }
+    }
+
+
+    private fun onBackPressedDispatcher() {
         val callback = object : OnBackPressedCallback(true) {
             override fun handleOnBackPressed() {
                 binding.apply {
@@ -258,15 +265,26 @@ class StudentActivity : AppCompatActivity() {
 
             }
         }
-        onBackPressedDispatcher.addCallback(this, callback)
-
-        getData(token)
+        onBackPressedDispatcher.addCallback(context, callback)
     }
 
-    private fun getData(token: String) {
 
-        setSearchBarViewNull()
+    private fun setObserveData(token: String, studentData: StudentData? = null) {
 
+        clearSearch()
+
+        studentData?.let {
+            if (it.isDeleted) {
+                val message = "${it.studentIdNumber} | ${it.fullName}"
+                alertSuccess(
+                    getString(
+                        R.string.text_alert_delete_format,
+                        getString(R.string.text_success),
+                        message
+                    )
+                )
+            }
+        }
 
         val footerAdapter = LoadingStateAdapter {
             studentManipulationAdapter.retry()
@@ -276,102 +294,7 @@ class StudentActivity : AppCompatActivity() {
             footer = footerAdapter
         )
 
-
-
-
-
-        studentManipulationAdapter.addLoadStateListener { loadState ->
-            // Cek jika data berhasil dimuat
-            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading &&
-                    studentManipulationAdapter.itemCount > 0
-
-            // Cek jika sedang dalam proses loading data pertama kali
-            val isLoading = loadState.source.refresh is LoadState.Loading
-
-            // Cek jika terjadi error
-            val isError = loadState.source.append is LoadState.Error ||
-                    loadState.source.prepend is LoadState.Error ||
-                    loadState.source.refresh is LoadState.Error
-
-
-            val isEmptyData =
-                loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && studentManipulationAdapter.itemCount == 0
-
-
-
-            when {
-                isLoading -> {
-                    showLoadingMain(true)
-                }
-
-                isDataLoaded -> {
-                    lifecycleScope.launch {
-                        withContext(Dispatchers.Main) {
-                            isVisibleAllView(true)
-                            showLoadingMain(false)
-                        }
-                    }
-
-
-                }
-
-                isError -> {
-                    showLoadingMain(false)
-                    // Terjadi error di tengah pagination
-                    val errorState = when {
-                        loadState.source.append is LoadState.Error -> loadState.source.append as LoadState.Error
-                        loadState.source.prepend is LoadState.Error -> loadState.source.prepend as LoadState.Error
-                        loadState.source.refresh is LoadState.Error -> loadState.source.refresh as LoadState.Error
-                        else -> null
-                    }
-                    errorState?.let {
-                        errorState.error.localizedMessage?.let { message ->
-                            if (message.contains("401")) {
-                                isVisibleAllView(true)
-                                failedToConnect(false)
-                                showAlertDialog(
-                                    getString(R.string.text_const_unauthorized),
-                                    STATUS_ERROR
-                                )
-                            } else {
-                                if (studentManipulationAdapter.itemCount == 0) {
-                                    // Error terjadi sejak awal, tampilkan error dan sembunyikan view lainnya
-                                    failedToConnect(true)
-                                    isVisibleAllView(false)
-                                } else {
-                                    // Error terjadi di tengah pagination, tampilkan pesan error
-                                    failedToConnect(false)
-                                }
-                                showSnackBarError(
-                                    true,
-                                    message = message
-                                )
-                            }
-                        }
-
-                    }
-                }
-
-                isEmptyData -> {
-                    lifecycleScope.launch {
-                        if (!isCallback) {
-                            withContext(Dispatchers.Main) {
-                                isVisibleAllView(true)
-                                showLoadingMain(false)
-                                Toast.makeText(
-                                    this@StudentActivity,
-                                    getString(R.string.text_not_found), Toast.LENGTH_SHORT
-                                ).show()
-
-                            }
-                        }
-
-                    }
-                }
-
-            }
-        }
-
+        observePaging()
 
         lifecycleScope.launch {
             // Mengambil data dan mengirimkan ke adapter
@@ -392,13 +315,10 @@ class StudentActivity : AppCompatActivity() {
             launch {
                 adminViewModel.errorStateFlow.collect { errorMessage ->
                     errorMessage?.let {
-                        if (errorMessage.contains("401")) {
-                            isVisibleAllView(true)
-                            failedToConnect(false)
-                            showAlertDialog(
-                                getString(R.string.text_const_unauthorized),
-                                STATUS_ERROR
-                            )
+                        if (errorMessage.contains(ErrorCode.UNAUTHORIZED.value)) {
+                            showDefaultView(true)
+                            showFailedConnectView(false)
+                            alertError(getString(R.string.text_const_unauthorized))
                         }
                     }
                 }
@@ -406,59 +326,213 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
+    private fun observePaging() {
+        loadStateListener?.let { studentManipulationAdapter.removeLoadStateListener(it) }
+        loadStateListener = { loadState ->
+            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading && studentManipulationAdapter.itemCount > 0
+            val isLoading = loadState.source.refresh is LoadState.Loading
+            val isError = listOf(loadState.source.append, loadState.source.prepend, loadState.source.refresh).any { it is LoadState.Error }
+            val isEmptyData = loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && studentManipulationAdapter.itemCount == 0
+
+            when {
+                isLoading -> showLoadingView(true)
+
+                isDataLoaded -> {
+                    showDefaultView(true)
+                    showLoadingView(false)
+                }
+
+                isError -> {
+                    showLoadingView(false)
+                    val errorState = (loadState.source.append as? LoadState.Error)
+                        ?: (loadState.source.prepend as? LoadState.Error)
+                        ?: (loadState.source.refresh as? LoadState.Error)
+
+                    errorState?.error?.localizedMessage?.let { message ->
+                        if (message.contains(ErrorCode.UNAUTHORIZED.value)) {
+                            showDefaultView(true)
+                            showFailedConnectView(false)
+                            alertError(getString(R.string.text_const_unauthorized))
+                        } else {
+                            val isEmpty = studentManipulationAdapter.itemCount == 0
+                            val isNotEmpty = studentManipulationAdapter.itemCount > 0
+                            showFailedConnectView(isEmpty)
+                            showDefaultView(isNotEmpty)
+                            showSnackBarError(message)
+                        }
+                    }
+                }
+
+                isEmptyData -> {
+                    if (!isCallback) {
+                        showDefaultView(true)
+                        showLoadingView(false)
+                        ToastHelper.showCustomToast(context, getString(R.string.text_not_found))
+                    }
+                }
+            }
+        }
+        studentManipulationAdapter.addLoadStateListener(loadStateListener!!)
+    }
+
+
+    /*
+    private fun observePaging() {
+        loadStateListener?.let { studentManipulationAdapter.removeLoadStateListener(it) }
+        loadStateListener = { loadState ->
+            // Cek jika data berhasil dimuat
+            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading &&
+                    studentManipulationAdapter.itemCount > 0
+
+            // Cek jika sedang dalam proses loading data pertama kali
+            val isLoading = loadState.source.refresh is LoadState.Loading
+
+            // Cek jika terjadi error
+            val isError = loadState.source.append is LoadState.Error ||
+                    loadState.source.prepend is LoadState.Error ||
+                    loadState.source.refresh is LoadState.Error
+
+
+            val isEmptyData =
+                loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && studentManipulationAdapter.itemCount == 0
+
+
+
+            when {
+                isLoading -> {
+                    showLoadingView(true)
+                }
+
+                isDataLoaded -> {
+                    lifecycleScope.launch {
+                        withContext(Dispatchers.Main) {
+                            showDefaultView(true)
+                            showLoadingView(false)
+                        }
+                    }
+
+
+                }
+
+                isError -> {
+                    showLoadingView(false)
+                    // Terjadi error di tengah pagination
+                    val errorState = when {
+                        loadState.source.append is LoadState.Error -> loadState.source.append as LoadState.Error
+                        loadState.source.prepend is LoadState.Error -> loadState.source.prepend as LoadState.Error
+                        loadState.source.refresh is LoadState.Error -> loadState.source.refresh as LoadState.Error
+                        else -> null
+                    }
+                    errorState?.let {
+                        errorState.error.localizedMessage?.let { message ->
+                            if (message.contains(ErrorCode.UNAUTHORIZED.value)) {
+                                showDefaultView(true)
+                                showFailedConnectView(false)
+                                alertError(getString(R.string.text_const_unauthorized))
+                            } else {
+                                if (studentManipulationAdapter.itemCount == 0) {
+                                    // Error terjadi sejak awal, tampilkan error dan sembunyikan view lainnya
+                                    showFailedConnectView(true)
+                                    showDefaultView(false)
+                                } else {
+                                    // Error terjadi di tengah pagination, tampilkan pesan error
+                                    showFailedConnectView(false)
+                                }
+                                showSnackBarError(message)
+                            }
+                        }
+
+                    }
+                }
+
+                isEmptyData -> {
+                    lifecycleScope.launch {
+                        if (!isCallback) {
+                            withContext(Dispatchers.Main) {
+                                showDefaultView(true)
+                                showLoadingView(false)
+                                Toast.makeText(
+                                    context,
+                                    getString(R.string.text_not_found), Toast.LENGTH_SHORT
+                                ).show()
+
+                            }
+                        }
+
+                    }
+                }
+
+            }
+        }
+        studentManipulationAdapter.addLoadStateListener(loadStateListener!!)
+    }
+*/
+
     private fun showLoadingIndicator() {
-        showLoadingMain(true)
-        failedToConnect(false)
+        showLoadingView(true)
+        showFailedConnectView(false)
     }
 
     private fun showErrorClient(error: Errors) {
-        showLoadingMain(false)
-        failedToConnect(false)
+        showLoadingView(false)
+        showFailedConnectView(false)
 
         var message = error.errors?.message?.first() ?: ""
 
         if (message.contains(getString(R.string.text_const_unauthorized))) {
-            isVisibleAllView(true)
+            showDefaultView(true)
             message = getString(R.string.text_const_unauthorized)
         }
 
-        showAlertDialog(msg = message, status = STATUS_ERROR)
+        alertError(message)
     }
 
     private fun showErrorServer(errorMessage: String) {
-        showLoadingMain(false)
-        failedToConnect(true)
-        isVisibleAllView(false)
-        showSnackBarError(
-            message = errorMessage
-        )
+        showLoadingView(false)
+        showFailedConnectView(true)
+        showDefaultView(false)
+        showSnackBarError(errorMessage)
     }
 
-    private fun setSearchBarViewNull() {
+
+    private fun clearSearch() {
         binding.searchBar.setText(null)
         binding.searchView.setText(null)
     }
 
-    private fun showAlertDialog(msg: String = "", status: String, id: String = "0") {
+
+    private fun alertSuccess(message: String) {
+        showAlertDialog(msg = message, status = STATUS_SUCCESS)
+    }
+
+    private fun alertError(message: String) {
+        showAlertDialog(msg = message, status = STATUS_ERROR)
+    }
+
+    private fun alertDelete(message: String, userId: String) {
+        showAlertDialog(msg = message, status = STATUS_CONFIRM_DELETE, userId = userId)
+    }
+
+    private fun showAlertDialog(msg: String = "", status: String, userId: String = "0") {
 
         val unauthorized = msg == getString(R.string.text_const_unauthorized)
         var title = ""
         var message = ""
         var icon: Drawable? = null
         when (status) {
-            STATUS_DELETED -> {
-                icon = ContextCompat.getDrawable(this, R.drawable.z_ic_delete)
+            STATUS_CONFIRM_DELETE -> {
+                icon = ContextCompat.getDrawable(context, R.drawable.z_ic_delete)
                 val wrappedDrawable = DrawableCompat.wrap(icon!!).mutate()
-                val color = ContextCompat.getColor(this, R.color.md_theme_error)
+                val color = ContextCompat.getColor(context, R.color.md_theme_error)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_delete)
-                message = getString(R.string.text_question_do_you_want_to_delete, msg)
+                message = getString(R.string.text_question_do_you_want_to_delete_format, msg)
             }
 
             STATUS_SUCCESS -> {
-                icon = ContextCompat.getDrawable(this, R.drawable.z_ic_check)
+                icon = ContextCompat.getDrawable(context, R.drawable.z_ic_check)
                 val wrappedDrawable = DrawableCompat.wrap(icon!!).mutate()
-                val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
+                val color = ContextCompat.getColor(context, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
                 message = msg
@@ -466,11 +540,11 @@ class StudentActivity : AppCompatActivity() {
 
             STATUS_ERROR -> {
                 if (unauthorized) {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.title_dialog_login_again)
+                    icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
+                    title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
                     title = getString(R.string.text_error, "")
                     message = msg
                 }
@@ -481,30 +555,29 @@ class StudentActivity : AppCompatActivity() {
         if (dialog == null) {
             if (status == STATUS_SUCCESS) {
                 CoroutineScope(Dispatchers.Main).launch {
-                    delay(1500)
+                    delay(2100)
                     isAdded = false
                     isDeleted = false
                     isAlertDialogShow = false
-                    isDialogShowingOrientationSuccess = false
                     dialog?.dismiss()
                     dialog = null
                 }
             }
 
-            dialog = MaterialAlertDialogBuilder(this).apply {
+            dialog = MaterialAlertDialogBuilder(context).apply {
                 setCancelable(false)
                 setIcon(icon)
                 setTitle(title)
                 setMessage(message)
-                if (status == STATUS_DELETED || status == STATUS_ERROR) {
+                if (status == STATUS_CONFIRM_DELETE || status == STATUS_ERROR) {
                     setPositiveButton(getString(R.string.text_ok)) { _, _ ->
                         isAlertDialogShow = false
                         dialog = null
                         when (status) {
-                            STATUS_DELETED -> lifecycleScope.launch {
+                            STATUS_CONFIRM_DELETE -> lifecycleScope.launch {
                                 getToken()?.let {
                                     isDeleted = true
-                                    adminViewModel.deleteStudent(it, id)
+                                    adminViewModel.deleteStudent(it, userId)
                                 }
                             }
 
@@ -515,10 +588,10 @@ class StudentActivity : AppCompatActivity() {
                                         null,
                                         null
                                     )
-                                    goToLogin(this@StudentActivity)
+                                    goToLogin(context)
                                 } else {
                                     lifecycleScope.launch {
-                                        getToken()?.let { getData(it) }
+                                        getToken()?.let { setObserveData(it) }
                                     }
                                     return@setPositiveButton
                                 }
@@ -528,7 +601,7 @@ class StudentActivity : AppCompatActivity() {
                         }
                     }
 
-                    if (status == STATUS_DELETED) {
+                    if (status == STATUS_CONFIRM_DELETE) {
                         setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
                             isAlertDialogShow = false
                             dialog = null
@@ -551,17 +624,18 @@ class StudentActivity : AppCompatActivity() {
 
     }
 
-    private fun showLoadingMain(isLoading: Boolean) {
+
+    private fun showLoadingView(isLoading: Boolean) {
         val shouldShowLoading = isLoading && !isAlertDialogShow
         showLoading(binding.mainProgressBar, shouldShowLoading)
 
         if (isLoading) {
-            isVisibleAllView(false)
-            failedToConnect(false)
+            showDefaultView(false)
+            showFailedConnectView(false)
         }
     }
 
-    private fun isVisibleAllView(isVisible: Boolean) {
+    private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
@@ -579,39 +653,23 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    private fun failedToConnect(boolean: Boolean) {
-        if (boolean) {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.VISIBLE
-        } else {
-            binding.viewHandle.viewFailedConnect.root.visibility = View.GONE
-        }
-
+    private fun showFailedConnectView(boolean: Boolean) {
+        binding.viewHandle.viewFailedConnect.root.isVisible = boolean
     }
 
-    private fun showSnackBarError(boolean: Boolean = true, message: String) {
-        initSnackBar(message)
-        if (boolean) {
-            if (binding.fabAdd.isVisible) {
-                snackbar?.anchorView = binding.fabAdd
-            }
-            snackbar?.show()
-        } else snackbar?.dismiss()
-    }
-
-    private fun initSnackBar(message: String) {
-        try {
-            snackbar = Snackbar.make(
-                this@StudentActivity,
-                binding.root as ViewGroup,
-                message,
-                Snackbar.LENGTH_LONG
-            )
-        } catch (_: Exception) {
-        }
+    private fun showSnackBarError(message: String) {
+        val fabAdd = binding.fabAdd
+        val anchorView = if (fabAdd.isVisible) fabAdd else null
+        SnackBarHelper.display(
+            viewGroup = binding.root as ViewGroup,
+            message = message,
+            lifecycleOwner = context,
+            anchorView = anchorView
+        )
     }
 
     private fun showMenu(v: View, menuRes: Int, token: String, sortBy: String) {
-        val popup = PopupMenu(this@StudentActivity, v)
+        val popup = PopupMenu(context, v)
         popup.menuInflater.inflate(menuRes, popup.menu)
 
         popup.setOnMenuItemClickListener { menuItem: MenuItem ->
@@ -668,16 +726,10 @@ class StudentActivity : AppCompatActivity() {
         }
     }
 
-    override fun onSaveInstanceState(outState: Bundle) {
-        outState.putBoolean(KEY_DIALOG_SHOWING_SUCCESS, isDialogShowingOrientationSuccess)
-        super.onSaveInstanceState(outState)
-    }
-
     companion object {
-        private const val STATUS_DELETED = "status_deleted"
+        private const val STATUS_CONFIRM_DELETE = "status_deleted"
         private const val STATUS_SUCCESS = "status_success"
         private const val STATUS_ERROR = "status_error"
-        private const val KEY_DIALOG_SHOWING_SUCCESS = "key_dialog_showing_success"
     }
 
 

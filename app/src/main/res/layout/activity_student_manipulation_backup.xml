@@ -27,7 +27,7 @@
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
 
-                app:title="@string/title_student" />
+                app:title="@string/text_student" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -374,7 +374,7 @@
             android:layout_marginHorizontal="14dp"
             android:layout_marginTop="20dp"
             android:drawableStart="@drawable/z_ic_save"
-            android:text="@string/btn_text_save"
+            android:text="@string/text_save"
             android:textSize="16sp" />
 
 

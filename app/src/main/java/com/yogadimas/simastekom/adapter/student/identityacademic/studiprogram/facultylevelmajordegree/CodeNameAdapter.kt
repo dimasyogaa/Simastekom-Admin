@@ -33,7 +33,7 @@ class CodeNameAdapter(private val itemClickCallback: OnItemClickManipulationCall
         fun bind(data: IdentityAcademicData) {
             binding.apply {
                 tvCodeName.text =
-                    itemView.context.getString(R.string.format_string_strip_string, data.code, data.name)
+                    itemView.context.getString(R.string.text_string_strip_string_format, data.code, data.name)
                 itemView.setOnClickListener { itemClickCallback.onItemClicked(data) }
                 btnDelete.visibility = View.GONE
                 btnDelete.isEnabled = false

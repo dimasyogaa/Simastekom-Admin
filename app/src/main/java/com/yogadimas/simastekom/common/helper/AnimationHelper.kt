@@ -1,6 +1,7 @@
 package com.yogadimas.simastekom.common.helper
 
 import android.view.View
+import androidx.collection.emptyObjectList
 
 fun animateFade(view: View, boolean: Boolean){
     view.apply {
@@ -11,3 +12,4 @@ fun animateFade(view: View, boolean: Boolean){
         }
     }
 }
+
