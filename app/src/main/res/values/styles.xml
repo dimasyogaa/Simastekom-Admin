@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<resources xmlns:tools="http://schemas.android.com/tools">
+<resources>
 
     <!-- Custom - Rounded Style  -->
     <style name="rounded">
@@ -45,29 +45,54 @@
     </style>
 
 
-    <!-- Custom - Table Layout -->
-    <style name="content">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+        <!-- Custom - Table Layout -->
+        <style name="content">
+            <item name="android:layout_width">match_parent</item>
+            <item name="android:layout_height">wrap_content</item>
+        </style>
 
-    <style name="content_wrap">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-    </style>
+        <style name="content_wrap">
+            <item name="android:layout_width">wrap_content</item>
+            <item name="android:layout_height">wrap_content</item>
+        </style>
 
-    <style name="content_wrap.text_size">
-        <item name="android:textSize">15sp</item>
-    </style>
+        <style name="content_wrap.text_size">
+            <item name="android:textSize">15sp</item>
+        </style>
 
-    <style name="content_wrap.text_size.column_name">
-        <item name="android:layout_marginEnd">16dp</item>
-    </style>
+        <style name="content_wrap.text_size.column_name">
+            <item name="android:layout_marginEnd">16dp</item>
+        </style>
 
-    <style name="content_wrap.text_size.column_data">
-        <item name="android:layout_weight">1</item>
-        <item name="android:textIsSelectable">true</item>
-    </style>
+        <style name="content_wrap.text_size.column_data">
+            <item name="android:layout_weight">1</item>
+            <item name="android:textIsSelectable">true</item>
+        </style>
+
+        <!-- Custom - Value   -->
+        <style name="content.value">
+            <item name="android:layout_marginTop">8dp</item>
+            <item name="android:textSize">15sp</item>
+            <item name="android:lineSpacingExtra">4dp</item>
+            <item name="android:layout_marginStart">32dp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textIsSelectable">true</item>
+        </style>
+
+        <style name="content_wrap.value">
+            <item name="android:layout_marginTop">8dp</item>
+            <item name="android:textSize">15sp</item>
+            <item name="android:textStyle">bold</item>
+            <item name="android:textIsSelectable">true</item>
+        </style>
+
+
+
+
+
+
+
+
 
     <!-- Custom - Dialog -->
     <!--    <style name="MaterialAlertDialog.App" parent="MaterialAlertDialog.Material3">-->
@@ -129,14 +154,6 @@
         <item name="android:textColor">@color/md_theme_onSurface</item>
     </style>
 
-    <!-- Custom - Value   -->
-    <style name="content_wrap.value">
-        <item name="android:layout_marginTop">8dp</item>
-        <item name="android:textSize">15sp</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textIsSelectable">true</item>
-    </style>
-
 
     <!-- Custom - Button   -->
     <style name="CustomButtonCardView" parent="Widget.Material3.CardView.Outlined">
@@ -192,8 +209,6 @@
     <style name="CustomButtonTextButtonError" parent="Widget.Material3.Button.TextButton">
         <item name="rippleColor">@color/md_theme_error_transparent_0_1</item>
     </style>
-
-
 
 
 </resources>

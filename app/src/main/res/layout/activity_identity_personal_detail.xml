@@ -19,8 +19,8 @@
             app:navigationIcon="@drawable/z_ic_close"
             app:title="@string/text_identity_personal"
             app:titleCentered="true"
-            app:titleTextColor="@color/md_theme_onSurface"
-            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge" />
+            app:titleTextAppearance="@style/TextAppearance.Material3.TitleLarge"
+            app:titleTextColor="@color/md_theme_onSurface" />
 
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -58,7 +58,8 @@
 
             <TextView
                 android:id="@+id/tv_phone"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_phone"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_phone"
                 tools:text="@string/text_dummy_number_phone_ind_08" />
@@ -83,7 +84,8 @@
 
             <TextView
                 android:id="@+id/tv_email"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_email"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_email"
                 tools:text="@string/text_dummy_email" />
@@ -108,7 +110,8 @@
 
             <TextView
                 android:id="@+id/tv_id_card_number"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_id_card_number"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_id_card_number"
                 tools:text="@string/text_dummy_id_card_number" />
@@ -133,7 +136,8 @@
 
             <TextView
                 android:id="@+id/tv_place_date_birth"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_place_date_birth"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_place_date_birth"
                 tools:text="@string/text_dummy_place_birth" />
@@ -156,9 +160,11 @@
                 app:layout_constraintStart_toEndOf="@+id/iv_address_home"
                 app:layout_constraintTop_toTopOf="@+id/iv_address_home" />
 
+
             <TextView
                 android:id="@+id/tv_address_home"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_address_home"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_address_home"
                 tools:text="@string/text_dummy_address_home" />
@@ -183,7 +189,8 @@
 
             <TextView
                 android:id="@+id/tv_gender"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_gender"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_gender"
                 tools:text="@string/text_man" />
@@ -208,7 +215,8 @@
 
             <TextView
                 android:id="@+id/tv_religion"
-                style="@style/content_wrap.value"
+                style="@style/content.value"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="@+id/tv_row_religion"
                 app:layout_constraintTop_toBottomOf="@+id/tv_row_religion"
                 tools:text="@string/text_islam" />

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -62,7 +61,6 @@ class AddressHomeEditActivity : AppCompatActivity() {
 
     private var isAlertDialogShow = false
     private var dialog: AlertDialog? = null
-
 
     private val strEmpty = Str.EMPTY.value
 
@@ -233,9 +231,6 @@ class AddressHomeEditActivity : AppCompatActivity() {
                         }
                     }
                 }
-
-
-
 
                 binding.apply {
                     identityData.address?.let { address ->

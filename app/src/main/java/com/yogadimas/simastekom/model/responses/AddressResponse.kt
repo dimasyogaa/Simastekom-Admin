@@ -1,6 +1,7 @@
 package com.yogadimas.simastekom.model.responses
 
 import android.os.Parcelable
+import android.util.Log
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
@@ -98,7 +99,10 @@ data class AddressData(
                 ).filter { it.isNotBlank() } // Hanya menyimpan bagian yang tidak kosong
 
                 // Menggabungkan bagian-bagian yang valid dengan koma
-                if (parts.isNotEmpty()) parts.joinToString(", ") else null
+                if (parts.isNotEmpty()) {
+                    parts.joinToString(", ")
+                } else null
+
             }
         }
 
