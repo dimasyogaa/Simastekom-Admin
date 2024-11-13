@@ -25,7 +25,7 @@ import com.yogadimas.simastekom.adapter.identitypersonal.IdentityPersonalAdapter
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorCode
-import com.yogadimas.simastekom.common.enums.FieldType
+import com.yogadimas.simastekom.common.enums.ContactType
 import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.common.enums.SortBy
 import com.yogadimas.simastekom.common.enums.SortDir
@@ -40,11 +40,9 @@ import com.yogadimas.simastekom.model.responses.UserCurrent
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 class IdentityPersonalActivity : AppCompatActivity() {
@@ -123,7 +121,7 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
             val userCurrent = data.userCurrent ?: UserCurrent()
             when (fieldType) {
-                FieldType.EMAIL -> {
+                ContactType.EMAIL -> {
                     sendMessage(
                         userCurrent = UserCurrent(
                             userCurrent.userType,
@@ -139,7 +137,7 @@ class IdentityPersonalActivity : AppCompatActivity() {
                     )
                 }
 
-                FieldType.PHONE -> {
+                ContactType.PHONE -> {
                     sendMessage(
                         userCurrent = UserCurrent(
                             userCurrent.userType,

@@ -1,8 +1,6 @@
 package com.yogadimas.simastekom.api
 
 import com.yogadimas.simastekom.model.responses.AddressData
-import com.yogadimas.simastekom.model.responses.StudentData
-import com.yogadimas.simastekom.model.responses.StudentObjectResponse
 import com.yogadimas.simastekom.model.responses.AdminResponse
 import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.model.responses.CampusListResponse
@@ -10,14 +8,17 @@ import com.yogadimas.simastekom.model.responses.CampusObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
-import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
-import com.yogadimas.simastekom.model.responses.StudentIdentityParentObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalObjectResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
 import com.yogadimas.simastekom.model.responses.PaginationResponse
+import com.yogadimas.simastekom.model.responses.ProfilePictureObjectResponse
+import com.yogadimas.simastekom.model.responses.StudentData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
+import com.yogadimas.simastekom.model.responses.StudentIdentityParentObjectResponse
+import com.yogadimas.simastekom.model.responses.StudentObjectResponse
 import com.yogadimas.simastekom.model.responses.UserResponse
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
@@ -115,14 +116,13 @@ interface ApiService {
     ): Call<IdentityPersonalObjectResponse>
 
 
-
     /** Student */
     @GET("student")
     suspend fun getAllStudents(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sort_by") sortBy: String
+        @Query("sort_by") sortBy: String,
     ): PaginationResponse<StudentData>
 
     @GET("student/search-sort")
@@ -168,7 +168,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("user-type") userType: String
+        @Query("user-type") userType: String,
     ): PaginationResponse<IdentityPersonalData>
 
     @GET("identity-personal/search-sort")
@@ -182,13 +182,30 @@ interface ApiService {
         @Query("user-type") userType: String,
     ): PaginationResponse<IdentityPersonalData>
 
+    @GET("identity-personal/{userType}/{userId}/profile-picture")
+    suspend fun getProfilePicture(
+        @Header("Authorization") token: String,
+        @Path("userType") userType: String,
+        @Path("userId") userId: String,
+    ): Response<ProfilePictureObjectResponse>
+
+    @Multipart
+    @POST("identity-personal/{userType}/{userId}/profile-picture?_method=PUT")
+    suspend fun setManipulationProfilePicture(
+        @Header("Authorization") token: String,
+        @Path("userType") userType: String,
+        @Path("userId") userId: String,
+        @Part profilePicture: MultipartBody.Part?,
+        @Query("is_deleted") isDeleted: Boolean
+    ): Response<ProfilePictureObjectResponse>
+
 
     /** Identity Academic */
     @GET("identity-academic")
     suspend fun getAllIdentitiesAcademic(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
     ): PaginationResponse<IdentityAcademicData>
 
     @GET("identity-academic/search-sort")
@@ -205,14 +222,14 @@ interface ApiService {
     @POST("identity-parent")
     suspend fun addStudentIdentityParent(
         @Header("Authorization") token: String,
-        @Body studentIdentityParentData: StudentIdentityParentData
+        @Body studentIdentityParentData: StudentIdentityParentData,
     ): Response<StudentIdentityParentObjectResponse>
 
     @GET("identity-parent")
     suspend fun getAllStudentIdentitiesParent(
         @Header("Authorization") token: String,
         @Query("page") page: Int,
-        @Query("size") size: Int
+        @Query("size") size: Int,
     ): PaginationResponse<StudentIdentityParentData>
 
     @GET("identity-parent/search-sort")
@@ -235,7 +252,7 @@ interface ApiService {
     suspend fun updateStudentIdentityParent(
         @Header("Authorization") token: String,
         @Path("id") id: String,
-        @Body studentIdentityParentData: StudentIdentityParentData
+        @Body studentIdentityParentData: StudentIdentityParentData,
     ): Response<StudentIdentityParentObjectResponse>
 
 
@@ -257,7 +274,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("user-type") userType: String
+        @Query("user-type") userType: String,
     ): PaginationResponse<AddressData>
 
     @GET("address/search-sort")
@@ -270,10 +287,6 @@ interface ApiService {
         @Query("sort-dir") sortDir: String?,
         @Query("user-type") userType: String,
     ): PaginationResponse<AddressData>
-
-
-
-
 
 
     /** Employment Status */
@@ -309,7 +322,7 @@ interface ApiService {
 
     @DELETE("employment-status/{id}")
     fun deleteEmploymentStatus(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<NameObjectResponse>
 
     /** Student Status */
@@ -345,7 +358,7 @@ interface ApiService {
 
     @DELETE("student-status/{id}") // Mengubah dari class-session/{id} menjadi student-status/{id}
     fun deleteStudentStatus(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<NameObjectResponse>
 
     /** Lecture Method */
@@ -382,7 +395,7 @@ interface ApiService {
     @DELETE("lecture-method/{id}")
     fun deleteLectureMethod(
         @Header("Authorization") token: String,
-        @Path("id") id: Int
+        @Path("id") id: Int,
     ): Call<NameObjectResponse>
 
 
@@ -419,7 +432,7 @@ interface ApiService {
 
     @DELETE("semester/{id}")
     fun deleteSemester(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<NameObjectResponse>
 
 
@@ -456,7 +469,7 @@ interface ApiService {
 
     @DELETE("class-session/{id}")
     fun deleteClassSession(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<NameObjectResponse>
 
     /** Campus */
@@ -492,7 +505,7 @@ interface ApiService {
 
     @DELETE("campus/{id}")
     fun deleteCampus(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<CampusObjectResponse>
 
     /** STUDY PROGRAM */
@@ -528,7 +541,7 @@ interface ApiService {
 
     @DELETE("study-programs/{id}")
     fun deleteStudyProgram(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<IdentityAcademicObjectResponse>
 
 
@@ -559,7 +572,7 @@ interface ApiService {
 
     @DELETE("faculties/{id}")
     fun deleteFaculty(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<IdentityAcademicObjectResponse>
 
 
@@ -598,7 +611,7 @@ interface ApiService {
 
     @DELETE("levels/{id}")
     fun deleteLevel(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<IdentityAcademicObjectResponse>
 
 
@@ -637,7 +650,7 @@ interface ApiService {
 
     @DELETE("majors/{id}")
     fun deleteMajor(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<IdentityAcademicObjectResponse>
 
     /** DEGREE */
@@ -675,7 +688,7 @@ interface ApiService {
 
     @DELETE("degrees/{id}")
     fun deleteDegree(
-        @Header("Authorization") token: String, @Path("id") id: Int
+        @Header("Authorization") token: String, @Path("id") id: Int,
     ): Call<IdentityAcademicObjectResponse>
 
 

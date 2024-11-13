@@ -1,7 +1,6 @@
 package com.yogadimas.simastekom.ui.student
 
 import android.app.Activity
-import android.content.Context
 import android.content.Intent
 import android.graphics.BlendMode
 import android.graphics.BlendModeColorFilter
@@ -9,7 +8,6 @@ import android.graphics.PorterDuff
 import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
-import android.os.Parcelable
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
@@ -48,10 +46,12 @@ import com.yogadimas.simastekom.databinding.LayoutStudentManipulationTextInputs2
 import com.yogadimas.simastekom.model.ErrorData
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.model.responses.ProfilePictureData
 import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
 import com.yogadimas.simastekom.ui.dialog.GenderDialogFragment
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
+import com.yogadimas.simastekom.ui.identity.profilepicture.ProfilePictureEditActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.campus.CampusActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.classsession.ClassSessionActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.lecturemethod.LectureMethodActivity
@@ -74,7 +74,7 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerInterface {
 
     private lateinit var binding: ActivityStudentManipulationBinding
-    
+
     private val context = this@StudentManipulationActivity
 
     private lateinit var includeViewRefreshBinding: LayoutHandleDataConnectionBinding
@@ -573,7 +573,16 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                 layoutNavigation.isVisible = true
 
 
-//                btnProfilePicture.setOnClickListener {sendDataParcelable()}
+                btnProfilePicture.setOnClickListener {
+                    movePageWithParcelable(
+                        ProfilePictureEditActivity.KEY_ADMIN,
+                        ProfilePictureEditActivity::class.java,
+                        ProfilePictureData(
+                            userId = data.id,
+                            userType = data.userType
+                        )
+                    )
+                }
                 btnIdentityPersonal.setOnClickListener {
                     movePageWithParcelable(
                         IdentityPersonalEditActivity.KEY_ADMIN_STUDENT,

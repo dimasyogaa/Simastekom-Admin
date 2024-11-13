@@ -11,11 +11,18 @@ import com.yogadimas.simastekom.common.event.Event
 import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.common.paging.Constant
 import com.yogadimas.simastekom.common.paging.GenericPagingSource
+import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalObjectResponse
+import com.yogadimas.simastekom.model.responses.ProfilePictureData
+import com.yogadimas.simastekom.model.responses.ProfilePictureObjectResponse
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.SharedFlow
+import kotlinx.coroutines.flow.asSharedFlow
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -95,12 +102,56 @@ class AdminAllUserTypeRoleRepository(private val apiService: ApiService) {
                     errors.value = Event(getErrors(response.errorBody()?.string().orEmpty()))
                 }
             }
+
             override fun onFailure(call: Call<IdentityPersonalObjectResponse>, t: Throwable) {
                 isLoading.value = false
                 snackBarText.value = Event(t.message.toString())
             }
         })
 
+    }
+
+
+    private val _profilePictureState = MutableSharedFlow<State<ProfilePictureData>>()
+    val profilePictureState: SharedFlow<State<ProfilePictureData>> get() = _profilePictureState.asSharedFlow()
+    suspend fun getProfilePicture(token: String, userType: String, userId: String) {
+        _profilePictureState.emit(State.Loading)
+        val response = runCatching { apiService.getProfilePicture(token, userType, userId) }
+        handleApiResponse(response)
+    }
+
+    suspend fun setManipulationProfilePicture(
+        token: String,
+        userType: String,
+        userId: String,
+        profilePicture: MultipartBody.Part?,
+        isDeleted: Boolean,
+    ) {
+        _profilePictureState.emit(State.Loading)
+        val response = runCatching {
+            apiService.setManipulationProfilePicture(
+                token,
+                userType,
+                userId,
+                profilePicture,
+                isDeleted
+            )
+        }
+        handleApiResponse(response)
+    }
+
+    private suspend fun handleApiResponse(response: Result<Response<ProfilePictureObjectResponse>>) {
+        response.onSuccess {
+            val data = it.body()?.profilePictureData ?: ProfilePictureData()
+            if (it.isSuccessful) {
+                _profilePictureState.emit(State.Success(data))
+            } else {
+                val errorResponse = it.errorBody()?.string().orEmpty()
+                _profilePictureState.emit(State.ErrorClient(getErrors(errorResponse)))
+            }
+        }.onFailure {
+            _profilePictureState.emit(State.ErrorServer(it.message.toString()))
+        }
     }
 
     /** Address */
@@ -148,6 +199,10 @@ class AdminAllUserTypeRoleRepository(private val apiService: ApiService) {
             }
         ).flow
     }
+
+
+
+
 
 
 }

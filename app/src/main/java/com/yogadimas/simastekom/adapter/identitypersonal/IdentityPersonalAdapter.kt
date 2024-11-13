@@ -15,7 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import coil.load
 import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.common.enums.FieldType
+import com.yogadimas.simastekom.common.enums.ContactType
 import com.yogadimas.simastekom.common.enums.Scale
 import com.yogadimas.simastekom.common.helper.setStripIfNull
 import com.yogadimas.simastekom.common.interfaces.OnItemClickIdentityPersonalCallback
@@ -162,7 +162,7 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
                     setOnClickListener {
                         CoroutineScope(Dispatchers.Main).launch {
                             delay(100);
-                            itemClickCallback.onItemClicked(data, FieldType.EMAIL)
+                            itemClickCallback.onItemClicked(data, ContactType.EMAIL)
                         }
                     }
 
@@ -195,7 +195,7 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
                     setOnClickListener {
                         CoroutineScope(Dispatchers.Main).launch {
                             delay(50);
-                            itemClickCallback.onItemClicked(data, FieldType.PHONE)
+                            itemClickCallback.onItemClicked(data, ContactType.PHONE)
                         }
                     }
                 } else {

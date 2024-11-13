@@ -293,7 +293,6 @@ class AdminStudentRepository(private val apiService: ApiService) {
                 _studentIdentityParentState.emit(State.ErrorClient(getErrors(errorResponse)))
             }
         }.onFailure { exception ->
-            Log.e("TAG", "getStudentParentById: ${exception.message.toString()}")
             _studentIdentityParentState.emit(State.ErrorServer(exception.message.toString()))
         }
     }

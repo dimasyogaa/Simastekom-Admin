@@ -2,6 +2,7 @@ package com.yogadimas.simastekom.common.helper
 
 import android.content.ContentResolver
 import android.content.Context
+import android.content.ContextWrapper
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.net.Uri
@@ -13,6 +14,7 @@ import java.io.InputStream
 import java.io.OutputStream
 import java.text.SimpleDateFormat
 import java.util.Locale
+import java.util.UUID
 
 /** Helper For Intent Gallery */
 private const val FILENAME_FORMAT = "dd-MMM-yyyy"
@@ -56,5 +58,17 @@ fun reduceFileImage(file: File): File {
         compressQuality -= 5
     } while (streamLength > MAXIMAL_SIZE)
     bitmap.compress(Bitmap.CompressFormat.JPEG, compressQuality, FileOutputStream(file))
+    return file
+}
+
+
+fun convertImageViewToFile(context: Context, bitmap: Bitmap): File {
+    val wrapper = ContextWrapper(context)
+    var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
+    file = File(file, "${UUID.randomUUID()}.jpg")
+    val stream: OutputStream = FileOutputStream(file)
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 25, stream)
+    stream.flush()
+    stream.close()
     return file
 }

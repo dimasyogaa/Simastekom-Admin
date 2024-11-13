@@ -1,10 +1,6 @@
 package com.yogadimas.simastekom.adapter.address
 
-import android.animation.ObjectAnimator
-import android.animation.PropertyValuesHolder
-import android.animation.StateListAnimator
 import android.annotation.SuppressLint
-import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,24 +8,11 @@ import androidx.core.content.ContextCompat
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import coil.load
-import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.common.enums.FieldType
-import com.yogadimas.simastekom.common.enums.Scale
 import com.yogadimas.simastekom.common.helper.setStripIfNull
-import com.yogadimas.simastekom.common.interfaces.OnItemClickCallback
-import com.yogadimas.simastekom.common.interfaces.OnItemClickIdentityPersonalCallback
 import com.yogadimas.simastekom.databinding.ItemAddressBinding
 import com.yogadimas.simastekom.databinding.ItemAddressDetailsViewStubBinding
-import com.yogadimas.simastekom.databinding.ItemIdentityPersonalBinding
-import com.yogadimas.simastekom.databinding.ItemIdentityPersonalDetailsViewStubBinding
 import com.yogadimas.simastekom.model.responses.AddressData
-import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 class AddressAdapter() :
     PagingDataAdapter<AddressData, AddressAdapter.ViewHolder>(DIFF_CALLBACK) {

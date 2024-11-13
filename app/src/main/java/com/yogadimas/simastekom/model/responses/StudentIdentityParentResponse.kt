@@ -20,6 +20,7 @@ data class StudentIdentityParentData(
     @field:SerializedName("id_pengguna")
     var userId: String? = null,
 
+
     @field:SerializedName("tipe_pengguna")
     val userType: String? = null,
 

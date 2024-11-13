@@ -31,13 +31,14 @@ import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.databinding.ActivityAdminEditBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.ContentType
+import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.hideKeyboard
 import com.yogadimas.simastekom.common.helper.isContainsSpace
 import com.yogadimas.simastekom.common.helper.reduceFileImage
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.helper.uriToFile
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
-import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
@@ -59,6 +60,8 @@ import java.util.UUID
 class AdminEditActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAdminEditBinding
+
+    private val contextActivity = this@AdminEditActivity
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
@@ -108,7 +111,7 @@ class AdminEditActivity : AppCompatActivity() {
                 deletePhoto = true
                 binding.ivProfile.setImageDrawable(
                     ContextCompat.getDrawable(
-                        this@AdminEditActivity,
+                        contextActivity,
                         R.drawable.z_ic_placeholder_profile
                     )
                 )
@@ -164,7 +167,7 @@ class AdminEditActivity : AppCompatActivity() {
             tvIdentityPersonal.setOnClickListener {
                 startActivity(
                     Intent(
-                        this@AdminEditActivity,
+                        contextActivity,
                         IdentityPersonalEditActivity::class.java
                     )
                 )
@@ -176,31 +179,27 @@ class AdminEditActivity : AppCompatActivity() {
     }
 
     private fun getAdmin() {
-        authViewModel.getUser().observe(this) {
+        authViewModel.getUser().observe(contextActivity) {
             val token = it.first
             if (token == AuthPreferences.DEFAULT_VALUE) {
-                val intent = Intent(this, LoginActivity::class.java)
-                intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                startActivity(intent)
+                goToLogin(contextActivity)
             } else {
                 adminViewModel.token = token
                 adminViewModel.getAdminCurrent()
             }
         }
-
-        adminViewModel.isLoading.observe(this) {
+        adminViewModel.isLoading.observe(contextActivity) {
             isLoading = it
-            showLoadingMain(it)
+            showLoadingView(it)
         }
-
-        adminViewModel.adminData.observe(this) { eventData ->
+        adminViewModel.adminData.observe(contextActivity) { eventData ->
             eventData.getContentIfNotHandled()?.let {
                 if (isLoading) {
-                    isVisibleAllView(false)
+                    showDefaultView(false)
                 } else {
-                    isVisibleAllView(true)
+                    showDefaultView(true)
                 }
-                failedToConnect(false)
+                showFailedConnectView(false)
 
 
 
@@ -219,8 +218,8 @@ class AdminEditActivity : AppCompatActivity() {
                         placeholder(R.drawable.z_ic_placeholder_profile)
                         error(R.drawable.z_ic_placeholder_profile)
                     }
-                    val loader = ImageLoader(this@AdminEditActivity)
-                    val req = ImageRequest.Builder(this@AdminEditActivity)
+                    val loader = ImageLoader(contextActivity)
+                    val req = ImageRequest.Builder(contextActivity)
                         .data(picture)
                         .target { result ->
                             val bitmap = (result as BitmapDrawable).bitmap
@@ -239,8 +238,7 @@ class AdminEditActivity : AppCompatActivity() {
 
 
         }
-
-        adminViewModel.errors.observe(this) { eventError ->
+        adminViewModel.errors.observe(contextActivity) { eventError ->
             eventError.getContentIfNotHandled()?.let { data ->
                 if (data.errors != null) {
                     val errors = data.errors
@@ -258,18 +256,17 @@ class AdminEditActivity : AppCompatActivity() {
                             listMessage = errors.name
                         }
                     }
-                    isVisibleAllView(true)
-                    failedToConnect(false)
+                    showDefaultView(true)
+                    showFailedConnectView(false)
                     showAlertDialog(listMessage[0], STATUS_ERROR)
                 }
             }
         }
-
-        adminViewModel.errorsSnackbarText.observe(this) { eventString ->
+        adminViewModel.errorsSnackbarText.observe(contextActivity) { eventString ->
             eventString.getContentIfNotHandled()?.let { snackBarText ->
                 hideKeyboard()
-                isVisibleAllView(false)
-                failedToConnect(true)
+                showDefaultView(false)
+                showFailedConnectView(true)
                 Snackbar.make(
                     binding.root as ViewGroup,
                     snackBarText,
@@ -284,8 +281,8 @@ class AdminEditActivity : AppCompatActivity() {
     private fun startGallery() {
         val intent = Intent()
         intent.action = Intent.ACTION_GET_CONTENT
-        intent.type = "image/*"
-        val chooser = Intent.createChooser(intent, "Pilih foto")
+        intent.type = ContentType.IMAGE_ALL.value
+        val chooser = Intent.createChooser(intent, getString(R.string.select_photo))
         launcherIntentGallery.launch(chooser)
     }
 
@@ -294,7 +291,7 @@ class AdminEditActivity : AppCompatActivity() {
     ) { result ->
         if (result.resultCode == RESULT_OK) {
             val selectedImg: Uri = result.data?.data as Uri
-            val myFile = uriToFile(selectedImg, this)
+            val myFile = uriToFile(selectedImg, contextActivity)
             photoFile = myFile
             deletePhoto = false
             binding.ivProfile.setImageURI(selectedImg)
@@ -302,7 +299,7 @@ class AdminEditActivity : AppCompatActivity() {
     }
 
     private fun convertImageViewToFile(bitmap: Bitmap): File {
-        val wrapper = ContextWrapper(this)
+        val wrapper = ContextWrapper(contextActivity)
         var file = wrapper.getDir("Images", Context.MODE_PRIVATE)
         file = File(file, "${UUID.randomUUID()}.jpg")
         val stream: OutputStream = FileOutputStream(file)
@@ -362,9 +359,9 @@ class AdminEditActivity : AppCompatActivity() {
         ) {
             var file: File? = null
             lifecycleScope.launch(Dispatchers.Main) {
-                isVisibleAllView(false)
-                failedToConnect(false)
-                showLoadingMain(true)
+                showDefaultView(false)
+                showFailedConnectView(false)
+                showLoadingView(true)
 
                 withContext(Dispatchers.Default) {
                     if (photoFile != null) {
@@ -386,7 +383,6 @@ class AdminEditActivity : AppCompatActivity() {
                                 "foto_profil", file?.name, it
                             )
                         }
-
 
                         val deletePhoto = deletePhoto.toString()
                             .toRequestBody("text/plain".toMediaType())
@@ -413,9 +409,9 @@ class AdminEditActivity : AppCompatActivity() {
         var icon: Drawable? = null
         when (status) {
             STATUS_SUCCESS -> {
-                icon = ContextCompat.getDrawable(this, R.drawable.z_ic_check)
+                icon = ContextCompat.getDrawable(contextActivity, R.drawable.z_ic_check)
                 val wrappedDrawable = DrawableCompat.wrap(icon!!).mutate()
-                val color = ContextCompat.getColor(this, R.color.colorFixedGreen)
+                val color = ContextCompat.getColor(contextActivity, R.color.colorFixedGreen)
                 DrawableCompat.setTint(wrappedDrawable, color)
                 title = getString(R.string.text_success)
                 message = getString(R.string.text_alert_update_data_format, title)
@@ -423,11 +419,11 @@ class AdminEditActivity : AppCompatActivity() {
 
             STATUS_ERROR -> {
                 if (unauthorized) {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    icon = ContextCompat.getDrawable(contextActivity, R.drawable.z_ic_warning)
                     title = getString(R.string.text_login_again)
                     message = getString(R.string.text_please_login_again)
                 } else {
-                    icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
+                    icon = ContextCompat.getDrawable(contextActivity, R.drawable.z_ic_warning)
                     title = getString(R.string.text_error, "")
                     message = msg
                 }
@@ -445,7 +441,7 @@ class AdminEditActivity : AppCompatActivity() {
                     dialog = null
                 }
             }
-            dialog = MaterialAlertDialogBuilder(this).apply {
+            dialog = MaterialAlertDialogBuilder(contextActivity).apply {
                 setCancelable(false)
                 setIcon(icon)
                 setTitle(title)
@@ -474,15 +470,15 @@ class AdminEditActivity : AppCompatActivity() {
 
     }
 
-    private fun showLoadingMain(boolean: Boolean) {
+    private fun showLoadingView(boolean: Boolean) {
         showLoading(binding.mainProgressBar, boolean)
         if (boolean) {
-            isVisibleAllView(false)
-            failedToConnect(false)
+            showDefaultView(false)
+            showFailedConnectView(false)
         }
     }
 
-    private fun isVisibleAllView(boolean: Boolean) {
+    private fun showDefaultView(boolean: Boolean) {
         binding.apply {
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
@@ -508,7 +504,7 @@ class AdminEditActivity : AppCompatActivity() {
         }
     }
 
-    private fun failedToConnect(boolean: Boolean) {
+    private fun showFailedConnectView(boolean: Boolean) {
         if (boolean) {
             binding.viewHandle.viewFailedConnect.root.visibility = View.VISIBLE
         } else {
@@ -523,7 +519,7 @@ class AdminEditActivity : AppCompatActivity() {
     }
 
     private fun Activity.hideKeyboard() {
-        hideKeyboard(currentFocus ?: View(this))
+        hideKeyboard(currentFocus ?: View(contextActivity))
         clearFocus()
     }
 

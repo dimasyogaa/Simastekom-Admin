@@ -21,6 +21,7 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.yogadimas.simastekom.MainActivity
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.enums.Phone
@@ -32,6 +33,10 @@ import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.UserCurrent
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -45,13 +50,23 @@ fun showLoading(progressBar: ProgressBar, isLoading: Boolean) {
 fun showLoadingFade(progressBar: ProgressBar, isLoading: Boolean) {
     progressBar.apply {
         if (isLoading) {
+            isVisible = true
             animate().alpha(1.0f).setDuration(300)
         } else {
             alpha = 0f
+            isVisible = false
         }
 
     }
 }
+
+
+
+
+
+
+
+
 
 fun Editable?.dataString(): String = this.toString().trim()
 fun String?.setStripIfNull(): String {
@@ -268,7 +283,6 @@ private fun sendEmail(
         val mailTo = Str.MAILTO.value
         val setSubject: (String, String) -> String =
             { role, name -> "$simastekom ${role.uppercase()} - $name" }
-        Log.e("TAG", "sendEmail: $senderRole ", )
         val subject = when (senderRole) {
             Role.ADMIN -> setSubject(admin, senderName)
             Role.LECTURE -> setSubject(lecture, senderName)

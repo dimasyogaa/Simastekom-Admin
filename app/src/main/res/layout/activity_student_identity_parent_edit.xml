@@ -227,6 +227,18 @@
             app:layout_constraintEnd_toEndOf="@+id/div2"
             app:layout_constraintTop_toBottomOf="@+id/div2" />
 
+
+        <include
+            android:id="@+id/view_handle"
+            layout="@layout/layout_handle_data_connection"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
+
         <com.google.android.material.progressindicator.CircularProgressIndicator
             android:id="@+id/mainProgressBar"
             android:layout_width="wrap_content"
@@ -241,17 +253,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/appBarLayout"
             app:trackThickness="4dp" />
-
-        <include
-            android:id="@+id/view_handle"
-            layout="@layout/layout_handle_data_connection"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:layout_marginTop="50dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/appBarLayout" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

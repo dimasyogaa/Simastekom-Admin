@@ -6,6 +6,7 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -69,6 +70,9 @@ class AddressHomeEditActivity : AppCompatActivity() {
     private var identityPersonalData: IdentityPersonalData? = IdentityPersonalData()
     private var studentIdentityParentData: StudentIdentityParentData? = StudentIdentityParentData()
 
+    private var hasIdentityParent = false
+    private var hasAddress = false
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -125,7 +129,11 @@ class AddressHomeEditActivity : AppCompatActivity() {
     }
 
     private fun restoreInstanceState(savedInstanceState: Bundle) {
-        addressData = savedInstanceState.getParcelableCompat(KEY_ADDRESS)
+        studentIdentityParentData =
+            savedInstanceState.getParcelableCompat(KEY_BUNDLE_IDENTITY_PARENT)
+        addressData = savedInstanceState.getParcelableCompat(KEY_BUNDLE_ADDRESS)
+        hasIdentityParent = savedInstanceState.getBoolean(KEY_BUNDLE_HAS_IDENTITY_PARENT)
+        hasAddress = savedInstanceState.getBoolean(KEY_BUNDLE_HAS_ADDRESS)
     }
 
     private fun setupFields() {
@@ -383,69 +391,16 @@ class AddressHomeEditActivity : AppCompatActivity() {
         when (state) {
             is State.Loading -> showLoadingView(true)
 
-            is State.Success -> lifecycleScope.launch {
+            is State.Success -> showDataView(state.data, token)
+
+            is State.ErrorClient -> lifecycleScope.launch {
                 delay(600)
-                showLoadingView(false)
-                showDefaultView(true)
-
-                val identityData = state.data
-
-                identityData.address?.run {
-                    when {
-                        isAdded -> alertSuccess(
-                            getString(
-                                R.string.text_alert_add_format,
-                                getString(R.string.text_success),
-                                getString(R.string.text_address_home)
-                            )
-                        )
-
-                        isUpdated -> alertSuccess(
-                            getString(
-                                R.string.text_alert_update_format,
-                                getString(R.string.text_success),
-                                getString(R.string.text_address_home)
-                            )
-                        )
-
-                        isDeleted -> {
-                            sendCallbackIntentResultDeleted()
-                        }
-                    }
+                if (hasAddress) {
+                    showDataView(studentIdentityParentData!!, token)
+                } else {
+                    showDataView(StudentIdentityParentData(), token)
                 }
-
-                binding.apply {
-                    identityData.address?.let { address ->
-                        addressData?.apply {
-                            province = address.province
-                            cityRegency = address.cityRegency
-                            district = address.district
-                            village = address.village
-                            rw = address.rw
-                            rt = address.rt
-                            street = address.street
-                            otherDetailAddress = address.otherDetailAddress
-                            isAdded = address.isAdded
-                            isUpdated = address.isUpdated
-                            isDeleted = address.isDeleted
-
-                            updateEditTextsWithData(address)
-                        }
-                    }
-                    checkButtonDeleteIsEnabled(identityData.address?.userId)
-                    checkButtonSaveIsEnabled(tiLayouts, tiEditTexts)
-                    setupButtonListenersStudentIdentityParent(
-                        identityData,
-                        token,
-                    )
-                }
-
-
-            }
-
-            is State.ErrorClient -> {
-                showLoadingView(false)
-                showDefaultView(true)
+                delay(600)
                 alertError(state.error.errors?.message?.firstOrNull() ?: Str.EMPTY.value)
             }
 
@@ -456,6 +411,79 @@ class AddressHomeEditActivity : AppCompatActivity() {
             }
 
             null -> {}
+        }
+    }
+
+    private fun showDataView(
+        responseData: StudentIdentityParentData,
+        token: String,
+    ) = lifecycleScope.launch {
+        delay(600)
+        showLoadingView(false)
+        showDefaultView(true)
+
+
+        checkButtonDeleteIsEnabled(responseData.address?.userId)
+        manipulationTypeResponse(responseData)
+
+        studentIdentityParentData?.apply {
+            hasIdentityParent = responseData.userId != null
+            responseData.userId?.let { userId = it }
+
+            idCardNumberFather = responseData.idCardNumberFather
+            nameFather = responseData.nameFather
+            idCardNumberMother = responseData.idCardNumberMother
+            nameMother = responseData.nameMother
+            studentIdNumber = responseData.studentIdNumber
+            studentName = responseData.studentName
+            occupation = responseData.occupation
+            phone = responseData.phone
+
+            hasAddress = responseData.address?.userId != null
+            responseData.address?.let { address ->
+                address.userId?.let { this.address?.userId = it }
+                addressData?.apply {
+                    province = address.province
+                    cityRegency = address.cityRegency
+                    district = address.district
+                    village = address.village
+                    rw = address.rw
+                    rt = address.rt
+                    street = address.street
+                    otherDetailAddress = address.otherDetailAddress
+                    updateEditTextsWithData(address)
+                }
+            }
+        }
+
+        checkButtonSaveIsEnabled(tiLayouts, tiEditTexts)
+        setupButtonListenersStudentIdentityParent(responseData, token)
+    }
+
+
+    private fun manipulationTypeResponse(identityData: StudentIdentityParentData) {
+        identityData.address?.run {
+            when {
+                isAdded -> alertSuccess(
+                    getString(
+                        R.string.text_alert_add_format,
+                        getString(R.string.text_success),
+                        getString(R.string.text_address_home)
+                    )
+                )
+
+                isUpdated -> alertSuccess(
+                    getString(
+                        R.string.text_alert_update_format,
+                        getString(R.string.text_success),
+                        getString(R.string.text_address_home)
+                    )
+                )
+
+                isDeleted -> {
+                    sendCallbackIntentResultDeleted()
+                }
+            }
         }
     }
 
@@ -470,7 +498,8 @@ class AddressHomeEditActivity : AppCompatActivity() {
             btnSave.setOnClickListener {
                 updateSave(
                     userType = userType,
-                    userId = userId)
+                    userId = userId
+                )
             }
         }
     }
@@ -482,8 +511,6 @@ class AddressHomeEditActivity : AppCompatActivity() {
         val studentIdParent = identityData.userId
         val studentId = studentIdentityParentData?.userId.orEmpty()
         val userId = studentIdParent ?: studentId
-
-
 
         binding.apply {
             btnDelete.setOnClickListener {
@@ -540,7 +567,7 @@ class AddressHomeEditActivity : AppCompatActivity() {
     }
 
     private fun alertDelete(
-        token: String = strEmpty, userId: String, userType: String = strEmpty
+        token: String = strEmpty, userId: String, userType: String = strEmpty,
     ) {
         showAlertDialog(
             msg = getString(R.string.text_address_home_this),
@@ -822,7 +849,10 @@ class AddressHomeEditActivity : AppCompatActivity() {
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(KEY_ADDRESS, addressData)
+        outState.putParcelable(KEY_BUNDLE_ADDRESS, addressData)
+        outState.putParcelable(KEY_BUNDLE_IDENTITY_PARENT, studentIdentityParentData)
+        outState.putBoolean(KEY_BUNDLE_HAS_ADDRESS, hasAddress)
+        outState.putBoolean(KEY_BUNDLE_HAS_IDENTITY_PARENT, hasIdentityParent)
         super.onSaveInstanceState(outState)
     }
 
@@ -833,7 +863,10 @@ class AddressHomeEditActivity : AppCompatActivity() {
         private const val STATUS_ERROR = "status_error"
         private const val STATUS_CONFIRM_DELETE = "status_confirm_delete"
 
-        private const val KEY_ADDRESS = "key_address"
+        private const val KEY_BUNDLE_ADDRESS = "key_bunlde_address"
+        private const val KEY_BUNDLE_IDENTITY_PARENT = "key_bundle_identity_parent"
+        private const val KEY_BUNDLE_HAS_ADDRESS = "key_bundle_has_address"
+        private const val KEY_BUNDLE_HAS_IDENTITY_PARENT = "key_bundle_has_identity_parent"
 
         const val KEY_EXTRA_SUCCESS = "key_extra_success"
         const val KEY_RESULT_CODE = 2120

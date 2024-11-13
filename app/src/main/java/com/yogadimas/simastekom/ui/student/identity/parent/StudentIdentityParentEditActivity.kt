@@ -17,8 +17,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.graphics.ColorUtils
 import androidx.core.graphics.drawable.DrawableCompat
 import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.asFlow
 import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.repeatOnLifecycle
 import com.google.android.material.color.MaterialColors
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.textfield.TextInputEditText
@@ -66,6 +68,7 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
     private val strEmpty = Str.EMPTY.value
 
     private var studentIdentityParentData: StudentIdentityParentData? = StudentIdentityParentData()
+    private var hasIdentityParent = false
 
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -82,14 +85,16 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
         when {
             doesItProduceValue(PhoneActivity.KEY_RESULT_CODE) -> {
                 showAlertDialogCallback(PhoneActivity.KEY_EXTRA_SUCCESS)
-                observeData()
+                initialGetAndObserveData()
             }
+
             doesItProduceValue(AddressHomeEditActivity.KEY_RESULT_CODE) -> {
-                observeData()
+                initialGetAndObserveData()
             }
+
             doesItProduceValue(AddressHomeEditActivity.KEY_RESULT_CODE_DELETED) -> {
                 showAlertDialogCallback(AddressHomeEditActivity.KEY_EXTRA_SUCCESS)
-                observeData()
+                initialGetAndObserveData()
             }
         }
     }
@@ -99,10 +104,22 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
         binding = ActivityStudentIdentityParentEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        auth()
         setStudentIdentityParentDataBundle(savedInstanceState)
         toolbar()
         mainContent()
     }
+
+    private fun auth() = lifecycleScope.launch {
+        repeatOnLifecycle(Lifecycle.State.RESUMED) {
+            authViewModel.getUser().asFlow().collect { user ->
+                if (user.first == AuthPreferences.DEFAULT_VALUE) {
+                    goToLogin(context)
+                }
+            }
+        }
+    }
+
 
     private fun setStudentIdentityParentDataBundle(savedInstanceState: Bundle?) {
         studentIdentityParentData = getParcelableExtra(intent, KEY_ADMIN_STUDENT_PARENT)
@@ -114,6 +131,9 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
     private fun restoreInstanceState(savedInstanceState: Bundle) {
         studentIdentityParentData = savedInstanceState.getParcelableCompat(
             KEY_BUNDLE_IDENTITY_PARENT
+        )
+        hasIdentityParent = savedInstanceState.getBoolean(
+            KEY_BUNDLE_HAS_IDENTITY_PARENT
         )
     }
 
@@ -155,186 +175,160 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
 
             }
         }
-        observeData()
+        viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getData() }
+        initialGetAndObserveData()
+    }
+
+    private fun getData() = executeMode { token, userId ->
+        adminViewModel.getStudentIdentityParentById(token, userId)
     }
 
 
-    private fun observeData() = executeMode { validToken, userId ->
-        adminViewModel.getStudentIdentityParentById(validToken, userId)
-        collectStudentState(validToken)
+    private fun initialGetAndObserveData() = executeMode { token, _ ->
+        getData()
+        collectStudentState(token)
     }
 
     private fun executeMode(action: suspend (String, String) -> Unit) = lifecycleScope.launch {
-        val token = getToken() ?: return@launch
-        val userId = if (studentIdentityParentData?.isFromAdminStudent == true) {
+        val token = getToken()
+        val userId = getUserId() ?: return@launch
+        action(token, userId)
+    }
+
+    private suspend fun StudentIdentityParentEditActivity.getUserId() =
+        if (studentIdentityParentData?.isFromAdminStudent == true) {
             getSelectedUserId()
         } else {
             getCurrentUserLoginId()
-        } ?: return@launch
+        }
 
-        action(token, userId)
-    }
+    private suspend fun getToken(): String = authViewModel.getUser().asFlow().first().first
+    private suspend fun getCurrentUserLoginId(): String =
+        authViewModel.getUser().asFlow().first().second
+
+    private fun getSelectedUserId(): String? = studentIdentityParentData?.userId
 
     private suspend fun collectStudentState(token: String) {
         adminViewModel.studentIdentityParentState.collect { state ->
             when (state) {
                 is State.Loading -> showLoadingView(true)
                 is State.Success -> showDataView(token, state.data)
-                is State.ErrorClient -> showErrorClientView(state.error)
+                is State.ErrorClient -> showErrorClientView(token, state.error)
                 is State.ErrorServer -> showErrorServerView(state.error)
             }
         }
     }
 
-
-    private suspend fun getToken(): String? {
-        val user = authViewModel.getUser().asFlow().first()
-        val token = user.first
-        return if (token == AuthPreferences.DEFAULT_VALUE) {
-            goToLogin(context)
-            null
-        } else token
-    }
-
-    private suspend fun getCurrentUserLoginId(): String? {
-        val userId = authViewModel.getUser().asFlow().first().second
-        return userId.ifEmpty {
-            goToLogin(context)
-            null
+    private fun showErrorClientView(token: String, error: Errors) = lifecycleScope.launch {
+        delay(600)
+        if (hasIdentityParent) {
+            showDataView(token, studentIdentityParentData!!)
+        } else {
+            showDataView(token, StudentIdentityParentData())
         }
-    }
-
-    private fun getSelectedUserId(): String? {
-        return studentIdentityParentData?.let { data ->
-            data.userId.orEmpty()
-        }
-    }
-
-
-    private fun showErrorClientView(error: Errors) {
-        showLoadingView(false)
-        showDefaultView(true)
+        delay(600)
         val message = error.errors?.message?.firstOrNull() ?: Str.EMPTY.value
         alertError(message)
     }
 
-    private fun showErrorServerView(error: String) {
+    private fun showErrorServerView(error: String) = lifecycleScope.launch {
+        delay(600)
         showLoadingView(false)
         showFailedConnectView(true)
         showSnackBar(error)
     }
 
-    private fun showDataView(token: String, data: StudentIdentityParentData) =
-        lifecycleScope.launch {
-            val userIdResponse = data.userId
-            val isModeCreate = userIdResponse == null
-            delay(600)
-            showLoadingView(false)
-            showDefaultView(true)
-            checkButtonDeleteIsEnabled(userIdResponse)
-            if (data.isAdded || data.isUpdated || data.isDeleted) {
-                val success = getString(R.string.text_success)
-                val label = getString(R.string.text_identity_parent)
-                val msg = when {
-                    data.isAdded -> R.string.text_alert_add_format
-                    data.isUpdated -> R.string.text_alert_update_format
-                    else -> R.string.text_alert_delete_format
-                }
+    private fun showDataView(
+        token: String,
+        responseData: StudentIdentityParentData,
+    ) = lifecycleScope.launch {
+        delay(600)
+        showLoadingView(false)
+        showDefaultView(true)
+        studentIdentityParentData?.apply {
+            hasIdentityParent = responseData.userId != null
+            responseData.userId?.let { userId = it }
 
-
-                val message = getString(msg, success, label)
-                alertSuccess(message)
-
-            }
-            binding.apply {
-                studentIdentityParentData?.let { parentData ->
-                    parentData.apply {
-                        idCardNumberFather = data.idCardNumberFather
-                        nameFather = data.nameFather
-                        idCardNumberMother = data.idCardNumberMother
-                        nameMother = data.nameMother
-                        studentIdNumber = data.studentIdNumber
-                        studentName = data.studentName
-                        occupation = data.occupation
-                        phone = data.phone
-                        address = data.address
-
-                        edtFatherIdCardNumber.setText(idCardNumberFather)
-                        edtFatherName.setText(nameFather)
-                        edtMotherIdCardNumber.setText(idCardNumberMother)
-                        edtMotherName.setText(nameMother)
-                        edtParentOccupation.setText(occupation)
-                        tvPhone.text = formatDataMaterialTextview(
-                            getString(R.string.text_label_phone),
-                            phone.orEmpty(),
-                            context
-                        )
-                        tvAddressHome.text = if (address?.userId != null) {
-                            getString(
-                                R.string.text_change_format,
-                                getString(R.string.text_address_home)
-                            )
-                        } else {
-                            getString(
-                                R.string.text_add_format,
-                                getString(R.string.text_address_home)
-                            )
-                        }
-
-                        setupTextWatchers(edtFatherIdCardNumber) { idCardNumberFather = it }
-                        setupTextWatchers(edtFatherName) { nameFather = it }
-                        setupTextWatchers(edtMotherIdCardNumber) { idCardNumberMother = it }
-                        setupTextWatchers(edtMotherName) { nameMother = it }
-                        setupTextWatchers(edtParentOccupation) { occupation = it }
-                        (userIdResponse ?: userId)?.let { userId ->
-                            btnSave.setOnClickListener {
-                                addOrUpdate(
-                                    token,
-                                    userId,
-                                    isModeCreate
-                                )
-                            }
-                            btnDelete.setOnClickListener { alertDelete(userId) }
-                            tvPhone.setOnClickListener {
-                                studentIdentityParentData?.userId = userId
-                                resultLauncher.launch(
-                                    Intent(
-                                        context,
-                                        PhoneActivity::class.java
-                                    ).apply {
-                                        putExtra(
-                                            KEY_ADMIN_STUDENT_PARENT,
-                                            studentIdentityParentData
-                                        )
-                                    }
-                                )
-                            }
-                            tvAddressHome.setOnClickListener {
-                                studentIdentityParentData?.userId = userId
-                                resultLauncher.launch(
-                                    Intent(
-                                        context,
-                                        AddressHomeEditActivity::class.java
-                                    ).apply {
-                                        putExtra(
-                                            KEY_ADMIN_STUDENT_PARENT,
-                                            studentIdentityParentData
-                                        )
-                                    }
-                                )
-                            }
-                        }
-
-                    }
-                }
-            }
-
-
-
-            checkButtonSaveIsEnabled()
-
-
+            idCardNumberFather = responseData.idCardNumberFather
+            nameFather = responseData.nameFather
+            idCardNumberMother = responseData.idCardNumberMother
+            nameMother = responseData.nameMother
+            studentIdNumber = responseData.studentIdNumber
+            studentName = responseData.studentName
+            occupation = responseData.occupation
+            phone = responseData.phone
+            address = responseData.address
         }
+
+        val isModeCreate = responseData.userId == null
+        checkButtonDeleteIsEnabled(responseData.userId)
+        manipulationTypeResponse(responseData)
+
+        binding.apply {
+            studentIdentityParentData?.apply {
+                edtFatherIdCardNumber.setText(idCardNumberFather)
+                edtFatherName.setText(nameFather)
+                edtMotherIdCardNumber.setText(idCardNumberMother)
+                edtMotherName.setText(nameMother)
+                edtParentOccupation.setText(occupation)
+                tvPhone.text = formatDataMaterialTextview(
+                    getString(R.string.text_label_phone),
+                    phone.orEmpty(),
+                    context
+                )
+                tvAddressHome.text = getString(
+                    if (address?.userId != null)
+                        R.string.text_change_format
+                    else
+                        R.string.text_add_format,
+                    getString(R.string.text_address_home)
+                )
+
+                setupTextWatchers(edtFatherIdCardNumber) { idCardNumberFather = it }
+                setupTextWatchers(edtFatherName) { nameFather = it }
+                setupTextWatchers(edtMotherIdCardNumber) { idCardNumberMother = it }
+                setupTextWatchers(edtMotherName) { nameMother = it }
+                setupTextWatchers(edtParentOccupation) { occupation = it }
+            }
+
+            studentIdentityParentData?.userId?.let { userId ->
+                btnSave.setOnClickListener { addOrUpdate(token, userId, isModeCreate) }
+                btnDelete.setOnClickListener { alertDelete(userId) }
+            }
+
+            tvPhone.setOnClickListener {
+                resultLauncher.launch(
+                    Intent(context, PhoneActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT_PARENT, studentIdentityParentData)
+                    }
+                )
+            }
+
+            tvAddressHome.setOnClickListener {
+                resultLauncher.launch(
+                    Intent(context, AddressHomeEditActivity::class.java).apply {
+                        putExtra(KEY_ADMIN_STUDENT_PARENT, studentIdentityParentData)
+                    }
+                )
+            }
+        }
+
+        checkButtonSaveIsEnabled()
+    }
+
+    private fun manipulationTypeResponse(responseData: StudentIdentityParentData) {
+        val (success, label) = getString(R.string.text_success) to getString(R.string.text_identity_parent)
+        responseData.run {
+            val messageRes = when {
+                isAdded -> R.string.text_alert_add_format
+                isUpdated -> R.string.text_alert_update_format
+                isDeleted -> R.string.text_alert_delete_format
+                else -> null
+            }
+            messageRes?.let { alertSuccess(getString(it, success, label)) }
+        }
+    }
+
 
 
     private fun addOrUpdate(token: String, userId: String, doesItAdd: Boolean) = binding.apply {
@@ -468,7 +462,11 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
     }
 
     private fun alertDelete(userId: String) {
-        showAlertDialog(msg = getString(R.string.text_identity_parent_this), status = STATUS_CONFIRM_DELETE, userId = userId)
+        showAlertDialog(
+            msg = getString(R.string.text_identity_parent_this),
+            status = STATUS_CONFIRM_DELETE,
+            userId = userId
+        )
     }
 
     private fun showAlertDialog(
@@ -549,9 +547,7 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
                     setPositiveButton(getString(R.string.text_ok)) { _, _ ->
                         defaultStateDialog()
                         lifecycleScope.launch {
-                            getToken()?.let {
-                                adminViewModel.deleteStudentIdentityParent(it, userId)
-                            }
+                            adminViewModel.deleteStudentIdentityParent(getToken(), userId)
                         }
                     }
                     setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
@@ -601,6 +597,7 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putParcelable(KEY_BUNDLE_IDENTITY_PARENT, studentIdentityParentData)
+        outState.putBoolean(KEY_BUNDLE_HAS_IDENTITY_PARENT, hasIdentityParent)
         super.onSaveInstanceState(outState)
     }
 
@@ -612,6 +609,7 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
         const val KEY_ADMIN_STUDENT_PARENT = "key_admin_student_parent"
 
         private const val KEY_BUNDLE_IDENTITY_PARENT = "key_bundle_identity_parent"
+        private const val KEY_BUNDLE_HAS_IDENTITY_PARENT = "key_bundle_has_identity_parent"
     }
 
 }
