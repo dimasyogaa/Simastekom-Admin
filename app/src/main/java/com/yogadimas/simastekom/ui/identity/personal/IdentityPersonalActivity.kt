@@ -24,8 +24,8 @@ import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.adapter.identitypersonal.IdentityPersonalAdapter
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
-import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.enums.ContactType
+import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.common.enums.SortBy
 import com.yogadimas.simastekom.common.enums.SortDir
@@ -34,18 +34,22 @@ import com.yogadimas.simastekom.common.helper.ToastHelper
 import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.sendMessage
 import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
 import com.yogadimas.simastekom.common.paging.LoadingStateAdapter
 import com.yogadimas.simastekom.databinding.ActivityIdentityPersonalBinding
 import com.yogadimas.simastekom.model.responses.UserCurrent
+import com.yogadimas.simastekom.ui.dialog.ImageViewerDialogFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
-class IdentityPersonalActivity : AppCompatActivity() {
+class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
 
     private lateinit var binding: ActivityIdentityPersonalBinding
 
@@ -63,6 +67,7 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
     private var dialog: AlertDialog? = null
     private var isAlertDialogShow = false
+    private var isFragmentDialogShow = false
 
     private lateinit var userTypeRole: String
 
@@ -108,9 +113,20 @@ class IdentityPersonalActivity : AppCompatActivity() {
             rvIdentityPersonal.layoutManager =
                 LinearLayoutManager(context)
 
-            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { setObserveData(token, role) }
+            viewHandle.viewFailedConnect.btnRefresh.setOnClickListener {
+                setObserveData(
+                    token,
+                    role
+                )
+            }
         }
-        identityPersonalAdapter = IdentityPersonalAdapter { data, fieldType ->
+        identityPersonalAdapter = IdentityPersonalAdapter({ url ->
+            if (!isFragmentDialogShow) {
+                isFragmentDialogShow = true
+                val dialogFragment: ImageViewerDialogFragment by inject { parametersOf(url) }
+                dialogFragment.show(supportFragmentManager, ImageViewerDialogFragment.TAG)
+            }
+        }) { data, fieldType ->
 
             val userTypeReceiver: Role? = when (data.userType) {
                 Role.ADMIN.value -> Role.ADMIN
@@ -265,9 +281,10 @@ class IdentityPersonalActivity : AppCompatActivity() {
         lifecycleScope.launch {
             launch {
 
-                adminViewModel.getIdentitiesPersonal(token, role = role).collectLatest { pagingData ->
-                    identityPersonalAdapter.submitData(pagingData)
-                }
+                adminViewModel.getIdentitiesPersonal(token, role = role)
+                    .collectLatest { pagingData ->
+                        identityPersonalAdapter.submitData(pagingData)
+                    }
 
 
             }
@@ -293,10 +310,16 @@ class IdentityPersonalActivity : AppCompatActivity() {
     private fun observePaging() {
         loadStateListener?.let { identityPersonalAdapter.removeLoadStateListener(it) }
         loadStateListener = { loadState ->
-            val isDataLoaded = loadState.source.refresh is LoadState.NotLoading && identityPersonalAdapter.itemCount > 0
+            val isDataLoaded =
+                loadState.source.refresh is LoadState.NotLoading && identityPersonalAdapter.itemCount > 0
             val isLoading = loadState.source.refresh is LoadState.Loading
-            val isError = listOf(loadState.source.append, loadState.source.prepend, loadState.source.refresh).any { it is LoadState.Error }
-            val isEmptyData = loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityPersonalAdapter.itemCount == 0
+            val isError = listOf(
+                loadState.source.append,
+                loadState.source.prepend,
+                loadState.source.refresh
+            ).any { it is LoadState.Error }
+            val isEmptyData =
+                loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityPersonalAdapter.itemCount == 0
 
             when {
                 isLoading -> showLoadingView(true)
@@ -336,7 +359,6 @@ class IdentityPersonalActivity : AppCompatActivity() {
         }
         identityPersonalAdapter.addLoadStateListener(loadStateListener!!)
     }
-
 
 
     private fun clearSearch() {
@@ -383,7 +405,12 @@ class IdentityPersonalActivity : AppCompatActivity() {
                         goToLogin(context)
                     } else {
                         lifecycleScope.launch {
-                            getToken()?.let { setObserveData(it, Role.fromValue(userTypeRole) ?: Role.STUDENT) }
+                            getToken()?.let {
+                                setObserveData(
+                                    it,
+                                    Role.fromValue(userTypeRole) ?: Role.STUDENT
+                                )
+                            }
                         }
                         return@setPositiveButton
                     }
@@ -499,6 +526,14 @@ class IdentityPersonalActivity : AppCompatActivity() {
 
     companion object {
         const val KEY_EXTRA_ROLE = "key_extra_role"
+    }
+
+    override fun getData(message: String) {
+        isFragmentDialogShow = false
+    }
+
+    override fun getError(message: String, code: ErrorCode) {
+        showSnackBarError(message)
     }
 
 }

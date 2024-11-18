@@ -8,7 +8,9 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -18,24 +20,29 @@ import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.enums.ContactType
 import com.yogadimas.simastekom.common.enums.Scale
 import com.yogadimas.simastekom.common.helper.setStripIfNull
+import com.yogadimas.simastekom.common.interfaces.OnImageClickCallback
 import com.yogadimas.simastekom.common.interfaces.OnItemClickIdentityPersonalCallback
 import com.yogadimas.simastekom.databinding.ItemIdentityPersonalBinding
 import com.yogadimas.simastekom.databinding.ItemIdentityPersonalDetailsViewStubBinding
 import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
+import com.yogadimas.simastekom.ui.dialog.ImageViewerDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
-class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentityPersonalCallback) :
+class IdentityPersonalAdapter(
+    private val imageClickCallback: OnImageClickCallback,
+    private val itemClickCallback: OnItemClickIdentityPersonalCallback,
+) :
     PagingDataAdapter<IdentityPersonalData, IdentityPersonalAdapter.ViewHolder>(DIFF_CALLBACK) {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val binding =
             ItemIdentityPersonalBinding.inflate(LayoutInflater.from(parent.context), parent, false)
-        return ViewHolder(binding, itemClickCallback)
+        return ViewHolder(binding, imageClickCallback, itemClickCallback)
 
     }
 
@@ -49,8 +56,10 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
 
     class ViewHolder(
         private val binding: ItemIdentityPersonalBinding,
+        private val imageClickCallback: OnImageClickCallback,
         private val itemClickCallback: OnItemClickIdentityPersonalCallback,
-    ) :
+
+        ) :
         RecyclerView.ViewHolder(binding.root) {
 
         private var isDetailVisible = false
@@ -69,10 +78,18 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
                         ) else getString(R.string.text_label_id_username)
 
 
-                    ivProfile.load(BuildConfig.BASE_URL + data.profilePicture) {
+                    val baseUrl = BuildConfig.BASE_URL
+                    val dataProfilePicture = data.profilePicture
+                    val profilePicture = baseUrl + dataProfilePicture
+                    ivProfile.load(profilePicture) {
                         crossfade(true)
                         placeholder(R.drawable.z_ic_placeholder_profile)
                         error(R.drawable.z_ic_placeholder_profile)
+                    }
+                    ivProfile.setOnClickListener {
+                        if (profilePicture != baseUrl && !dataProfilePicture.isNullOrEmpty()) {
+                            imageClickCallback.onImageClicked(profilePicture)
+                        }
                     }
 
                     tvLabelUser.text = labelUser
@@ -85,6 +102,8 @@ class IdentityPersonalAdapter(private val itemClickCallback: OnItemClickIdentity
                         toggleDetailView(data)
                     }
                 }
+
+
             }
         }
 

@@ -29,6 +29,7 @@ import com.yogadimas.simastekom.BuildConfig.BASE_URL
 import com.yogadimas.simastekom.databinding.ActivityMainBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
 import com.yogadimas.simastekom.ui.mainpage.action.ActionFragment
 import com.yogadimas.simastekom.ui.login.LoginActivity
@@ -424,28 +425,18 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
 
     }
 
-    override fun getError(message: String, code: Int) {
+    override fun getError(message: String, code: ErrorCode) {
         when (code) {
-            400 -> {
-                showAlertDialog(message)
-            }
-
-            500 -> {
-                showSnackBar(message)
-            }
+            ErrorCode.CLIENT -> showAlertDialog(message)
+            ErrorCode.SERVER -> showSnackBar(message)
+            ErrorCode.UNAUTHORIZED -> {}
         }
     }
 
     override fun getData(message: String) {
-
         when (message) {
-            ActionFragment.NAME_FRAGMENT -> {
-                currentPage = R.id.actionFragment
-            }
-
-            ProfileFragment.NAME_FRAGMENT -> {
-                currentPage = R.id.profileFragment
-            }
+            ActionFragment.NAME_FRAGMENT ->  currentPage = R.id.actionFragment
+            ProfileFragment.NAME_FRAGMENT -> currentPage = R.id.profileFragment
         }
     }
 

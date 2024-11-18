@@ -3,7 +3,10 @@
     <attr name="colorOnCustomColor1" format="color" />
     <attr name="colorCustomColor1Container" format="color" />
     <attr name="colorOnCustomColor1Container" format="color" />
-
+    <declare-styleable name="FullscreenAttrs">
+        <attr name="fullscreenBackgroundColor" format="color" />
+        <attr name="fullscreenTextColor" format="color" />
+    </declare-styleable>
 
 
 </resources>

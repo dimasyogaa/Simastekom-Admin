@@ -19,7 +19,7 @@ android {
 
         buildConfigField("boolean", "DEBUG", "true")
 
-        buildConfigField("String", "BASE_URL", "\"http://192.168.158.106:8000\"")
+        buildConfigField("String", "BASE_URL", "\"http://192.168.91.106:8000\"")
 //        buildConfigField("String", "BASE_URL", "\"http://192.168.50.138:8000\"")
         buildConfigField("String", "API", "\"/api/\"")
 

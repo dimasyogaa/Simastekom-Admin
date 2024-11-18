@@ -1,8 +1,10 @@
 package com.yogadimas.simastekom.di.koin
 
+import androidx.core.bundle.Bundle
 import com.yogadimas.simastekom.api.ApiConfig
 import com.yogadimas.simastekom.repository.AdminStudentRepository
 import com.yogadimas.simastekom.repository.AdminAllUserTypeRoleRepository
+import com.yogadimas.simastekom.ui.dialog.ImageViewerDialogFragment
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
 import com.yogadimas.simastekom.viewmodel.admin.AdminAllUserTypeRoleViewModel
 import org.koin.core.module.dsl.singleOf
@@ -20,6 +22,9 @@ val appModule = module {
 //
 //    // Provide AdminViewModel
 //    viewModel { AdminViewModel(get()) }
+
+    factory { (imageUrl: String) -> ImageViewerDialogFragment.newInstance(imageUrl) }
+
 
 
     // Provide AdminStudentRepository

@@ -45,8 +45,10 @@
             android:name=".ui.student.identity.parent.StudentIdentityParentActivity"
             android:exported="false" />
         <activity
+            android:enableOnBackInvokedCallback="true"
             android:name=".ui.identity.personal.IdentityPersonalActivity"
-            android:exported="false" />
+            android:exported="false"
+            tools:targetApi="tiramisu" />
         <activity
             android:name=".ui.student.StudentManipulationActivity"
             android:exported="false" />

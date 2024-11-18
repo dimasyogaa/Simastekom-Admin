@@ -19,7 +19,9 @@ import com.yogadimas.simastekom.BuildConfig
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
+import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.databinding.FragmentProfileBinding
 import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.ui.admin.AdminEditActivity
@@ -101,14 +103,14 @@ class ProfileFragment : Fragment() {
                     ?.let { errorMsg ->
                         showDefaultView(true)
                         showFailedConnectView(false)
-                        mCallback.getError(errorMsg, 400)
+                        mCallback.getError(errorMsg, ErrorCode.CLIENT)
                     }
             }
             errorsSnackbarText.observe(viewLifecycleOwner) { eventSnackbarText ->
                 eventSnackbarText.getContentIfNotHandled()?.let { snackBarText ->
                     showDefaultView(false)
                     showFailedConnectView(true)
-                    mCallback.getError(snackBarText, 500)
+                    mCallback.getError(snackBarText,  ErrorCode.SERVER)
                 }
             }
         }

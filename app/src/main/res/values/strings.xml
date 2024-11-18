@@ -383,6 +383,9 @@
     <string name="text_address_home_personal">Alamat Rumah Pribadi</string>
     <string name="text_address_home_parent">Alamat Rumah Orang Tua</string>
     <string name="select_photo">Pilih foto</string>
+    <string name="dummy_button">Dummy Button</string>
+    <string name="dummy_content">DUMMY\nCONTENT</string>
+    <string name="text_image_not_found">Gambar tidak ditemukan</string>
 
 
 </resources>
