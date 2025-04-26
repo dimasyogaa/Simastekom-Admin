@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -90,6 +91,8 @@ class ClassSessionActivity : AppCompatActivity() {
 
     private fun mainCall() {
         binding.apply {
+            appBarLayout.isVisible = false
+
             toolbar.setNavigationOnClickListener { finish() }
 
             toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
@@ -343,7 +346,7 @@ class ClassSessionActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -419,6 +422,7 @@ class ClassSessionActivity : AppCompatActivity() {
 
     private fun isVisibleAllView(boolean: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

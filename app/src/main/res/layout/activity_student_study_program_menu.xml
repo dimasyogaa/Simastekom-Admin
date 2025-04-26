@@ -28,7 +28,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
-                app:title="@string/title_student_study_program_menu" />
+                app:title="@string/text_student_study_program_menu" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -41,22 +41,22 @@
         <Button
             android:id="@+id/btn_faculty"
             style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_faculty"/>
+            android:text="@string/text_faculty"/>
 
         <Button
             android:id="@+id/btn_level"
             style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_level"/>
+            android:text="@string/text_level"/>
 
         <Button
             android:id="@+id/btn_major"
             style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_major"/>
+            android:text="@string/text_major"/>
 
         <Button
             android:id="@+id/btn_degree"
             style="@style/CustomButtonTonalMenu"
-            android:text="@string/title_degree"/>
+            android:text="@string/text_degree"/>
 
 
 

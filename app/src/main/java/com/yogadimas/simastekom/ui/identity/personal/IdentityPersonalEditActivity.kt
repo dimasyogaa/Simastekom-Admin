@@ -68,6 +68,8 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
     private var identityPersonalData: IdentityPersonalData? = IdentityPersonalData()
 
+    private var keyRole = KEY_ADMIN_STUDENT
+
 
     private val resultLauncher = registerForActivityResult(
         ActivityResultContracts.StartActivityForResult()
@@ -104,13 +106,16 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         binding = ActivityIdentityPersonalEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-
         identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
+            ?: getParcelableExtra(intent, KEY_ADMIN_LECTURER)
+                    ?: getParcelableExtra(intent, KEY_ADMIN_ADMIN)
+
 
         if (savedInstanceState != null) {
             restoreInstanceState(savedInstanceState)
         }
 
+        showDefaultView(false)
 
         observeData()
 
@@ -227,7 +232,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                if (identityPersonalData?.isFromAdminStudent == true) {
+                if (identityPersonalData?.isFromAdmin == true) {
                     identityPersonalData?.let { data ->
                         userType = data.userType.orEmpty()
                         userId = data.userId.orEmpty()
@@ -259,11 +264,10 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
                 binding.apply {
                     edtIdCardNumber.setText(it.idCardNumber)
-                    if (identityPersonalData?.isFromAdminStudent == true) {
+                    if (identityPersonalData?.isFromAdmin == true) {
                         identityPersonalData?.gender = it.gender
                     } else {
                         setGender(it.gender)
-
                     }
                     edtReligion.setText(it.religion)
                     tvPhone.text =
@@ -332,7 +336,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         hideKeyboard()
         val idCardNumber = binding.edtIdCardNumber.text.toString().trim()
         val gender =
-            if (identityPersonalData?.isFromAdminStudent == true)
+            if (identityPersonalData?.isFromAdmin == true)
                 identityPersonalData?.gender
             else
                 binding.edtGender.text.toString().lowercase()
@@ -391,7 +395,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -462,6 +466,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
 
     private fun showDefaultView(boolean: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutIdCardNumber.visibility = View.VISIBLE
@@ -519,7 +524,7 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
     private fun checkingIsGenderGone(block: () -> Unit) {
-        if (identityPersonalData?.isFromAdminStudent != true) {
+        if (identityPersonalData?.isFromAdmin != true) {
             block()
         } else {
             setGenderGone()
@@ -569,6 +574,8 @@ class IdentityPersonalEditActivity : AppCompatActivity(), OnOptionDialogListener
         private const val KEY_SUCCESS_DIALOG_SHOWING = "key_success_dialog_showing"
 
         const val KEY_ADMIN_STUDENT = "key_admin_student"
+        const val KEY_ADMIN_LECTURER = "key_admin_lecturer"
+        const val KEY_ADMIN_ADMIN = "key_admin_admin"
 
         private const val KEY_BUNDLE_IDENTITY_PERSONAL = "key_bundle_identity_personal"
     }

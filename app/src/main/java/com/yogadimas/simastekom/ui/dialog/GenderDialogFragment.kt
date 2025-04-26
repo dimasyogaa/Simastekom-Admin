@@ -11,6 +11,7 @@ import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.databinding.DialogFragmentGenderBinding
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
+import com.yogadimas.simastekom.ui.lecturer.LecturerManipulationActivity
 import com.yogadimas.simastekom.ui.student.StudentManipulationActivity
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -30,10 +31,16 @@ class GenderDialogFragment : DialogFragment() {
 
         val parentActivity = activity
 
-        if (parentActivity is IdentityPersonalEditActivity) {
-            this.optionDialogListener = parentActivity
-        } else if (parentActivity is StudentManipulationActivity) {
-            this.optionDialogListener = parentActivity
+        when (parentActivity) {
+            is IdentityPersonalEditActivity -> {
+                this.optionDialogListener = parentActivity
+            }
+            is StudentManipulationActivity -> {
+                this.optionDialogListener = parentActivity
+            }
+            is LecturerManipulationActivity -> {
+                this.optionDialogListener = parentActivity
+            }
         }
 
     }

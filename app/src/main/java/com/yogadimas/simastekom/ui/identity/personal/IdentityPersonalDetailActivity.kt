@@ -9,6 +9,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
@@ -43,6 +44,8 @@ class IdentityPersonalDetailActivity : AppCompatActivity() {
         binding = ActivityIdentityPersonalDetailBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+        showDefaultView(false)
         setupListeners()
         fetchIdentityPersonalDetail()
         observeIdentityPersonalDetail()
@@ -134,6 +137,7 @@ class IdentityPersonalDetailActivity : AppCompatActivity() {
     private fun showDefaultView(isVisible: Boolean) {
         val visibility = if (isVisible) View.VISIBLE else View.GONE
         binding.apply {
+            appBarLayout.visibility = visibility
             toolbar.visibility = visibility
             ivPhone.visibility = visibility
             tvRowPhone.visibility = visibility

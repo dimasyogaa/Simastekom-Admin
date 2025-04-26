@@ -6,13 +6,13 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
@@ -64,6 +64,8 @@ class PhoneActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityPhoneBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        showDefaultView(false)
 
         setDataFromIntent()
         toolbar()
@@ -158,7 +160,7 @@ class PhoneActivity : AppCompatActivity() {
                 goToLogin(context)
             } else {
                 adminViewModel.token = token
-                if (identityPersonalData?.isFromAdminStudent == true) {
+                if (identityPersonalData?.isFromAdmin == true) {
                     identityPersonalData?.let { data ->
                         userType = data.userType.orEmpty()
                         userId = data.userId.orEmpty()
@@ -301,11 +303,13 @@ class PhoneActivity : AppCompatActivity() {
                         getString(R.string.text_success),
                         getString(R.string.text_label_phone)
                     )
+
                     identityData.isUpdated -> getString(
                         R.string.text_alert_update_format,
                         getString(R.string.text_success),
                         getString(R.string.text_label_phone)
                     )
+
                     else -> ""
                 }
 
@@ -379,7 +383,7 @@ class PhoneActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
             }
@@ -435,7 +439,7 @@ class PhoneActivity : AppCompatActivity() {
 
     private fun showDefaultView(boolean: Boolean) {
         binding.apply {
-
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutPhone.visibility = View.VISIBLE

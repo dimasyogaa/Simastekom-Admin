@@ -65,6 +65,8 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
         binding = ActivityStudentIdentityAcademicBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.appBarLayout.isVisible = false
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
@@ -334,7 +336,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
             message = getString(R.string.text_please_login_again)
         } else {
             icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-            title = getString(R.string.text_error, "")
+            title = getString(R.string.text_error_format, "")
             message = msg
         }
 
@@ -387,6 +389,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
     private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = isVisible
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

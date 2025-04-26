@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.yogadimas.simastekom"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.yogadimas.simastekom"
@@ -19,8 +19,7 @@ android {
 
         buildConfigField("boolean", "DEBUG", "true")
 
-        buildConfigField("String", "BASE_URL", "\"http://192.168.91.106:8000\"")
-//        buildConfigField("String", "BASE_URL", "\"http://192.168.50.138:8000\"")
+        buildConfigField("String", "BASE_URL", "\"http://192.168.69.106:8000\"")
         buildConfigField("String", "API", "\"/api/\"")
 
     }
@@ -47,6 +46,14 @@ android {
     kotlinOptions {
         jvmTarget = "1.8"
     }
+
+    packaging {
+        resources {
+            pickFirsts.add("META-INF/LICENSE-notice.md")
+            pickFirsts.add("META-INF/LICENSE.md")
+        }
+    }
+
 }
 
 dependencies {
@@ -85,7 +92,29 @@ dependencies {
     implementation(libs.material)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.constraintlayout)
+
+    // UI test
+    implementation(libs.androidx.espresso.idling.resource)
+    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.espresso.intents)
+
+
+    // JUnit 4 untuk pengujian unit dan UI
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
-    androidTestImplementation(libs.androidx.espresso.core)
+    androidTestImplementation(libs.androidx.rules)
+    androidTestImplementation(libs.androidx.runner)
+
+    // JUnit 5 untuk pengujian unit
+    testImplementation(libs.junit.jupiter.api)
+    androidTestImplementation(libs.junit.jupiter)
+    testRuntimeOnly(libs.junit.jupiter.engine)
+
 }
+
+// agar gradle mengenali junit5
+tasks.withType<Test> {
+    useJUnitPlatform()
+}
+
+

@@ -367,7 +367,6 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                         employmentStatusName = data.employmentStatusName
                         campusId = data.campusId
                         campusName = data.campusName
-
                     }
                 }
             }
@@ -590,7 +589,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                         IdentityPersonalData(
                             userId = data.id,
                             userType = data.userType,
-                            isFromAdminStudent = true
+                            isFromAdmin = true
                         )
                     )
                 }
@@ -808,7 +807,6 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
         initializeBindings()
         setVisibilityToolbar(!isVisible)
         setVisibilityViewStub(isVisible)
-
     }
 
     private fun setVisibilityViewStub(isVisible: Boolean) {
@@ -843,7 +841,7 @@ class StudentManipulationActivity : AppCompatActivity(), OnOptionDialogListenerI
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 

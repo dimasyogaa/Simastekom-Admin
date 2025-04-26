@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
+xmlns:app="http://schemas.android.com/apk/res-auto"
+xmlns:tools="http://schemas.android.com/tools"
+android:layout_width="match_parent"
+android:layout_height="match_parent"
+tools:context=".ui.lecturer.LecturerActivity">
+
+
+<com.google.android.material.appbar.AppBarLayout
+    android:id="@+id/appBarLayout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:fitsSystemWindows="true">
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
+        app:menu="@menu/top_appbar_refresh_menu"
+        app:navigationIcon="@drawable/z_ic_back"
+        app:title="@string/text_lecturer">
+
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+    <com.google.android.material.appbar.MaterialToolbar
+        android:id="@+id/toolbar2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        app:layout_scrollFlags="noScroll|snap">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <com.google.android.material.search.SearchBar
+                android:id="@+id/searchBar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_searchbar_hint" />
+
+            <HorizontalScrollView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="-12dp"
+                android:gravity="center"
+                android:scrollbars="none">
+
+                <com.google.android.material.chip.ChipGroup
+                    android:id="@+id/chipGroup"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:singleLine="true"
+                    app:singleSelection="true">
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_sort_by"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_sort_by"
+                        app:checkedIcon="@drawable/z_ic_sort"
+                        app:checkedIconEnabled="true"
+                        app:chipIcon="@drawable/z_ic_sort"
+                        app:chipIconEnabled="true"
+                        app:ensureMinTouchTargetSize="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_lecturer_id_number"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_label_lecturer_id_number"
+                        app:checkedIcon="@drawable/z_ic_sort"
+                        app:checkedIconEnabled="true"
+                        app:chipIcon="@drawable/z_ic_sort"
+                        app:chipIconEnabled="true"
+                        app:ensureMinTouchTargetSize="true" />
+
+                    <com.google.android.material.chip.Chip
+                        android:id="@+id/chip_name"
+                        style="@style/Widget.Material3.Chip.Filter"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/text_label_name"
+                        app:checkedIcon="@drawable/z_ic_sort"
+                        app:checkedIconEnabled="true"
+                        app:chipIcon="@drawable/z_ic_sort"
+                        app:chipIconEnabled="true"
+                        app:ensureMinTouchTargetSize="true" />
+
+
+
+                </com.google.android.material.chip.ChipGroup>
+
+
+            </HorizontalScrollView>
+        </LinearLayout>
+
+    </com.google.android.material.appbar.MaterialToolbar>
+
+
+</com.google.android.material.appbar.AppBarLayout>
+
+
+<com.google.android.material.search.SearchView
+    android:id="@+id/searchView"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:hint="@string/text_searchbar_hint"
+    app:layout_anchor="@id/searchBar">
+
+
+</com.google.android.material.search.SearchView>
+
+<com.yogadimas.simastekom.common.custom.SmartNestedScrollView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:scrollbars="none"
+    app:layout_behavior="@string/appbar_scrolling_view_behavior">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_lecturer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="8dp"
+            android:clipToPadding="false"
+            android:nestedScrollingEnabled="true"
+            android:paddingBottom="100dp"
+            tools:listitem="@layout/item_lecturer" />
+
+
+    </LinearLayout>
+
+
+</com.yogadimas.simastekom.common.custom.SmartNestedScrollView>
+
+
+<com.google.android.material.floatingactionbutton.FloatingActionButton
+    android:id="@+id/fab_add"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="bottom|end"
+    android:layout_margin="16dp"
+    app:srcCompat="@drawable/z_ic_add" />
+
+
+<com.google.android.material.progressindicator.CircularProgressIndicator
+    android:id="@+id/mainProgressBar"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:indeterminate="true"
+    android:scaleX="0.75"
+    android:scaleY="0.75"
+    android:visibility="gone"
+    app:trackThickness="4dp" />
+
+<include
+    android:id="@+id/view_handle"
+    layout="@layout/layout_handle_data_connection"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center" />
+
+
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

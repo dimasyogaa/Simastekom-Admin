@@ -7,13 +7,12 @@ import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.databinding.ActivityStudentMenuBinding
 import com.yogadimas.simastekom.ui.identity.address.AddressHomeActivity
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalActivity
-import com.yogadimas.simastekom.ui.identity.address.AddressHomeEditActivity
 import com.yogadimas.simastekom.ui.student.identity.academic.StudentIdentityAcademicMenuActivity
 import com.yogadimas.simastekom.ui.student.identity.parent.StudentIdentityParentActivity
 import com.yogadimas.simastekom.ui.student.status.employment.EmploymentStatusActivity
 import com.yogadimas.simastekom.ui.student.status.student.StudentStatusActivity
 
-class StudentActivityMenu : AppCompatActivity() {
+class StudentMenuActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityStudentMenuBinding
 
@@ -26,9 +25,8 @@ class StudentActivityMenu : AppCompatActivity() {
         binding.apply {
             toolbar.setNavigationOnClickListener { finish() }
 
-            // Helper function to handle startActivity
             fun navigateTo(activityClass: Class<*>, role: String? = null) {
-                val intent = Intent(this@StudentActivityMenu, activityClass)
+                val intent = Intent(this@StudentMenuActivity, activityClass)
                 role?.let { roleValue ->
                     intent.putExtra(AddressHomeActivity.KEY_EXTRA_ROLE, roleValue)
                 }

@@ -8,7 +8,6 @@ import android.content.res.Resources
 import android.graphics.Typeface
 import android.net.Uri
 import android.os.Build
-import android.os.Build.VERSION_CODES.S
 import android.os.Bundle
 import android.os.Parcelable
 import android.text.Editable
@@ -16,7 +15,6 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.text.style.StyleSpan
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.ProgressBar
@@ -29,14 +27,9 @@ import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.common.enums.SpecialCharacter
 import com.yogadimas.simastekom.common.enums.Str
 import com.yogadimas.simastekom.model.backup.Address
-import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.UserCurrent
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.mainpage.profile.ProfileFragment
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 import java.net.URLEncoder
 import java.text.SimpleDateFormat
 import java.util.Calendar
@@ -192,13 +185,13 @@ fun sendMessage(
         val setAdmin: (String?) -> String =
             { name -> getString(R.string.text_admin_name_format, name) }
         val setLecture: (String?) -> String =
-            { name -> getString(R.string.text_lecture_name_format, name) }
+            { name -> getString(R.string.text_lecturer_name_format, name) }
         val setStudent: (String?) -> String =
             { name -> getString(R.string.text_student_name_format, name) }
         val setStudentParent: (String?) -> String =
             { name -> getString(R.string.text_student_name_parent_format, name) }
-        val misterLecture = getString(R.string.text_lecture_mister_format, receiverName)
-        val madamLecture = getString(R.string.text_lecture_madam_format, receiverName)
+        val misterLecture = getString(R.string.text_lecturer_mister_format, receiverName)
+        val madamLecture = getString(R.string.text_lecturer_madam_format, receiverName)
         val technician = getString(R.string.text_technician)
         val technicianNumber = Phone.TECHNICIAN.number
         val emptyString = Str.EMPTY.value
@@ -277,7 +270,7 @@ private fun sendEmail(
     context.apply {
         val simastekom = "SIMASTEKOM"
         val admin = getString(R.string.text_admin)
-        val lecture = getString(R.string.text_lecture)
+        val lecture = getString(R.string.text_lecturer)
         val student = getString(R.string.text_student)
 
         val mailTo = Str.MAILTO.value

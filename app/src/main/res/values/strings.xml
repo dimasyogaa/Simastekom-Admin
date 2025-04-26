@@ -10,11 +10,11 @@
 
     <string name="text_admin">Admin</string>
     <string name="text_student">Mahasiswa</string>
-    <string name="text_lecture">Dosen</string>
+    <string name="text_lecturer">Dosen</string>
 
     <string name="text_admin_data">Data Admin</string>
     <string name="text_student_data">Data Mahasiswa</string>
-    <string name="text_lecture_data">Data Dosen</string>
+    <string name="text_lecturer_data">Data Dosen</string>
 
     <string name="text_login">Login</string>
     <string name="text_logout">Logout</string>
@@ -51,9 +51,9 @@
     <string name="text_hint_your_name">Masukkan nama anda…</string>
     <string name="text_hint_name">Masukkan nama…</string>
 
-    <string name="text_label_fullname">Nama Lengkap</string>
+    <string name="text_label_full_name">Nama Lengkap</string>
     <string name="text_hint_your_fullname">Masukkan nama lengkap anda…</string>
-    <string name="text_hint_fullname">Masukkan nama lengkap…</string>
+    <string name="text_hint_full_name">Masukkan nama lengkap…</string>
 
     <string name="text_label_phone">Nomor WA</string>
     <string name="text_hint_phone">Masukkan nomor wa…</string>
@@ -164,8 +164,8 @@
     <string name="text_man">Laki-Laki</string>
     <string name="text_woman">Perempuan</string>
 
-    <string name="text_lecture_mister_format">Bapak Dosen %s</string>
-    <string name="text_lecture_madam_format">Ibu Dosen %s</string>
+    <string name="text_lecturer_mister_format">Bapak Dosen %s</string>
+    <string name="text_lecturer_madam_format">Ibu Dosen %s</string>
 
 
     <string name="text_with_identity_format">" dengan identitas %1$s"</string>
@@ -173,7 +173,7 @@
     <string name="text_student_name_format">Mahasiswa %s</string>
     <string name="text_student_name_parent_format">Orang Tua dari Mahasiswa %s</string>
     <string name="text_admin_name_format">%s</string>
-    <string name="text_lecture_name_format">Dosen %s</string>
+    <string name="text_lecturer_name_format">Dosen %s</string>
     <string name="text_technician">Teknisi</string>
 
     <string name="text_time_morning">Pagi</string>
@@ -185,7 +185,8 @@
 
     <string name="text_success">Berhasil</string>
     <string name="text_failed">Gagal</string>
-    <string name="text_error">%1$s Error</string>
+    <string name="text_error">Error</string>
+    <string name="text_error_format">%1$s Error</string>
 
     <string name="text_failed_to_connect">Gagal Terhubung</string>
     <string name="text_refresh">Refresh</string>
@@ -203,7 +204,7 @@
     <string name="text_what_you_entered_is_not_correct_format">%1$s yang anda masukkan belum benar</string>
     <string name="text_cannot_contain_spaces_format">%1$s tidak boleh mengandung spasi</string>
     <string name="text_cannot_contain_spaces_early_format">Tidak boleh ada spasi di awal %1$s</string>
-    <string name="text_error_format">%1$s tidak boleh ada %2$s</string>
+    <string name="text_there_cant_be_any_format">%1$s tidak boleh ada %2$s</string>
 
 
     <string name="text_please_login_again">Silakan login kembali</string>
@@ -291,17 +292,19 @@
 
     <string name="title_search">Cari</string>
 
-    <string name="title_student_menu">Menu Mahasiswa</string>
-    <string name="title_student_identity_academic_menu">Menu Identitas Akademik</string>
-    <string name="title_student_study_program_menu">Menu Program Studi</string>
+    <string name="text_student_menu">Menu Mahasiswa</string>
+    <string name="text_student_identity_academic_menu">Menu Identitas Akademik</string>
+    <string name="text_student_study_program_menu">Menu Program Studi</string>
+
+    <string name="text_lecturer_menu">Menu Dosen</string>
 
 
-    <string name="title_study_program">Program Studi</string>
-    <string name="title_faculty">Fakultas</string>
-    <string name="title_level">Jenjang</string>
-    <string name="title_major">Jurusan</string>
-    <string name="title_degree">Gelar</string>
-    <string name="title_campus">Kampus</string>
+    <string name="text_study_program">Program Studi</string>
+    <string name="text_faculty">Fakultas</string>
+    <string name="text_level">Jenjang</string>
+    <string name="text_major">Jurusan</string>
+    <string name="text_degree">Gelar</string>
+    <string name="text_campus">Kampus</string>
 
     <string name="title_study_program_data">Data Program Studi</string>
 
@@ -338,6 +341,7 @@
     <string name="text_label_code">Kode</string>
     <string name="text_hint_code">Masukkan kode…</string>
     <string name="text_string_strip_string_format">%1$s - %2$s</string>
+    <string name="text_string_pipe_string_format">%1$s | %2$s</string>
     <string name="text_max_char_5">Maksimal 5 karakter</string>
     <string name="text_max_char_10">Maksimal 10 karakter</string>
     <string name="text_newest">Terbaru</string>
@@ -368,8 +372,8 @@
     <string name="text_semester_format">Semester %1$s</string>
 
 
-    <string name="text_label_lecture_id_number">NIDN</string>
-    <string name="text_hint_lecture_id_number">Masukkan Nomor Induk Dosen Nasional…</string>
+    <string name="text_label_lecturer_id_number">NIDN</string>
+    <string name="text_hint_lecturer_id_number">Masukkan Nomor Induk Dosen Nasional…</string>
     <string name="text_more">Selengkapnya</string>
     <string name="text_close">Tutup</string>
     <string name="text_profile_photo">Foto Profil</string>
@@ -386,6 +390,15 @@
     <string name="dummy_button">Dummy Button</string>
     <string name="dummy_content">DUMMY\nCONTENT</string>
     <string name="text_image_not_found">Gambar tidak ditemukan</string>
+
+
+    <string name="text_error_msg_registered_format">%1$s sudah didaftarkan oleh %2$s</string>
+    <string name="text_error_msg_unregistered_format">%1$s tidak terdaftar</string>
+    <string name="text_error_msg_used_format">%1$s sudah digunakan oleh  %2$s</string>
+
+    <string name="text_other_admin">Admin Lain</string>
+    <string name="text_other_student">Mahasiswa Lain</string>
+    <string name="text_other_lecturer">Dosen Lain</string>
 
 
 </resources>

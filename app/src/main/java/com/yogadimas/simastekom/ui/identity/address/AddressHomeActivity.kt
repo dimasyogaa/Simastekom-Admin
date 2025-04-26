@@ -77,6 +77,8 @@ class AddressHomeActivity : AppCompatActivity() {
 
         userTypeRole = adminViewModel.intentData
 
+        binding.appBarLayout.isVisible = false
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
@@ -165,7 +167,7 @@ class AddressHomeActivity : AppCompatActivity() {
         chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
         chipUser.text = when (role) {
             Role.ADMIN -> getString(R.string.text_label_id_username)
-            Role.LECTURE -> getString(R.string.text_label_lecture_id_number)
+            Role.LECTURE -> getString(R.string.text_label_lecturer_id_number)
             else -> getString(R.string.text_label_student_id_number)
         }
         listOf(chipSortBy, chipUser).forEach { chipId ->
@@ -186,7 +188,7 @@ class AddressHomeActivity : AppCompatActivity() {
                             chip,
                             it,
                             token,
-                            if (chipId == chipSortBy) SortBy.CREATED_AT.value else userSortBy,
+                            if (chipId == chipSortBy) SortBy.CREATEDAT.value else userSortBy,
                             role
                         )
                     }
@@ -313,7 +315,7 @@ class AddressHomeActivity : AppCompatActivity() {
                             showEmptyDataView(false)
                             getString(R.string.text_not_found)
                         }
-                    ToastHelper.showCustomToast(context, noDataText)
+                    ToastHelper.showCustomToastActivity(context, noDataText)
                 }
             }
         }
@@ -346,7 +348,7 @@ class AddressHomeActivity : AppCompatActivity() {
             message = getString(R.string.text_please_login_again)
         } else {
             icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-            title = getString(R.string.text_error, "")
+            title = getString(R.string.text_error_format, "")
             message = msg
         }
 
@@ -405,6 +407,7 @@ class AddressHomeActivity : AppCompatActivity() {
 
     private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = isVisible
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

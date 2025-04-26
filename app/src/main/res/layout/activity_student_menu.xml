@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:scrollbars="none"
-    tools:context=".ui.student.StudentActivityMenu">
+    tools:context=".ui.student.StudentMenuActivity">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -28,7 +28,7 @@
                 android:layout_height="?attr/actionBarSize"
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
-                app:title="@string/title_student_menu" />
+                app:title="@string/text_student_menu" />
 
         </com.google.android.material.appbar.AppBarLayout>
 

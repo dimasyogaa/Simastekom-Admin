@@ -327,7 +327,7 @@ class PasswordEditActivity : AppCompatActivity() {
 
             STATUS_ERROR -> {
                 icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                title = getString(R.string.text_error, "")
+                title = getString(R.string.text_error_format, "")
                 message = getString(
                     R.string.text_what_you_entered_is_not_correct_format,
                     getString(R.string.text_label_old_password)

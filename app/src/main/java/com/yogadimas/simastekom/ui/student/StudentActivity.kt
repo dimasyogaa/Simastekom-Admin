@@ -7,7 +7,6 @@ import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.PopupMenu
-import android.widget.Toast
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
@@ -98,6 +97,8 @@ class StudentActivity : AppCompatActivity() {
         binding = ActivityStudentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+
+
         lifecycleScope.launch {
             getToken()?.let { token ->
                 withContext(Dispatchers.Main) {
@@ -113,18 +114,16 @@ class StudentActivity : AppCompatActivity() {
                     }
                 }
             }
-
         }
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
+                    binding.appBarLayout.isVisible = false
                     val token = getToken()
                     token?.let { setMainContent(it) }
                 }
             }
-
-
         }
 
 
@@ -367,7 +366,7 @@ class StudentActivity : AppCompatActivity() {
                     if (!isCallback) {
                         showDefaultView(true)
                         showLoadingView(false)
-                        ToastHelper.showCustomToast(context, getString(R.string.text_not_found))
+                        ToastHelper.showCustomToastActivity(context, getString(R.string.text_not_found))
                     }
                 }
             }
@@ -545,7 +544,7 @@ class StudentActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -637,6 +636,7 @@ class StudentActivity : AppCompatActivity() {
 
     private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = isVisible
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

@@ -72,6 +72,8 @@ class StudentIdentityParentActivity : AppCompatActivity() {
         binding = ActivityStudentIdentityParentBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        binding.appBarLayout.isVisible = false
+
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
                 launch {
@@ -172,7 +174,7 @@ class StudentIdentityParentActivity : AppCompatActivity() {
                             chip,
                             it,
                             token,
-                            if (chipId == chipSortBy) SortBy.CREATED_AT.value else SortBy.STUDENT_ID_NUMBER.value
+                            if (chipId == chipSortBy) SortBy.CREATEDAT.value else SortBy.STUDENT_ID_NUMBER.value
                         )
                     }
                 }
@@ -299,7 +301,7 @@ class StudentIdentityParentActivity : AppCompatActivity() {
                             showEmptyDataView(false)
                             getString(R.string.text_not_found)
                         }
-                    ToastHelper.showCustomToast(context, noDataText)
+                    ToastHelper.showCustomToastActivity(context, noDataText)
                 }
             }
         }
@@ -385,7 +387,7 @@ class StudentIdentityParentActivity : AppCompatActivity() {
             message = getString(R.string.text_please_login_again)
         } else {
             icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-            title = getString(R.string.text_error, "")
+            title = getString(R.string.text_error_format, "")
             message = msg
         }
 
@@ -439,6 +441,7 @@ class StudentIdentityParentActivity : AppCompatActivity() {
 
     private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
+            binding.appBarLayout.isVisible = isVisible
             if (isVisible) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

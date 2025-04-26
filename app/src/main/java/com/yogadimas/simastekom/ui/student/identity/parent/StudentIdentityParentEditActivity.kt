@@ -104,6 +104,8 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
         binding = ActivityStudentIdentityParentEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        showDefaultView(false)
+
         auth()
         setStudentIdentityParentDataBundle(savedInstanceState)
         toolbar()
@@ -496,7 +498,7 @@ class StudentIdentityParentEditActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 

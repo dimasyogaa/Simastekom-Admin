@@ -102,7 +102,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginEnd="16dp"
-                            android:text="@string/title_major"
+                            android:text="@string/text_major"
                             app:checkedIcon="@drawable/z_ic_sort"
                             app:checkedIconEnabled="true"
                             app:chipIcon="@drawable/z_ic_sort"

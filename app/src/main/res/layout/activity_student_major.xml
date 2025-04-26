@@ -22,7 +22,7 @@
             app:layout_scrollFlags="scroll|enterAlways|snap"
             app:menu="@menu/top_appbar_refresh_menu"
             app:navigationIcon="@drawable/z_ic_back"
-            app:title="@string/title_major">
+            app:title="@string/text_major">
 
 
         </com.google.android.material.appbar.MaterialToolbar>

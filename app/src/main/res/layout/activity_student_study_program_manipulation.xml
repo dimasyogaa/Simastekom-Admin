@@ -27,7 +27,7 @@
                 android:background="?attr/colorPrimary"
                 app:navigationIcon="@drawable/z_ic_back"
 
-                app:title="@string/title_study_program" />
+                app:title="@string/text_study_program" />
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -63,7 +63,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
-            android:hint="@string/title_faculty"
+            android:hint="@string/text_faculty"
             app:endIconDrawable="@drawable/z_ic_pop_up"
             app:endIconMode="custom"
             app:expandedHintEnabled="false"
@@ -90,7 +90,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
-            android:hint="@string/title_level"
+            android:hint="@string/text_level"
             app:endIconDrawable="@drawable/z_ic_pop_up"
             app:endIconMode="custom"
             app:expandedHintEnabled="false"
@@ -117,7 +117,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
-            android:hint="@string/title_major"
+            android:hint="@string/text_major"
             app:endIconDrawable="@drawable/z_ic_pop_up"
             app:endIconMode="custom"
             app:expandedHintEnabled="false"
@@ -144,7 +144,7 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
             android:layout_marginTop="20dp"
-            android:hint="@string/title_degree"
+            android:hint="@string/text_degree"
             app:endIconDrawable="@drawable/z_ic_pop_up"
             app:endIconMode="custom"
             app:expandedHintEnabled="false"

@@ -6,7 +6,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import androidx.activity.OnBackPressedCallback
@@ -78,6 +77,8 @@ class AddressHomeEditActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityAddressHomeEditBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        showDefaultView(false)
 
         setupToolbar()
         setDataFromIntentAndBundle(savedInstanceState)
@@ -619,7 +620,7 @@ class AddressHomeEditActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(contextActivity, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -779,7 +780,7 @@ class AddressHomeEditActivity : AppCompatActivity() {
 
     private fun showDefaultView(boolean: Boolean) {
         binding.apply {
-
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutProvince.visibility = View.VISIBLE

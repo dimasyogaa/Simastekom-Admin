@@ -200,7 +200,7 @@ class CampusManipulationActivity : AppCompatActivity() {
 
                 if (it.isAdded || it.isUpdated || it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val campus = getString(R.string.title_campus)
+                    val campus = getString(R.string.text_campus)
                     val resultIntent = Intent()
 
                     val msg = when {
@@ -335,7 +335,7 @@ class CampusManipulationActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 

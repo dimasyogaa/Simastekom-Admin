@@ -13,6 +13,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import com.google.android.material.datepicker.CalendarConstraints
 import com.google.android.material.datepicker.DateValidatorPointBackward
 import com.google.android.material.datepicker.MaterialDatePicker
@@ -105,6 +106,8 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                 }
             }
 
+            isVisibleAllView(false)
+
 
             toolbar.setNavigationOnClickListener {
                 finish()
@@ -141,7 +144,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                 startActivity(intent)
             } else {
                 adminViewModel.token = token
-                if (identityPersonalData?.isFromAdminStudent == true) {
+                if (identityPersonalData?.isFromAdmin == true) {
                     identityPersonalData?.let { data ->
                         userType = data.userType.orEmpty()
                         userId = data.userId.orEmpty()
@@ -356,7 +359,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -422,7 +425,7 @@ class PlaceDateBirthActivity : AppCompatActivity() {
 
     private fun isVisibleAllView(boolean: Boolean) {
         binding.apply {
-
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutPlaceBirth.visibility = View.VISIBLE

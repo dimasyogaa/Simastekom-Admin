@@ -2,6 +2,7 @@ package com.yogadimas.simastekom.ui.identity.personal
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -81,6 +82,8 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
         adminViewModel.intentData = roleFromIntent
 
         userTypeRole = adminViewModel.intentData
+
+        binding.appBarLayout.isVisible = false
 
         lifecycleScope.launch {
             repeatOnLifecycle(Lifecycle.State.RESUMED) {
@@ -213,7 +216,7 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
         chipGroup.layoutDirection = View.LAYOUT_DIRECTION_LOCALE
         chipUser.text = when (role) {
             Role.ADMIN -> getString(R.string.text_label_id_username)
-            Role.LECTURE -> getString(R.string.text_label_lecture_id_number)
+            Role.LECTURE -> getString(R.string.text_label_lecturer_id_number)
             else -> getString(R.string.text_label_student_id_number)
         }
         listOf(chipSortBy, chipUser).forEach { chipId ->
@@ -234,7 +237,7 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
                             chip,
                             it,
                             token,
-                            if (chipId == chipSortBy) SortBy.CREATED_AT.value else userSortBy,
+                            if (chipId == chipSortBy) SortBy.CREATEDAT.value else userSortBy,
                             role
                         )
                     }
@@ -322,7 +325,9 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
                 loadState.source.refresh is LoadState.NotLoading && loadState.append.endOfPaginationReached && identityPersonalAdapter.itemCount == 0
 
             when {
-                isLoading -> showLoadingView(true)
+                isLoading -> {
+                    showLoadingView(true)
+                }
 
                 isDataLoaded -> {
                     showDefaultView(true)
@@ -353,7 +358,7 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
                 isEmptyData -> {
                     showDefaultView(true)
                     showLoadingView(false)
-                    ToastHelper.showCustomToast(context, getString(R.string.text_not_found))
+                    ToastHelper.showCustomToastActivity(context, getString(R.string.text_not_found))
                 }
             }
         }
@@ -382,7 +387,7 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
             message = getString(R.string.text_please_login_again)
         } else {
             icon = ContextCompat.getDrawable(context, R.drawable.z_ic_warning)
-            title = getString(R.string.text_error, "")
+            title = getString(R.string.text_error_format, "")
             message = msg
         }
 
@@ -441,12 +446,14 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
     private fun showDefaultView(isVisible: Boolean) {
         binding.apply {
             if (isVisible) {
+                appBarLayout.visibility = View.VISIBLE
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE
                 rvIdentityPersonal.apply {
                     animate().alpha(1.0f).setDuration(600)
                 }
             } else {
+                appBarLayout.visibility = View.INVISIBLE
                 toolbar.visibility = View.INVISIBLE
                 toolbar2.visibility = View.GONE
                 rvIdentityPersonal.alpha = 0f

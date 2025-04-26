@@ -71,6 +71,6 @@ data class IdentityPersonalData(
     @field:SerializedName("is_deleted")
     val isDeleted: Boolean = false,
 
-    val isFromAdminStudent: Boolean = false,
+    val isFromAdmin: Boolean = false,
 
-): Parcelable
+    ): Parcelable

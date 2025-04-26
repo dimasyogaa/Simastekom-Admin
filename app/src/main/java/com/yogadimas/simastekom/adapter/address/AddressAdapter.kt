@@ -50,7 +50,7 @@ class AddressAdapter() :
                     val user = data.studentIdNumber ?: data.lectureIdNumber ?: data.username
                     val labelUser =
                         if (data.studentIdNumber != null) getString(R.string.text_label_student_id_number) else if (data.lectureIdNumber != null) getString(
-                            R.string.text_label_lecture_id_number
+                            R.string.text_label_lecturer_id_number
                         ) else getString(R.string.text_label_id_username)
 
                     tvLabelUser.text = labelUser

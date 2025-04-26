@@ -178,7 +178,7 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
 
                 if (it.isAdded || it.isUpdated || it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val level = getString(R.string.title_level)
+                    val level = getString(R.string.text_level)
                     val resultIntent = Intent()
 
                     val msg = when {
@@ -302,7 +302,7 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 

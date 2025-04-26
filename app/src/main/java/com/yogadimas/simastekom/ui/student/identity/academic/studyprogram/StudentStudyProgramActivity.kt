@@ -14,6 +14,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
@@ -84,6 +85,8 @@ class StudentStudyProgramActivity : AppCompatActivity() {
         }
 
         binding.apply {
+            appBarLayout.isVisible = false
+
             toolbar.setNavigationOnClickListener { finish() }
 
             toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
@@ -211,7 +214,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
 
                 if (it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val studyProgram = getString(R.string.title_study_program)
+                    val studyProgram = getString(R.string.text_study_program)
                     showAlertDialog(
                         getString(R.string.text_alert_delete_format, success, studyProgram),
                         STATUS_SUCCESS
@@ -337,7 +340,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -410,6 +413,7 @@ class StudentStudyProgramActivity : AppCompatActivity() {
 
     private fun isVisibleAllView(boolean: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 toolbar2.visibility = View.VISIBLE

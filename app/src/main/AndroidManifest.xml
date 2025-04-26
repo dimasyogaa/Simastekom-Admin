@@ -30,6 +30,18 @@
         android:usesCleartextTraffic="true"
         tools:targetApi="31">
         <activity
+            android:name=".ui.admin.AdminMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.lecturer.LecturerManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.lecturer.LecturerMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.lecturer.LecturerActivity"
+            android:exported="false" />
+        <activity
             android:name=".ui.identity.profilepicture.ProfilePictureEditActivity"
             android:exported="false" />
         <activity
@@ -45,8 +57,8 @@
             android:name=".ui.student.identity.parent.StudentIdentityParentActivity"
             android:exported="false" />
         <activity
-            android:enableOnBackInvokedCallback="true"
             android:name=".ui.identity.personal.IdentityPersonalActivity"
+            android:enableOnBackInvokedCallback="true"
             android:exported="false"
             tools:targetApi="tiramisu" />
         <activity
@@ -131,7 +143,7 @@
             android:name=".ui.student.identity.academic.studyprogram.StudentStudyProgramActivity"
             android:exported="false" />
         <activity
-            android:name=".ui.student.StudentActivityMenu"
+            android:name=".ui.student.StudentMenuActivity"
             android:exported="false" />
         <activity
             android:name=".ui.student.StudentActivity"

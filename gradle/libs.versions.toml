@@ -2,20 +2,29 @@
 
 coreSplashscreen = "1.0.1"
 
-agp = "8.3.0"
+rules = "1.6.1"
+runner = "1.6.2"
+
+junitJupiterApi = "5.10.1"
+junitJupiter = "5.10.1"
+
+espressoIdlingResource = "3.6.1"
+espressoIntents = "3.6.1"
+espressoCore = "3.6.1"
+
+agp = "8.3.2"
 kotlin = "1.9.0"
-coreKtx = "1.12.0"
+coreKtx = "1.15.0"
 junit = "4.13.2"
-junitVersion = "1.1.5"
-espressoCore = "3.5.1"
-appcompat = "1.6.1"
-material = "1.11.0"
-activity = "1.8.0"
-constraintlayout = "2.1.4"
+junitVersion = "1.2.1"
+appcompat = "1.7.0"
+material = "1.12.0"
+activity = "1.9.3"
+constraintlayout = "2.2.0"
 
 
-navigationFragmentKtx = "2.7.7"
-navigationUiKtx = "2.7.7"
+navigationFragmentKtx = "2.8.5"
+navigationUiKtx = "2.8.5"
 
 coil = "2.4.0"
 
@@ -23,17 +32,18 @@ retrofit = "2.9.0"
 converterGson = "2.9.0"
 loggingInterceptor = "4.11.0"
 
-lifecycleViewmodelKtx = "2.7.0"
-activityKtx =  "1.8.2"
-lifecycleLivedataKtx = "2.7.0"
+lifecycleViewmodelKtx = "2.8.7"
+activityKtx =  "1.9.3"
+lifecycleLivedataKtx = "2.8.7"
 
-datastorePreferences = "1.0.0"
+datastorePreferences = "1.1.1"
 
 bcrypt = "0.10.2"
 
+
 swiperefreshlayout = "1.1.0"
 
-pagingRuntimeKtx = "3.3.2"
+pagingRuntimeKtx = "3.3.5"
 
 
 koinAndroid = "4.0.0-RC1"
@@ -42,12 +52,24 @@ koinAndroid = "4.0.0-RC1"
 [libraries]
 androidx-core-splashscreen = { module = "androidx.core:core-splashscreen", version.ref = "coreSplashscreen" }
 
+
+androidx-rules = { module = "androidx.test:rules", version.ref = "rules" }
+androidx-runner = { module = "androidx.test:runner", version.ref = "runner" }
+
+junit-jupiter = { group = "org.junit.jupiter", name = "junit-jupiter", version.ref = "junitJupiter" }
+junit-jupiter-api = { module = "org.junit.jupiter:junit-jupiter-api", version.ref = "junitJupiterApi" }
+junit-jupiter-engine = { module = "org.junit.jupiter:junit-jupiter-engine", version.ref = "junitJupiterApi" }
+
+androidx-espresso-intents = { module = "androidx.test.espresso:espresso-intents", version.ref = "espressoIntents" }
+androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
+androidx-espresso-idling-resource = { group = "androidx.test.espresso", name = "espresso-idling-resource", version.ref = "espressoIdlingResource" }
+
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "coreKtx" }
 
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-junit = { group = "androidx.test.ext", name = "junit", version.ref = "junitVersion" }
-androidx-espresso-core = { group = "androidx.test.espresso", name = "espresso-core", version.ref = "espressoCore" }
 androidx-appcompat = { group = "androidx.appcompat", name = "appcompat", version.ref = "appcompat" }
+
 material = { group = "com.google.android.material", name = "material", version.ref = "material" }
 androidx-activity = { group = "androidx.activity", name = "activity", version.ref = "activity" }
 androidx-constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayout", version.ref = "constraintlayout" }
@@ -80,6 +102,9 @@ androidx-paging-runtime-ktx = { module = "androidx.paging:paging-runtime-ktx", v
 
 
 koin-android = { module = "io.insert-koin:koin-android", version.ref = "koinAndroid" }
+
+
+
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

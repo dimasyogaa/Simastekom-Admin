@@ -8,9 +8,7 @@ import android.content.res.Resources
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
 import androidx.paging.PagingDataAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
@@ -26,7 +24,6 @@ import com.yogadimas.simastekom.databinding.ItemIdentityPersonalBinding
 import com.yogadimas.simastekom.databinding.ItemIdentityPersonalDetailsViewStubBinding
 import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import com.yogadimas.simastekom.ui.dialog.ImageViewerDialogFragment
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -74,7 +71,7 @@ class IdentityPersonalAdapter(
                     val user = data.studentIdNumber ?: data.lectureIdNumber ?: data.username
                     val labelUser =
                         if (data.studentIdNumber != null) getString(R.string.text_label_student_id_number) else if (data.lectureIdNumber != null) getString(
-                            R.string.text_label_lecture_id_number
+                            R.string.text_label_lecturer_id_number
                         ) else getString(R.string.text_label_id_username)
 
 

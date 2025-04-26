@@ -1,7 +1,6 @@
 package com.yogadimas.simastekom.viewmodel.admin
 
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -10,6 +9,7 @@ import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.yogadimas.simastekom.api.ApiConfig
 import com.yogadimas.simastekom.common.enums.Role
+import com.yogadimas.simastekom.common.enums.SortDir
 import com.yogadimas.simastekom.common.event.Event
 import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.common.state.State
@@ -32,6 +32,7 @@ import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
 import com.yogadimas.simastekom.repository.AdminAllUserTypeRoleRepository
 import com.yogadimas.simastekom.repository.AdminStudentRepository
+import com.yogadimas.simastekom.test.SimpleIdlingResource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -85,6 +86,7 @@ class AdminViewModel(
 
     private val _snackbarText = MutableLiveData<Event<String>>()
     val errorsSnackbarText: LiveData<Event<String>> = _snackbarText
+
 
 
     /** ADMIN */
@@ -217,8 +219,8 @@ class AdminViewModel(
     private val _errorStateFlow = MutableStateFlow<String?>(null)
     val errorStateFlow: StateFlow<String?> = _errorStateFlow
 
-    fun getAllStudents(token: String, sortBy: String = "asc"): StateFlow<PagingData<StudentData>> {
-        return adminStudentRepository.getAllStudents(token, sortBy, onError = { errorMessage ->
+    fun getAllStudents(token: String, sortDir: String = SortDir.ASC.value): StateFlow<PagingData<StudentData>> {
+        return adminStudentRepository.getAllStudents(token, sortDir, onError = { errorMessage ->
             _errorStateFlow.value = errorMessage
         })
             .distinctUntilChanged()

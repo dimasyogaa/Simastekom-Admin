@@ -2,7 +2,6 @@ package com.yogadimas.simastekom.common.helper
 
 import android.app.Activity
 import android.graphics.Rect
-import android.view.Gravity
 import android.view.View
 import android.view.ViewTreeObserver
 import android.widget.Toast
@@ -10,7 +9,7 @@ import android.widget.Toast
 object ToastHelper {
     private var currentToast: Toast? = null
 
-    fun showCustomToast(activity: Activity, message: String) {
+    fun showCustomToastActivity(activity: Activity, message: String) {
         // Batalkan Toast sebelumnya jika ada
         currentToast?.cancel()
 
@@ -37,5 +36,10 @@ object ToastHelper {
                 }
             }
         })
+    }
+
+    fun dismissToast() {
+        currentToast?.cancel()
+        currentToast = null
     }
 }

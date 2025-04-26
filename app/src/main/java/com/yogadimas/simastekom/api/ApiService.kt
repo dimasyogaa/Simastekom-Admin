@@ -10,6 +10,8 @@ import com.yogadimas.simastekom.model.responses.IdentityAcademicListResponse
 import com.yogadimas.simastekom.model.responses.IdentityAcademicObjectResponse
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.IdentityPersonalObjectResponse
+import com.yogadimas.simastekom.model.responses.LecturerData
+import com.yogadimas.simastekom.model.responses.LecturerObjectResponse
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.model.responses.NameListResponse
 import com.yogadimas.simastekom.model.responses.NameObjectResponse
@@ -122,7 +124,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Query("page") page: Int,
         @Query("size") size: Int,
-        @Query("sort_by") sortBy: String,
+        @Query("sort_dir") sortDir: String,
     ): PaginationResponse<StudentData>
 
     @GET("student/search-sort")
@@ -692,6 +694,52 @@ interface ApiService {
     ): Call<IdentityAcademicObjectResponse>
 
 
+    /** Lecture */
+    @GET("lecturer")
+    suspend fun getAllLecturers(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<LecturerData>
+
+    @GET("lecturer/search-sort")
+    suspend fun searchSortLecturers(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<LecturerData>
+
+    @GET("lecturer/{id}")
+    suspend fun getLecturerById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<LecturerObjectResponse>
+
+
+    @PUT("lecturer/{id}")
+    suspend fun updateLecturer(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body data: LecturerData,
+    ): Response<LecturerObjectResponse>
+
+    @POST("lecturer")
+    suspend fun addLecturer(
+        @Header("Authorization") token: String,
+        @Body data: LecturerData,
+    ): Response<LecturerObjectResponse>
+
+    @DELETE("lecturer/{id}")
+    suspend fun deleteLecturer(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<LecturerObjectResponse>
+
+
     /** PASSWORD */
     @FormUrlEncoded
     @POST("reset-password")
@@ -714,5 +762,6 @@ interface ApiService {
         @Field("pengguna_type") userType: String,
         @Field("password") password: String,
     ): Call<UserResponse>
+
 
 }

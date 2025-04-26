@@ -48,7 +48,7 @@ class PhoneNumberValidationHelper(
                 return Pair(
                     false,
                     context.getString(
-                        R.string.text_error_format,
+                        R.string.text_there_cant_be_any_format,
                         context.getString(R.string.text_label_phone),
                         context.getString(R.string.text_sign_format, char.symbol)
                     )

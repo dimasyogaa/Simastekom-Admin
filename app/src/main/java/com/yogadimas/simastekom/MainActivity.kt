@@ -31,6 +31,7 @@ import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.test.SimpleIdlingResource
 import com.yogadimas.simastekom.ui.mainpage.action.ActionFragment
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.ui.password.PasswordEditActivity
@@ -57,6 +58,9 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
+
+    private lateinit var idlingResource: SimpleIdlingResource
+    fun getIdlingResourceMain(): SimpleIdlingResource = idlingResource
 
     private lateinit var drawerLayout: DrawerLayout
     private lateinit var navViewDrawer: NavigationView
@@ -107,8 +111,11 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
         uINavigation()
         onClickMenuNavigation()
 
+        idlingResource = SimpleIdlingResource()
 
     }
+
+
 
 
 
@@ -380,7 +387,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
 
     }
 
-    private fun showLoadingDialog(boolean: Boolean, isDataExist: Boolean = false) {
+    private fun showLoadingDialog(boolean: Boolean) {
 
 
         if (dialogLoading == null) {

@@ -18,6 +18,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
@@ -270,6 +271,7 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
 
     private fun editDeleteMode() {
         binding.apply {
+            appBarLayout.isVisible = false
             toolbar.apply {
                 title = getString(R.string.text_change_or_delete)
                 menu.clear()
@@ -354,7 +356,7 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
 
                 if (it.isAdded || it.isUpdated || it.isDeleted) {
                     val success = getString(R.string.text_success)
-                    val studyProgram = getString(R.string.title_study_program)
+                    val studyProgram = getString(R.string.text_study_program)
                     val resultIntent = Intent()
 
                     val msg = when {
@@ -492,7 +494,7 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -556,6 +558,7 @@ class StudentStudyProgramManipulationActivity : AppCompatActivity() {
 
     private fun isVisibleAllView(boolean: Boolean) {
         binding.apply {
+            appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutCode.visibility = View.VISIBLE

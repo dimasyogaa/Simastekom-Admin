@@ -1,14 +1,11 @@
 package com.yogadimas.simastekom.repository
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.google.gson.Gson
 import com.yogadimas.simastekom.api.ApiService
-import com.yogadimas.simastekom.common.enums.Role
 import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.common.paging.Constant
 import com.yogadimas.simastekom.common.paging.GenericPagingSource
@@ -16,23 +13,19 @@ import com.yogadimas.simastekom.common.paging.student.StudentAllPagingSource
 import com.yogadimas.simastekom.common.paging.student.StudentSearchSortPagingSource
 import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
-import com.yogadimas.simastekom.model.responses.IdentityPersonalData
 import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.asSharedFlow
-import kotlinx.coroutines.flow.flow
-import retrofit2.HttpException
 
 class AdminStudentRepository(private val apiService: ApiService) {
 
     /** Student */
     fun getAllStudents(
         token: String,
-        sortBy: String,
+        sortDir: String,
         onError: (String) -> Unit,
     ): Flow<PagingData<StudentData>> {
         return Pager(
@@ -43,7 +36,7 @@ class AdminStudentRepository(private val apiService: ApiService) {
                 enablePlaceholders = false
             ),
             pagingSourceFactory = {
-                StudentAllPagingSource(apiService, token, sortBy, onError)
+                StudentAllPagingSource(apiService, token, sortDir, onError)
             }
         ).flow
     }

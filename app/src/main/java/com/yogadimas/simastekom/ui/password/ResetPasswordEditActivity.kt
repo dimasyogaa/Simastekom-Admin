@@ -223,7 +223,7 @@ class ResetPasswordEditActivity : AppCompatActivity() {
 
             STATUS_ERROR -> {
                 icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                title = getString(R.string.text_error, getString(R.string.text_label_new_password))
+                title = getString(R.string.text_error_format, getString(R.string.text_label_new_password))
             }
         }
 

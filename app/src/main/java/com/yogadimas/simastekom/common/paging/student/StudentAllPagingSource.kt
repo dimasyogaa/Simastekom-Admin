@@ -10,7 +10,7 @@ import com.yogadimas.simastekom.model.responses.StudentData
 class StudentAllPagingSource(
     private val apiService: ApiService,
     private val token: String,
-    private val sortBy: String,
+    private val sortDir: String,
     private val onError: (String) -> Unit
 ) : PagingSource<Int, StudentData>() {
 
@@ -19,7 +19,7 @@ class StudentAllPagingSource(
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, StudentData> {
         val page = params.key ?: 1
         return try {
-            val response = apiService.getAllStudents(token, page, params.loadSize,  sortBy)
+            val response = apiService.getAllStudents(token, page, params.loadSize,  sortDir)
             val students = response.data ?: emptyList()
 
             val nextKey = if (response.meta?.currentPage == response.meta?.lastPage) {

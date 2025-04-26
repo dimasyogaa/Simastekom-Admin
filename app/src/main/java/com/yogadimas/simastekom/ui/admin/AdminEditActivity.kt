@@ -19,6 +19,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import coil.ImageLoader
 import coil.load
@@ -92,10 +93,12 @@ class AdminEditActivity : AppCompatActivity() {
                 showAlertDialog(status = STATUS_SUCCESS)
             }
         }
+        showDefaultView(false)
 
         getAdmin()
 
         binding.apply {
+
 
 
             toolbar.setNavigationIcon(R.drawable.z_ic_close)
@@ -424,7 +427,7 @@ class AdminEditActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(contextActivity, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
 
@@ -480,6 +483,7 @@ class AdminEditActivity : AppCompatActivity() {
 
     private fun showDefaultView(boolean: Boolean) {
         binding.apply {
+           appBarLayout.isVisible = boolean
             if (boolean) {
                 toolbar.visibility = View.VISIBLE
                 ivProfile.visibility = View.VISIBLE

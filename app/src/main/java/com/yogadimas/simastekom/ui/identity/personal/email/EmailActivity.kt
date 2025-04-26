@@ -63,29 +63,23 @@ class EmailActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
-        identityPersonalData = getParcelableExtra(intent, KEY_ADMIN_STUDENT)
 
         if (savedInstanceState != null) {
             email = savedInstanceState.getString(KEY_EMAIL_VALID)
             tokenMode = savedInstanceState.getBoolean(KEY_BUNDLE_MODE_TOKEN)
-
         }
 
-        if (email == null) {
-            emailView(true)
-        } else {
-            emailView()
-        }
+//        if (email == null) {
+//            emailView(true)
+//        } else {
+//            emailView()
+//        }
 
-
-
+        allViewGone()
+        if (emailIsNull()) emailObserver() else tokenObserver()
 
         binding.apply {
-
-
-            toolbar.setNavigationOnClickListener {
-                finish()
-            }
+            toolbar.setNavigationOnClickListener { finish() }
             toolbar.menu.findItem(R.id.profileMenu).setOnMenuItemClickListener {
                 val intent = Intent(this@EmailActivity, MainActivity::class.java)
                 intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
@@ -94,350 +88,355 @@ class EmailActivity : AppCompatActivity() {
                 true
             }
 
-
-
-
             viewHandle.viewFailedConnect.btnRefresh.setOnClickListener {
                 if (!binding.edtToken.isVisible) {
-                    emailView(true)
+                    emailObserver()
                 } else {
-                    emailView()
+                    tokenObserver()
                 }
-
             }
         }
     }
 
 
 
-    private fun emailView(isVisible: Boolean = false) {
-        binding.apply {
-            if (isVisible) {
-                tvInstructionTokenResetPassword1.visibility = View.GONE
-                tvInstructionTokenResetPasswordEmail.visibility = View.GONE
-                tvInstructionTokenResetPassword2.visibility = View.GONE
-                inputLayoutToken.visibility = View.GONE
-                edtToken.visibility = View.GONE
-                btnVerifyToken.visibility = View.GONE
-                inputLayoutEmail.visibility = View.VISIBLE
-                edtEmail.visibility = View.VISIBLE
-                layoutInstruction.visibility = View.VISIBLE
-                btnGetTokenViaEmail.visibility = View.VISIBLE
-                emailLogic()
+
+    private fun emailObserver() {
+        authViewModel.getUser().observe(this) { user ->
+            if (!emailIsNull()) return@observe
+
+            val (token, defaultUserId, defaultUserType) = user
+
+            if (token == AuthPreferences.DEFAULT_VALUE) {
+                goToLogin()
+                return@observe
+            }
+
+            adminViewModel.token = token
+
+            val (userType, userId) = if (identityPersonalData?.isFromAdmin == true) {
+                val type = identityPersonalData?.userType.orEmpty()
+                val id = identityPersonalData?.userId.orEmpty()
+                type to id
             } else {
-                inputLayoutEmail.visibility = View.GONE
-                edtEmail.visibility = View.GONE
-                layoutInstruction.visibility = View.GONE
-                btnGetTokenViaEmail.visibility = View.GONE
-                tokenView()
+                defaultUserType to defaultUserId
             }
-        }
 
+            adminViewModel.getIdentityPersonal(userType, userId)
+            setupEmailVerification(userType, userId)
+        }
+        observeEmailViewModel()
     }
 
-    private fun emailLogic() {
-
-        binding.apply {
-            btnGetTokenViaEmail.isEnabled = edtEmail.text.toString().isNotEmpty()
-            edtEmail.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0.toString().isNotEmpty()) {
-                        inputLayoutEmail.error = null
-                        inputLayoutEmail.isErrorEnabled = false
-                        btnGetTokenViaEmail.isEnabled = true
-                    }
-                    if (p0.toString().isEmpty()) {
-                        btnGetTokenViaEmail.isEnabled = false
-                    }
-                }
-
-                override fun afterTextChanged(p0: Editable?) {}
-
-            })
-        }
-        if (!tokenMode) {
-            authViewModel.getUser().observe(this) {
-                if (email == null) {
-                    var (token, userId, userType) = it
-                    if (token == AuthPreferences.DEFAULT_VALUE) {
-                        val intent = Intent(this, LoginActivity::class.java)
-                        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                        startActivity(intent)
-                    } else {
-                        adminViewModel.token = token
-                        if (identityPersonalData?.isFromAdminStudent == true) {
-                            identityPersonalData?.let { data ->
-                                userType = data.userType.orEmpty()
-                                userId = data.userId.orEmpty()
-                                adminViewModel.getIdentityPersonal(userType, userId)
-                            }
-                        } else {
-                            adminViewModel.getIdentityPersonal(userType, userId)
-                        }
-                        binding.btnGetTokenViaEmail.setOnClickListener { view ->
-                            hideKeyboard(view)
-                            if (checkValidatedEmail(binding.edtEmail.text.toString().trim())) {
-                                adminViewModel.verifyEmail(
-                                    userType,
-                                    userId,
-                                    binding.edtEmail.text.toString().trim()
-                                )
-                            }
-                        }
-                    }
-                }
-            }
-
-
-            adminViewModel.isLoading.observe(this) {
-                if (!binding.edtToken.isVisible) {
-                    isLoading = it
-                    showLoadingMain(it, VIEW_EMAIL)
-                }
-            }
-
-            adminViewModel.identityPersonal.observe(this) { eventData ->
-                if (email == null) {
-                    eventData.getContentIfNotHandled()?.let {
-
-                        if (isLoading) {
-                            isVisibleAllView(false, VIEW_EMAIL)
-                        } else {
-                            isVisibleAllView(true, VIEW_EMAIL)
-                        }
-                        failedToConnect(false)
-
-                        if (it.isValidEmail) {
-                            email = it.email
-                            emailView()
-                        }
-                    }
-                }
-            }
-
-            adminViewModel.errors.observe(this) { eventError ->
-                if (email == null) {
-                    eventError.getContentIfNotHandled()?.let { data ->
-                        if (data.errors != null) {
-                            if (!binding.edtToken.isVisible) {
-                                val listMessage = data.errors.message.orEmpty()
-                                isVisibleAllView(true, VIEW_EMAIL)
-                                failedToConnect(false)
-                                showAlertDialog(listMessage[0], STATUS_ERROR)
-                            }
-                        }
-                    }
-                }
-            }
-
-            adminViewModel.errorsSnackbarText.observe(this) { eventString ->
-                if (email == null) {
-                    eventString.getContentIfNotHandled()?.let { snackBarText ->
-                        hideKeyboard()
-                        isVisibleAllView(false, VIEW_EMAIL)
-                        failedToConnect(true)
-                        Snackbar.make(
-                            binding.root as ViewGroup,
-                            snackBarText,
-                            Snackbar.LENGTH_SHORT
-                        ).show()
-
-                    }
-                }
+    private fun setupEmailVerification(userType: String, userId: String) {
+        binding.btnGetTokenViaEmail.setOnClickListener { view ->
+            hideKeyboard(view)
+            val emailInput = binding.edtEmail.text.toString().trim()
+            if (checkValidatedEmail(emailInput)) {
+                adminViewModel.verifyEmail(userType, userId, emailInput)
             }
         }
-
-
     }
 
-    private fun tokenView() {
-        tokenMode = true
-        binding.apply {
+    private fun observeEmailViewModel() {
+        if (tokenMode) return
 
-            tvInstructionTokenResetPassword1.visibility = View.VISIBLE
-            tvInstructionTokenResetPasswordEmail.visibility = View.VISIBLE
-            tvInstructionTokenResetPassword2.visibility = View.VISIBLE
-
-            tvInstructionTokenResetPasswordEmail.text = email
-
-            inputLayoutToken.visibility = View.VISIBLE
-            edtToken.visibility = View.VISIBLE
-            btnVerifyToken.visibility = View.VISIBLE
-            edtToken.transformationMethod = null
-            tokenLogic()
-        }
-
+        observeEmailLoading()
+        observeEmailIdentityPersonal()
+        observeEmailErrors()
+        observeEmailSnackBar()
     }
 
-    private fun tokenLogic() {
-
-
-        fun minCharacterTokenValidation(
-            token: String,
-            layout: TextInputLayout,
-            message: String,
-            min: Int,
-            send: Boolean = false,
-        ): Boolean {
-
-            var isValid = true
-            if (token.isNotEmpty() &&
-                token.length >= min
-            ) {
-                layout.error = null
-                layout.isErrorEnabled = false
-            } else if (token.isEmpty() && !send) {
-                layout.error = null
-                layout.isErrorEnabled = false
-            } else if (token.isEmpty() && send) {
-                layout.isErrorEnabled = true
-                layout.error = message
-                isValid = false
-            } else {
-                layout.isErrorEnabled = true
-                layout.error = message
-                isValid = false
-            }
-
-            binding.btnVerifyToken.isEnabled = isValid
-
-            return isValid
+    private fun observeEmailLoading() {
+        adminViewModel.isLoading.observe(this) { isLoading ->
+            if (binding.edtToken.isVisible) return@observe
+            this.isLoading = isLoading
+            showLoadingMain(isLoading)
         }
-        binding.apply {
-            btnVerifyToken.isEnabled = edtToken.text.toString().isNotEmpty()
-            edtToken.addTextChangedListener(object : TextWatcher {
-                override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+    }
 
-                override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-                    if (p0.toString().isNotEmpty() && minCharacterTokenValidation(
-                            p0.toString().trim(),
-                            binding.inputLayoutToken,
-                            stringFormatMin(getString(R.string.text_label_token)),
-                            digits
-                        )
-                    ) {
-                        inputLayoutEmail.error = null
-                        inputLayoutEmail.isErrorEnabled = false
-                        btnVerifyToken.isEnabled = true
-                    }
-                    if (p0.toString().isEmpty()) {
-                        btnVerifyToken.isEnabled = false
-                    }
-
-                }
-
-                override fun afterTextChanged(p0: Editable?) {}
-
-            })
-        }
-
-
-        authViewModel.getUser().observe(this) {
-            if (email != null) {
-                var (token, userId, userType) = it
-                if (token == AuthPreferences.DEFAULT_VALUE) {
-                    val intent = Intent(this, LoginActivity::class.java)
-                    intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
-                    startActivity(intent)
-                } else {
-                    adminViewModel.token = token
-                    if (identityPersonalData?.isFromAdminStudent == true) {
-                        identityPersonalData?.let { data ->
-                            userType = data.userType.orEmpty()
-                            userId = data.userId.orEmpty()
-                            adminViewModel.getIdentityPersonal(userType, userId)
-                        }
-                    } else {
-                        adminViewModel.getIdentityPersonal(userType, userId)
-                    }
-                    binding.btnVerifyToken.setOnClickListener { view ->
-                        hideKeyboard(view)
-                        if (checkValidatedToken(
-                                binding.edtToken.text.toString().trim()
-                            ) && minCharacterTokenValidation(
-                                binding.edtToken.text.toString().trim(),
-                                binding.inputLayoutToken,
-                                stringFormatMin(getString(R.string.text_label_token)),
-                                digits
-                            )
-                        ) {
-                            adminViewModel.verifyEmailCheckToken(
-                                userType,
-                                userId,
-                                email.orEmpty(),
-                                binding.edtToken.text.toString().trim()
-                            )
-                        }
-                    }
-                }
-            }
-        }
-
-        adminViewModel.isLoading.observe(this) {
-            if (email != null) {
-                isLoading = it
-                showLoadingMain(it, VIEW_TOKEN)
-            }
-        }
-
+    private fun observeEmailIdentityPersonal() {
         adminViewModel.identityPersonal.observe(this) { eventData ->
-            if (email != null) {
-                eventData.getContentIfNotHandled()?.let {
+            if (!emailIsNull()) return@observe
 
-                    if (isLoading) {
-                        isVisibleAllView(false, VIEW_TOKEN)
-                    } else {
-                        isVisibleAllView(true, VIEW_TOKEN)
-                    }
-                    failedToConnect(false)
+            eventData.getContentIfNotHandled()?.let { identity ->
+                emailView(!isLoading)
 
-                    if (it.isUpdated) {
-                        val resultIntent = Intent()
-                        resultIntent.putExtra(
-                            KEY_EXTRA_SUCCESS,
-                            getString(R.string.text_label_email)
-                        )
-                        setResult(KEY_RESULT_CODE, resultIntent)
-                        finish()
-                    }
+                failedToConnect(false)
+
+                if (identity.isValidEmail) {
+                    email = identity.email
+                    tokenView()
+                    tokenObserver()
                 }
             }
         }
-
-        adminViewModel.errors.observe(this) { eventError ->
-            if (email != null) {
-                eventError.getContentIfNotHandled()?.let { data ->
-                    if (data.errors != null) {
-                        val listMessage = data.errors.message.orEmpty()
-                        isVisibleAllView(true, VIEW_TOKEN)
-                        failedToConnect(false)
-                        showAlertDialog(listMessage[0], STATUS_ERROR)
-
-                    }
-                }
-            }
-        }
-
-        adminViewModel.errorsSnackbarText.observe(this) { eventString ->
-            if (email != null) {
-                eventString.getContentIfNotHandled()?.let { snackBarText ->
-                    hideKeyboard()
-                    isVisibleAllView(false, VIEW_TOKEN)
-                    failedToConnect(true)
-                    Snackbar.make(
-                        binding.root as ViewGroup,
-                        snackBarText,
-                        Snackbar.LENGTH_SHORT
-                    ).show()
-
-                }
-            }
-        }
-
-
     }
+
+    private fun observeEmailErrors() {
+        adminViewModel.errors.observe(this) { eventError ->
+            if (!emailIsNull() || binding.edtToken.isVisible) return@observe
+
+            eventError.getContentIfNotHandled()?.errors?.message?.firstOrNull()?.let { message ->
+                emailView()
+                failedToConnect(false)
+                showAlertDialog(message)
+            }
+        }
+    }
+
+    private fun observeEmailSnackBar() {
+        adminViewModel.errorsSnackbarText.observe(this) { event ->
+            if (!emailIsNull()) return@observe
+
+            event.getContentIfNotHandled()?.let { message ->
+                hideKeyboard()
+                emailView(false)
+                failedToConnect(true)
+                Snackbar.make(binding.root as ViewGroup, message, Snackbar.LENGTH_SHORT).show()
+            }
+        }
+    }
+
+
+    private fun tokenObserver() {
+        authViewModel.getUser().observe(this) { user ->
+            if (emailIsNull()) return@observe
+
+            val (token, defaultUserId, defaultUserType) = user
+
+            if (token == AuthPreferences.DEFAULT_VALUE) {
+                goToLogin()
+                return@observe
+            }
+
+            adminViewModel.token = token
+
+            val (userType, userId) = if (identityPersonalData?.isFromAdmin == true) {
+                val type = identityPersonalData?.userType.orEmpty()
+                val id = identityPersonalData?.userId.orEmpty()
+                type to id
+            } else {
+                defaultUserType to defaultUserId
+            }
+
+            adminViewModel.getIdentityPersonal(userType, userId)
+            setupTokenVerification(userType, userId)
+        }
+        observeTokenViewModel()
+    }
+
+
+    private  fun minCharacterTokenValidation(
+        token: String,
+        layout: TextInputLayout,
+        message: String,
+        min: Int,
+        send: Boolean = false,
+    ): Boolean {
+        var isValid = true
+        if (token.isNotEmpty() &&
+            token.length >= min
+        ) {
+            layout.error = null
+            layout.isErrorEnabled = false
+        } else if (token.isEmpty() && !send) {
+            layout.error = null
+            layout.isErrorEnabled = false
+        } else if (token.isEmpty() && send) {
+            layout.isErrorEnabled = true
+            layout.error = message
+            isValid = false
+        } else {
+            layout.isErrorEnabled = true
+            layout.error = message
+            isValid = false
+        }
+
+        binding.btnVerifyToken.isEnabled = isValid
+
+        return isValid
+    }
+
+    private fun setupTokenVerification(userType: String, userId: String) {
+        binding.btnVerifyToken.setOnClickListener { view ->
+            hideKeyboard(view)
+            if (checkValidatedToken(
+                    binding.edtToken.text.toString().trim()
+                ) && minCharacterTokenValidation(
+                    binding.edtToken.text.toString().trim(),
+                    binding.inputLayoutToken,
+                    stringFormatMin(getString(R.string.text_label_token)),
+                    digits
+                )
+            ) {
+                adminViewModel.verifyEmailCheckToken(
+                    userType,
+                    userId,
+                    email.orEmpty(),
+                    binding.edtToken.text.toString().trim()
+                )
+            }
+        }
+    }
+
+    private fun observeTokenViewModel() {
+        if (emailIsNull()) return
+
+        observeTokenLoading()
+        observeTokenIdentityPersonal()
+        observeTokenErrors()
+        observeTokenSnackBar()
+    }
+
+    private fun observeTokenLoading() {
+        adminViewModel.isLoading.observe(this) { isLoading ->
+            if (emailIsNull()) return@observe
+            this.isLoading = isLoading
+            showLoadingMain(isLoading)
+        }
+    }
+
+    private fun observeTokenIdentityPersonal() {
+        adminViewModel.identityPersonal.observe(this) { eventData ->
+            if (emailIsNull()) return@observe
+
+            eventData.getContentIfNotHandled()?.let { identity ->
+                tokenView(!isLoading)
+                failedToConnect(false)
+
+                if (identity.isUpdated) {
+                    val resultIntent = Intent()
+                    resultIntent.putExtra(
+                        KEY_EXTRA_SUCCESS,
+                        getString(R.string.text_label_email)
+                    )
+                    setResult(KEY_RESULT_CODE, resultIntent)
+                    finish()
+                }
+            }
+        }
+    }
+
+    private fun observeTokenErrors() {
+        adminViewModel.errors.observe(this) { eventError ->
+            if (emailIsNull()) return@observe
+
+            eventError.getContentIfNotHandled()?.errors?.message?.firstOrNull()?.let { message ->
+                tokenView()
+                failedToConnect(false)
+                showAlertDialog(message)
+            }
+        }
+    }
+
+    private fun observeTokenSnackBar() {
+        adminViewModel.errorsSnackbarText.observe(this) { event ->
+            if (emailIsNull()) return@observe
+
+            event.getContentIfNotHandled()?.let { message ->
+                hideKeyboard()
+                tokenView(false)
+                failedToConnect(true)
+                Snackbar.make(binding.root as ViewGroup, message, Snackbar.LENGTH_SHORT).show()
+            }
+
+        }
+    }
+
+
+    private fun emailIsNull(): Boolean = email == null
+
+
+    private fun emailView(isVisible: Boolean = true) {
+        showEmailView(isVisible)
+        setupEmailListener()
+    }
+
+    private fun showEmailView(isVisible: Boolean) = binding.apply {
+        appBarLayout.isVisible = isVisible
+        toolbar.isVisible = isVisible
+        inputLayoutEmail.isVisible = isVisible
+        edtEmail.isVisible = isVisible
+        layoutInstruction.isVisible = isVisible
+        btnGetTokenViaEmail.isVisible = isVisible
+    }
+
+    private fun setupEmailListener() = binding.apply {
+        btnGetTokenViaEmail.isEnabled = edtEmail.text.toString().isNotEmpty()
+        edtEmail.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().isNotEmpty()) {
+                    inputLayoutEmail.error = null
+                    inputLayoutEmail.isErrorEnabled = false
+                    btnGetTokenViaEmail.isEnabled = true
+                }
+                if (p0.toString().isEmpty()) {
+                    btnGetTokenViaEmail.isEnabled = false
+                }
+            }
+
+            override fun afterTextChanged(p0: Editable?) {}
+
+        })
+    }
+
+    private fun tokenView(isVisible: Boolean = true) {
+        tokenMode = isVisible
+        showEmailView(!isVisible)
+        showTokenView(isVisible)
+        setupTokenListener()
+    }
+
+
+    private fun showTokenView(isVisible: Boolean) = binding.apply {
+        appBarLayout.isVisible = isVisible
+        toolbar.isVisible = isVisible
+        tvInstructionTokenResetPassword1.isVisible = isVisible
+        tvInstructionTokenResetPasswordEmail.isVisible = isVisible
+        tvInstructionTokenResetPasswordEmail.text = email
+        tvInstructionTokenResetPassword2.isVisible = isVisible
+        inputLayoutToken.isVisible = isVisible
+        edtToken.isVisible = isVisible
+        btnVerifyToken.isVisible = isVisible
+    }
+
+
+    private fun setupTokenListener() = binding.apply {
+        btnVerifyToken.isEnabled = edtToken.text.toString().isNotEmpty()
+        edtToken.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
+            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
+                if (p0.toString().isNotEmpty() && minCharacterTokenValidation(
+                        p0.toString().trim(),
+                        binding.inputLayoutToken,
+                        stringFormatMin(getString(R.string.text_label_token)),
+                        digits
+                    )
+                ) {
+                    inputLayoutEmail.error = null
+                    inputLayoutEmail.isErrorEnabled = false
+                    btnVerifyToken.isEnabled = true
+                }
+                if (p0.toString().isEmpty()) {
+                    btnVerifyToken.isEnabled = false
+                }
+            }
+            override fun afterTextChanged(p0: Editable?) {}
+        })
+    }
+
+
+    private fun goToLogin() {
+        val intent = Intent(this, LoginActivity::class.java)
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK)
+        startActivity(intent)
+    }
+
+
+
+
 
     private fun checkValidatedEmail(email: String): Boolean {
 
@@ -495,7 +494,7 @@ class EmailActivity : AppCompatActivity() {
     }
 
 
-    private fun showAlertDialog(msg: String = "", status: String) {
+    private fun showAlertDialog(msg: String = "", status: String = STATUS_ERROR) {
 
         val unauthorized = msg == getString(R.string.text_const_unauthorized)
         var title = ""
@@ -510,7 +509,7 @@ class EmailActivity : AppCompatActivity() {
                     message = getString(R.string.text_please_login_again)
                 } else {
                     icon = ContextCompat.getDrawable(this, R.drawable.z_ic_warning)
-                    title = getString(R.string.text_error, "")
+                    title = getString(R.string.text_error_format, "")
                     message = msg
                 }
             }
@@ -555,34 +554,17 @@ class EmailActivity : AppCompatActivity() {
         clearFocus()
     }
 
-    private fun showLoadingMain(boolean: Boolean, view: String) = binding.apply {
+    private fun showLoadingMain(boolean: Boolean) = binding.apply {
         showLoading(mainProgressBar, boolean)
         if (boolean) {
-            isVisibleAllView(false, view)
+            allViewGone()
             failedToConnect(false)
         }
     }
 
-    private fun isVisibleAllView(boolean: Boolean, view: String) {
+    private fun allViewGone() {
         binding.apply {
-
-            if (boolean) {
-                toolbar.visibility = View.VISIBLE
-                if (view == VIEW_EMAIL) {
-                    cvInstruction.visibility = View.VISIBLE
-                    inputLayoutEmail.visibility = View.VISIBLE
-                    edtEmail.visibility = View.VISIBLE
-                    btnGetTokenViaEmail.visibility = View.VISIBLE
-                } else {
-                    tvInstructionTokenResetPassword1.visibility = View.VISIBLE
-                    tvInstructionTokenResetPasswordEmail.visibility = View.VISIBLE
-                    tvInstructionTokenResetPassword2.visibility = View.VISIBLE
-                    inputLayoutToken.visibility = View.VISIBLE
-                    edtToken.visibility = View.VISIBLE
-                    btnVerifyToken.visibility = View.VISIBLE
-                }
-
-            } else {
+                appBarLayout.visibility = View.INVISIBLE
                 toolbar.visibility = View.INVISIBLE
                 cvInstruction.visibility = View.GONE
                 inputLayoutEmail.visibility = View.GONE
@@ -594,7 +576,6 @@ class EmailActivity : AppCompatActivity() {
                 inputLayoutToken.visibility = View.GONE
                 edtToken.visibility = View.GONE
                 btnVerifyToken.visibility = View.GONE
-            }
         }
     }
 
@@ -634,10 +615,6 @@ class EmailActivity : AppCompatActivity() {
         private const val KEY_EMAIL_VALID = "key_email_valid"
 
         private const val KEY_BUNDLE_MODE_TOKEN = "key_bundle_mode_token"
-
-
-        const val VIEW_EMAIL = "email"
-        const val VIEW_TOKEN = "token"
 
         private const val STATUS_ERROR = "status_error"
 

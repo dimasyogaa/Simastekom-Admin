@@ -7,7 +7,7 @@ import com.yogadimas.simastekom.model.responses.PaginationResponse
 class GenericPagingSource<T : Any>(
     private val token: String,
     private val keyword: String? = null,
-    private val sortBy: String? = "asc",
+    private val sortBy: String? = null,
     private val sortDir: String? = null,
     private val fetchData: suspend (String, Int, Int, String?, String?, String?) -> PaginationResponse<T>,
     private val onError: (String) -> Unit
