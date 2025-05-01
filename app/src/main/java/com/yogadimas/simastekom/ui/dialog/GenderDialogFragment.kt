@@ -10,6 +10,8 @@ import androidx.lifecycle.lifecycleScope
 import com.yogadimas.simastekom.R
 import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.databinding.DialogFragmentGenderBinding
+import com.yogadimas.simastekom.model.responses.AdminData
+import com.yogadimas.simastekom.ui.admin.AdminManipulationActivity
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
 import com.yogadimas.simastekom.ui.lecturer.LecturerManipulationActivity
 import com.yogadimas.simastekom.ui.student.StudentManipulationActivity
@@ -39,6 +41,9 @@ class GenderDialogFragment : DialogFragment() {
                 this.optionDialogListener = parentActivity
             }
             is LecturerManipulationActivity -> {
+                this.optionDialogListener = parentActivity
+            }
+            is AdminManipulationActivity -> {
                 this.optionDialogListener = parentActivity
             }
         }

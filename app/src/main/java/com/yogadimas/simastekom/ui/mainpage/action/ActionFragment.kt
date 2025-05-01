@@ -7,8 +7,9 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import com.yogadimas.simastekom.databinding.FragmentActionBinding
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
+import com.yogadimas.simastekom.databinding.FragmentActionBinding
+import com.yogadimas.simastekom.ui.admin.AdminMenuActivity
 import com.yogadimas.simastekom.ui.lecturer.LecturerMenuActivity
 import com.yogadimas.simastekom.ui.student.StudentMenuActivity
 
@@ -36,15 +37,36 @@ class ActionFragment : Fragment() {
     }
 
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         mCallback.getData(NAME_FRAGMENT)
 
         binding.apply {
-            btnStudent.setOnClickListener {startActivity(Intent(requireActivity(), StudentMenuActivity::class.java))}
-            btnLecturer.setOnClickListener {startActivity(Intent(requireActivity(), LecturerMenuActivity::class.java))}
+            btnStudent.setOnClickListener {
+                startActivity(
+                    Intent(
+                        requireActivity(),
+                        StudentMenuActivity::class.java
+                    )
+                )
+            }
+            btnLecturer.setOnClickListener {
+                startActivity(
+                    Intent(
+                        requireActivity(),
+                        LecturerMenuActivity::class.java
+                    )
+                )
+            }
+            btnAdmin.setOnClickListener {
+                startActivity(
+                    Intent(
+                        requireActivity(),
+                        AdminMenuActivity::class.java
+                    )
+                )
+            }
         }
 
     }

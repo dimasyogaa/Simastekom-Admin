@@ -1,4 +1,4 @@
-package com.yogadimas.simastekom.ui.lecturer
+package com.yogadimas.simastekom.ui.admin
 
 import android.app.Activity
 import android.content.Intent
@@ -11,15 +11,21 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
 import android.text.TextWatcher
+import android.util.TypedValue
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewStub
+import android.view.Window
+import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.graphics.drawable.DrawableCompat
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.core.view.isInvisible
 import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
@@ -33,7 +39,6 @@ import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorMessage
 import com.yogadimas.simastekom.common.enums.ErrorPassword
-import com.yogadimas.simastekom.common.enums.HttpResponseType
 import com.yogadimas.simastekom.common.enums.Str
 import com.yogadimas.simastekom.common.helper.SnackBarHelper
 import com.yogadimas.simastekom.common.helper.animateViewStub
@@ -44,16 +49,16 @@ import com.yogadimas.simastekom.common.helper.movePageWithParcelable
 import com.yogadimas.simastekom.common.helper.showLoadingFade
 import com.yogadimas.simastekom.common.interfaces.OnOptionDialogListenerInterface
 import com.yogadimas.simastekom.common.state.State
-import com.yogadimas.simastekom.databinding.ActivityLecturerManipulationBinding
-import com.yogadimas.simastekom.databinding.LayoutLecturerManipulationTextInputs1Binding
+import com.yogadimas.simastekom.databinding.ActivityAdminManipulationBinding
+import com.yogadimas.simastekom.databinding.LayoutAdminManipulationTextInputs1Binding
+import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.model.responses.Errors
 import com.yogadimas.simastekom.model.responses.IdentityPersonalData
-import com.yogadimas.simastekom.model.responses.LecturerData
 import com.yogadimas.simastekom.model.responses.ProfilePictureData
 import com.yogadimas.simastekom.ui.dialog.GenderDialogFragment
 import com.yogadimas.simastekom.ui.identity.personal.IdentityPersonalEditActivity
 import com.yogadimas.simastekom.ui.identity.profilepicture.ProfilePictureEditActivity
-import com.yogadimas.simastekom.viewmodel.admin.AdminLecturerViewModel
+import com.yogadimas.simastekom.viewmodel.admin.AdminAdminViewModel
 import com.yogadimas.simastekom.viewmodel.auth.AuthViewModel
 import com.yogadimas.simastekom.viewmodel.factory.AuthViewModelFactory
 import kotlinx.coroutines.Dispatchers
@@ -63,20 +68,20 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
-typealias VStub1BindingLecturer = LayoutLecturerManipulationTextInputs1Binding
+typealias VStub1BindingAdmin = LayoutAdminManipulationTextInputs1Binding
 
-class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListenerInterface {
+class AdminManipulationActivity : AppCompatActivity(), OnOptionDialogListenerInterface {
 
-    private lateinit var binding: ActivityLecturerManipulationBinding
-    private val activityContext = this@LecturerManipulationActivity
+    private lateinit var binding: ActivityAdminManipulationBinding
+    private val activityContext = this@AdminManipulationActivity
 
     private val authViewModel: AuthViewModel by viewModels {
         AuthViewModelFactory.getInstance(AuthPreferences.getInstance(dataStore))
     }
-    private val viewmodel: AdminLecturerViewModel by viewModel()
+    private val viewmodel: AdminAdminViewModel by viewModel()
 
     private lateinit var vStub1: ViewStub
-    private var vStub1Binding: VStub1BindingLecturer? = null
+    private var vStub1Binding: VStub1BindingAdmin? = null
 
     private var isAlertDialogShow = false
     private var dialog: AlertDialog? = null
@@ -84,54 +89,69 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
     private val emptyString = Str.EMPTY.value
 
     private val isEditDeleteMode: Boolean
-        get() = lecturerData?.userId?.isNotEmpty() == true &&
-                lecturerData?.userType?.isNotEmpty() == true
+        get() = adminData?.userId?.isNotEmpty() == true &&
+                adminData?.userType?.isNotEmpty() == true
 
-    private var lecturerData: LecturerData? = null
+    private var adminData: AdminData? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = ActivityLecturerManipulationBinding.inflate(layoutInflater)
+        setupView()
+        setupAuth()
+        setupAdminDataBundle(savedInstanceState)
+        setupMainContent()
+    }
+
+
+    private fun setupView() {
+        binding = ActivityAdminManipulationBinding.inflate(layoutInflater)
+        enableEdgeToEdge()
         setContentView(binding.root)
 
         vStub1 = binding.vs1
 
-        auth()
-
-        setLectureDataBundle(savedInstanceState)
-
-        mainContent()
-
+        ViewCompat.setOnApplyWindowInsetsListener(binding.main) { v, insets ->
+            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
+            insets
+        }
+        setStatusBarColor(window)
     }
 
-    private fun auth() = lifecycleScope.launch {
+    private fun setStatusBarColor(window: Window) {
+        val typedValue = TypedValue()
+        val theme = window.context.theme
+        theme.resolveAttribute(R.color.md_theme_surface, typedValue, true)
+        val color = typedValue.data
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) {
+            window.statusBarColor = color
+            val isLight = resources.configuration.uiMode and
+                    android.content.res.Configuration.UI_MODE_NIGHT_MASK ==
+                    android.content.res.Configuration.UI_MODE_NIGHT_NO
+
+            WindowInsetsControllerCompat(window, window.decorView).apply {
+                isAppearanceLightStatusBars = isLight
+                isAppearanceLightNavigationBars = isLight
+            }
+        }
+    }
+
+
+    private fun setupAuth() = lifecycleScope.launch {
         repeatOnLifecycle(Lifecycle.State.RESUMED) {
             if (getToken() == AuthPreferences.DEFAULT_VALUE) goToLogin(activityContext)
         }
     }
 
+    private suspend fun getToken(): String = authViewModel.getUser().asFlow().first().first
 
-    private fun setLectureDataBundle(savedInstanceState: Bundle?) {
-        lecturerData = savedInstanceState?.getParcelableCompat(KEY_BUNDLE_LECTURER)
-            ?: LecturerData()
+
+    private fun setupAdminDataBundle(savedInstanceState: Bundle?) {
+        adminData = savedInstanceState?.getParcelableCompat(KEY_BUNDLE_ADMIN)
+            ?: AdminData()
     }
 
-
-    private fun mainContent() = lifecycleScope.launch {
-        showToolbar(false)
-        val data = lecturerData ?: LecturerData()
-        data.apply {
-            userId = intent.getStringExtra(KEY_EXTRA_ID).orEmpty()
-            userType = intent.getStringExtra(KEY_EXTRA_USER_TYPE).orEmpty()
-        }
-        binding.viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getDataByMode(data) }
-        initialGetData(data)
-    }
-
-
-    private fun showToolbarAddMode() {
-        setupToolbar(title = getString(R.string.text_add))
-    }
+    private fun showToolbarAddMode() { setupToolbar(title = getString(R.string.text_add)) }
 
     private fun showToolbarEditDeleteMode() {
         setupToolbar(getString(R.string.text_change_or_delete))
@@ -142,11 +162,11 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         ) { menuItem ->
             when (menuItem.itemId) {
                 R.id.deleteMenu -> {
-                    lecturerData?.let {
+                    adminData?.let {
                         alertDelete(
                             it.userId.orEmpty(),
-                            it.lecturerIdNumber.orEmpty(),
-                            it.fullName.orEmpty()
+                            it.username.orEmpty(),
+                            it.name.orEmpty()
                         )
                     }
                     true
@@ -188,30 +208,37 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         }
     }
 
+    private fun setupMainContent() = lifecycleScope.launch {
+        showToolbar(false)
+        val data = adminData ?: AdminData()
+        data.apply {
+            userId = intent.getStringExtra(KEY_EXTRA_ID).orEmpty()
+            userType = intent.getStringExtra(KEY_EXTRA_USER_TYPE).orEmpty()
+        }
+        binding.viewHandle.viewFailedConnect.btnRefresh.setOnClickListener { getDataByMode(data) }
+        initialGetData(data)
+    }
 
-    private fun initialGetData(data: LecturerData) {
+    private fun initialGetData(data: AdminData) {
         getDataByMode(data)
     }
 
-    private fun getDataByMode(data: LecturerData) {
+    private fun getDataByMode(data: AdminData) {
         if (isEditDeleteMode) editDeleteMode(data) else addMode(data)
     }
 
 
-    private suspend fun getToken(): String = authViewModel.getUser().asFlow().first().first
-
-
-    private fun addMode(data: LecturerData) = execute { token ->
+    private fun addMode(data: AdminData) = execute { token ->
         withContext(Dispatchers.Main) {
             showSmoothLoadingView()
-            showDataLecturerManipulationView(token, data)
+            showDataAdminManipulationView(token, data)
         }
     }
 
-    private fun editDeleteMode(data: LecturerData) = execute { token ->
+    private fun editDeleteMode(data: AdminData) = execute { token ->
         withContext(Dispatchers.Main) {
             showSmoothLoadingView()
-            viewmodel.getLecturerById(
+            viewmodel.getAdminById(
                 token,
                 data.userId.orEmpty()
             )
@@ -225,19 +252,20 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
 
     private fun execute(action: suspend (String) -> Unit) =
-        lifecycleScope.launch { action(getToken()); collectLecturerState(getToken()) }
+        lifecycleScope.launch { action(getToken()); collectAdminState(getToken()) }
 
 
-    private suspend fun collectLecturerState(token: String) {
-        viewmodel.lecturerState.collect { state ->
+    private suspend fun collectAdminState(token: String) {
+        viewmodel.adminState.collect { state ->
             when (state) {
                 is State.Loading -> showLoadingView(true)
-                is State.Success -> showDataLecturerManipulationView(token, state.data)
+                is State.Success -> showDataAdminManipulationView(token, state.data)
                 is State.ErrorClient -> showErrorClient(state.error)
                 is State.ErrorServer -> showErrorServer(state.error)
             }
         }
     }
+
 
     private fun showLoadingView(isVisible: Boolean) {
 
@@ -249,13 +277,12 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         showLoadingFade(binding.mainProgressBar, isVisible)
     }
 
-
-    private fun showDataLecturerManipulationView(token: String, data: LecturerData) {
+    private fun showDataAdminManipulationView(token: String, data: AdminData) {
         showLoadingView(false)
 
         if (data.isAdded || data.isUpdated || data.isDeleted) {
             val success = getString(R.string.text_success)
-            val label = getString(R.string.text_lecturer)
+            val label = getString(R.string.text_admin)
             val resultIntent = Intent()
 
             val msg = when {
@@ -290,21 +317,21 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
             message.containsIgnoreCase(ErrorMessage.REGISTERED.value) ->
                 getString(
                     R.string.text_error_msg_registered_format,
-                    getString(R.string.text_label_lecturer_id_number),
-                    getString(R.string.text_other_lecturer)
+                    getString(R.string.text_label_id_username),
+                    getString(R.string.text_other_admin)
                 )
 
             message.containsIgnoreCase(ErrorMessage.UNREGISTERED.value) ->
                 getString(
                     R.string.text_error_msg_unregistered_format,
-                    getString(R.string.text_lecturer)
+                    getString(R.string.text_admin)
                 )
 
             message.containsIgnoreCase(ErrorMessage.USED.value) ->
                 getString(
                     R.string.text_error_msg_used_format,
-                    getString(R.string.text_label_lecturer_id_number),
-                    getString(R.string.text_other_lecturer)
+                    getString(R.string.text_label_id_username),
+                    getString(R.string.text_other_admin)
                 )
 
             else -> message
@@ -332,7 +359,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
 
-    private fun setupViewStubWithData(token: String, data: LecturerData) {
+    private fun setupViewStubWithData(token: String, data: AdminData) {
         if (vStub1.parent != null) {
             initializeViewStubBindingIfNull()
             setupFirstInputLayout(vStub1Binding!!, token, data)
@@ -342,16 +369,11 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
     }
 
-    private fun setupFirstInputLayout(
-        vsb1: VStub1BindingLecturer,
-        token: String,
-        data: LecturerData,
-    ) {
-
-
+    private fun setupFirstInputLayout(vsb1: VStub1BindingAdmin, token: String, data: AdminData) {
         showToolbar(true)
         vsb1.apply {
             if (isEditDeleteMode) setupEditMode(data) else setupAddMode(data)
+
             setupTextWatchersForInputs()
             setupGenderDialog()
             checkSaveButtonIsEnabled()
@@ -368,11 +390,9 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
             btnSave.setOnClickListener { save(token) }
             if (!root.isVisible) showViewStub(true)
         }
-
-
     }
 
-    private fun VStub1BindingLecturer.setupEditMode(data: LecturerData) {
+    private fun VStub1BindingAdmin.setupEditMode(data: AdminData) {
         inputLayoutPassword.isVisible = false
         edtPassword.isVisible = false
         inputLayoutConfirmPassword.isVisible = false
@@ -389,29 +409,29 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
         btnIdentityPersonal.setOnClickListener {
             movePageWithParcelable(
-                IdentityPersonalEditActivity.KEY_ADMIN_LECTURER,
+                IdentityPersonalEditActivity.KEY_ADMIN_ADMIN,
                 IdentityPersonalEditActivity::class.java,
                 IdentityPersonalData(
-                    userId = lecturerData?.userId,
-                    userType = lecturerData?.userType,
+                    userId = adminData?.userId,
+                    userType = adminData?.userType,
                     isFromAdmin = true
                 )
             )
         }
 
         btnDelete.setOnClickListener {
-            lecturerData?.let {
+            adminData?.let {
                 alertDelete(
                     it.userId.orEmpty(),
-                    it.lecturerIdNumber.orEmpty(),
-                    it.fullName.orEmpty()
+                    it.username.orEmpty(),
+                    it.name.orEmpty()
                 )
             }
         }
 
     }
 
-    private fun VStub1BindingLecturer.setupAddMode(data: LecturerData) {
+    private fun VStub1BindingAdmin.setupAddMode(data: AdminData) {
         animateViewStub(this)
 
         setupCommonInputs(data)
@@ -423,18 +443,16 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         btnDelete.isEnabled = false
     }
 
-    private fun VStub1BindingLecturer.setupCommonInputs(data: LecturerData) {
-        lecturerData?.apply {
-            fullName = data.fullName
+    private fun VStub1BindingAdmin.setupCommonInputs(data: AdminData) {
+        adminData?.apply {
+            name = data.name
             password = data.password
             confirmPassword = data.confirmPassword
-            lecturerIdNumber = data.lecturerIdNumber
-            degree = data.degree
+            username = data.username
             gender = data.gender
         }?.let {
-            edtFullName.setText(it.fullName)
-            edtLecturerIdNumber.setText(it.lecturerIdNumber)
-            edtDegree.setText(it.degree)
+            edtFullName.setText(it.name)
+            edtAdminIdUsername.setText(it.username)
             setGender(this, it.gender)
             if (!isEditDeleteMode) {
                 edtPassword.setText(it.password)
@@ -444,13 +462,12 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
     }
 
-    private fun VStub1BindingLecturer.setupTextWatchersForInputs() {
-        setupTextWatchers(edtFullName) { lecturerData?.fullName = it }
-        setupTextWatchers(edtPassword) { lecturerData?.password = it }
-        setupTextWatchers(edtConfirmPassword) { lecturerData?.confirmPassword = it }
-        setupTextWatchers(edtLecturerIdNumber) { lecturerData?.lecturerIdNumber = it }
-        setupTextWatchers(edtDegree) { lecturerData?.degree = it }
-        setupTextWatchers(edtGender) { lecturerData?.gender = it.lowercase() }
+    private fun VStub1BindingAdmin.setupTextWatchersForInputs() {
+        setupTextWatchers(edtFullName) { adminData?.name = it }
+        setupTextWatchers(edtPassword) { adminData?.password = it }
+        setupTextWatchers(edtConfirmPassword) { adminData?.confirmPassword = it }
+        setupTextWatchers(edtAdminIdUsername) { adminData?.username = it }
+        setupTextWatchers(edtGender) { adminData?.gender = it.lowercase() }
     }
 
     private fun setupTextWatchers(editText: TextInputEditText, onTextChanged: (String) -> Unit) {
@@ -466,7 +483,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         })
     }
 
-    private fun LayoutLecturerManipulationTextInputs1Binding.setupGenderDialog() {
+    private fun LayoutAdminManipulationTextInputs1Binding.setupGenderDialog() {
         edtGender.setOnClickListener {
             hideKeyboard()
             GenderDialogFragment().show(
@@ -477,7 +494,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
     private fun setGender(
-        viewBinding1: LayoutLecturerManipulationTextInputs1Binding,
+        viewBinding1: LayoutAdminManipulationTextInputs1Binding,
         gender: String?,
     ) {
         viewBinding1.apply {
@@ -498,35 +515,24 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         hideKeyboard()
         if (isEditDeleteMode) {
             showAllView(false)
-            lecturerData?.let { data ->
-                viewmodel.updateLecturer(token, data.userId.orEmpty(), data)
+            adminData?.let { data ->
+                viewmodel.updateAdmin(token, data.userId.orEmpty(), data)
             }
         } else {
             showAllView(false)
-            lecturerData?.let { data ->
+            adminData?.let { data ->
                 if (isValidPassword(data)) {
-                    viewmodel.addLecturer(token, data)
+                    viewmodel.addAdmin(token, data)
                 } else {
                     showAllView(true)
                 }
             }
-//            dummyAddOperation()
-
         }
 
     }
 
-    private fun dummyAddOperation() {
-        showAllView(false)
-        lecturerData?.isAdded = true
-        lecturerData?.let { data ->
-            if (isValidPassword(data)) {
-                viewmodel.addLecturerDummy(HttpResponseType.SUCCESS, data)
-            }
-        }
-    }
 
-    private fun isValidPassword(data: LecturerData): Boolean {
+    private fun isValidPassword(data: AdminData): Boolean {
         if ((data.password?.length ?: 0) < 6) {
             showErrorPassword(ErrorPassword.MIN_CHAR)
         } else if (!data.password.equals(data.confirmPassword)) {
@@ -542,7 +548,8 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         val message = when (errorType) {
             ErrorPassword.MIN_CHAR -> getString(
                 R.string.text_min_character_field_format,
-                getString(R.string.text_label_password), MIN_PASSWORD_LENGTH
+                getString(R.string.text_label_password),
+                MIN_PASSWORD_LENGTH
             )
 
             ErrorPassword.NOT_SAME -> getString(
@@ -593,8 +600,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
                     inputLayoutPassword.editText?.clearFocus()
                     inputLayoutConfirmPassword.editText?.clearFocus()
                 }
-                inputLayoutLecturerIdNumber.editText?.clearFocus()
-                inputLayoutDegree.editText?.clearFocus()
+                inputLayoutAdminIdUsername.editText?.clearFocus()
                 inputLayoutGender.editText?.clearFocus()
             }
         }
@@ -607,12 +613,10 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         val viewBinding1isNotEmpty = vStub1Binding?.run {
             listOf(
                 edtFullName,
-                edtLecturerIdNumber,
-                edtDegree,
+                edtAdminIdUsername,
                 edtGender,
             ).all { it.text.toString().isNotEmpty() }
-        } ?: false
-
+        } == true
 
         val isPasswordNotEmpty = vStub1Binding?.run {
             edtPassword.text.toString().isNotEmpty() && edtConfirmPassword.text.toString()
@@ -632,9 +636,9 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         showAlertDialog(isUnAuthorized = isUnAuthorized, msg = message, status = STATUS_ERROR)
     }
 
-    private fun alertDelete(userId: String, lecturerIdNumber: String, fullName: String) {
+    private fun alertDelete(userId: String, username: String, fullName: String) {
         showAlertDialog(
-            msg = getString(R.string.text_string_strip_string_format, lecturerIdNumber, fullName),
+            msg = getString(R.string.text_string_strip_string_format, username, fullName),
             status = STATUS_CONFIRM_DELETE,
             userId = userId
         )
@@ -663,7 +667,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
                     STATUS_CONFIRM_DELETE -> {
                         setPositiveButton(getString(R.string.text_ok)) { _, _ ->
-                            deleteLecturer(userId)
+                            deleteAdmin(userId)
                             dismissAlertDialog()
                         }
                         setNegativeButton(getString(R.string.text_cancel)) { _, _ ->
@@ -687,9 +691,9 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         }
     }
 
-    private fun deleteLecturer(userId: String) = lifecycleScope.launch {
+    private fun deleteAdmin(userId: String) = lifecycleScope.launch {
         showAllView(false)
-        viewmodel.deleteLecturer(getToken(), userId)
+        viewmodel.deleteAdmin(getToken(), userId)
     }
 
 
@@ -737,7 +741,7 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
 
     private fun initializeViewStubBindingIfNull() {
         if (vStub1Binding == null) {
-            vStub1Binding = LayoutLecturerManipulationTextInputs1Binding.bind(vStub1.inflate())
+            vStub1Binding = LayoutAdminManipulationTextInputs1Binding.bind(vStub1.inflate())
         }
     }
 
@@ -753,13 +757,13 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
     }
 
     override fun onSaveInstanceState(outState: Bundle) {
-        outState.putParcelable(KEY_BUNDLE_LECTURER, lecturerData)
+        outState.putParcelable(KEY_BUNDLE_ADMIN, adminData)
         super.onSaveInstanceState(outState)
     }
 
 
     companion object {
-        private const val STATUS_CONFIRM_DELETE = "status_confirm_deleted"
+        private const val STATUS_CONFIRM_DELETE = "status_confirm_delete"
         private const val STATUS_ERROR = "status_error"
 
         const val KEY_EXTRA_ID = "key_extra_id"
@@ -768,14 +772,10 @@ class LecturerManipulationActivity : AppCompatActivity(), OnOptionDialogListener
         const val KEY_EXTRA_SUCCESS = "key_extra_success"
         const val KEY_RESULT_CODE = 200
 
-        const val KEY_BUNDLE_LECTURER = "key_bundle_lecturer"
+        const val KEY_BUNDLE_ADMIN = "key_bundle_admin"
 
         private const val MIN_PASSWORD_LENGTH = 6
         private const val DELAY_TIME = 600L
-
-
     }
 
-
 }
-

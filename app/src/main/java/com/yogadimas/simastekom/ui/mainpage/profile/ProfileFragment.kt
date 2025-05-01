@@ -21,7 +21,6 @@ import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.enums.ErrorCode
 import com.yogadimas.simastekom.common.interfaces.OnCallbackFromFragmentInterface
-import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.databinding.FragmentProfileBinding
 import com.yogadimas.simastekom.model.responses.AdminData
 import com.yogadimas.simastekom.ui.admin.AdminEditActivity
@@ -94,7 +93,7 @@ class ProfileFragment : Fragment() {
                 eventData.getContentIfNotHandled()?.let { data ->
                     showDefaultView(!contextFragment.isLoading)
                     showFailedConnectView(false)
-                    if (data.logout) authViewModel.saveUser(null, null, null)
+                    if (data.isLogout) authViewModel.saveUser(null, null, null)
                     showAdminDataView(data)
                 }
             }

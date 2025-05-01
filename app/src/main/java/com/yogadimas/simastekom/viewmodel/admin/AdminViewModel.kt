@@ -15,7 +15,7 @@ import com.yogadimas.simastekom.common.helper.getErrors
 import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.model.responses.AddressData
 import com.yogadimas.simastekom.model.responses.AdminData
-import com.yogadimas.simastekom.model.responses.AdminResponse
+import com.yogadimas.simastekom.model.responses.AdminObjectResponse
 import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.model.responses.CampusListResponse
 import com.yogadimas.simastekom.model.responses.CampusObjectResponse
@@ -32,7 +32,6 @@ import com.yogadimas.simastekom.model.responses.StudentData
 import com.yogadimas.simastekom.model.responses.StudentIdentityParentData
 import com.yogadimas.simastekom.repository.AdminAllUserTypeRoleRepository
 import com.yogadimas.simastekom.repository.AdminStudentRepository
-import com.yogadimas.simastekom.test.SimpleIdlingResource
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.SharingStarted
@@ -93,8 +92,8 @@ class AdminViewModel(
     fun login(id: String, password: String) {
         _isLoading.value = true
         val client = ApiConfig.getApiService().login(id, password)
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
 
                 _isLoading.value = false
                 if (response.isSuccessful) {
@@ -104,7 +103,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }
@@ -116,8 +115,8 @@ class AdminViewModel(
     fun getAdminCurrent() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAdminCurrent(token)
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     _adminData.value = Event(response.body()?.adminData)
@@ -127,7 +126,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }
@@ -147,8 +146,8 @@ class AdminViewModel(
                 .updateAdminCurrent(token, profilePicture, username, name, deletePhoto)
 
 
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     _adminData.value = Event(response.body()?.adminData)
@@ -157,7 +156,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }
@@ -169,8 +168,8 @@ class AdminViewModel(
     fun getAdminPassword() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().getAdminPassword(token)
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     _adminData.value = Event(response.body()?.adminData)
@@ -180,7 +179,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }
@@ -195,8 +194,8 @@ class AdminViewModel(
                 .updateAdminCurrentPassword(token, password)
 
 
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     _adminData.value = Event(response.body()?.adminData)
@@ -205,7 +204,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }
@@ -2174,8 +2173,8 @@ class AdminViewModel(
     fun logout() {
         _isLoading.value = true
         val client = ApiConfig.getApiService().logout(token)
-        client.enqueue(object : Callback<AdminResponse> {
-            override fun onResponse(call: Call<AdminResponse>, response: Response<AdminResponse>) {
+        client.enqueue(object : Callback<AdminObjectResponse> {
+            override fun onResponse(call: Call<AdminObjectResponse>, response: Response<AdminObjectResponse>) {
                 _isLoading.value = false
                 if (response.isSuccessful) {
                     _adminData.value = Event(response.body()?.adminData)
@@ -2184,7 +2183,7 @@ class AdminViewModel(
                 }
             }
 
-            override fun onFailure(call: Call<AdminResponse>, t: Throwable) {
+            override fun onFailure(call: Call<AdminObjectResponse>, t: Throwable) {
                 _isLoading.value = false
                 _snackbarText.value = Event(t.message.toString())
             }

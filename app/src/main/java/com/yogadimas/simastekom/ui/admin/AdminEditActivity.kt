@@ -206,7 +206,7 @@ class AdminEditActivity : AppCompatActivity() {
 
 
 
-                if (it.logout) {
+                if (it.isLogout) {
                     authViewModel.saveUser(null, null, null)
                 }
 

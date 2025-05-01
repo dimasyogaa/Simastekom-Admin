@@ -131,7 +131,7 @@ class PasswordEditActivity : AppCompatActivity() {
                     isVisibleAllView(true)
                     failedToConnect(false)
 
-                    if (it.logout) {
+                    if (it.isLogout) {
                         authViewModel.saveUser(null, null, null)
                     }
 

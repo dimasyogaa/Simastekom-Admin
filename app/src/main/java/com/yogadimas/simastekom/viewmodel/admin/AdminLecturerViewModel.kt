@@ -29,8 +29,6 @@ class AdminLecturerViewModel(
         sortBy: String? = null,
         sortDir: String? = null,
     ): StateFlow<PagingData<LecturerData>> {
-
-        Log.e("TAG", "getLecturers: $sortBy", )
         val flow = if (keyword.isNullOrEmpty() && sortBy.isNullOrEmpty()) {
             repository.getLecturers(
                 token,

@@ -298,6 +298,8 @@
 
     <string name="text_lecturer_menu">Menu Dosen</string>
 
+    <string name="text_admin_menu">Menu Admin</string>
+
 
     <string name="text_study_program">Program Studi</string>
     <string name="text_faculty">Fakultas</string>

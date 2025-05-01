@@ -177,7 +177,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
                     navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(false)
                 }
 
-                if (it.logout) {
+                if (it.isLogout) {
                     authViewModel.saveUser(null, null, null)
                 }
 

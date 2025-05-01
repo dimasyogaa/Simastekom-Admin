@@ -89,6 +89,7 @@ tools:context=".ui.lecturer.LecturerActivity">
                         style="@style/Widget.Material3.Chip.Filter"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:layout_marginEnd="16dp"
                         android:text="@string/text_label_name"
                         app:checkedIcon="@drawable/z_ic_sort"
                         app:checkedIconEnabled="true"

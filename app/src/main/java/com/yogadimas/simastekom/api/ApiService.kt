@@ -1,7 +1,8 @@
 package com.yogadimas.simastekom.api
 
 import com.yogadimas.simastekom.model.responses.AddressData
-import com.yogadimas.simastekom.model.responses.AdminResponse
+import com.yogadimas.simastekom.model.responses.AdminData
+import com.yogadimas.simastekom.model.responses.AdminObjectResponse
 import com.yogadimas.simastekom.model.responses.CampusData
 import com.yogadimas.simastekom.model.responses.CampusListResponse
 import com.yogadimas.simastekom.model.responses.CampusObjectResponse
@@ -47,16 +48,16 @@ interface ApiService {
     fun login(
         @Field("nama_pengguna") namaPengguna: String,
         @Field("password") password: String,
-    ): Call<AdminResponse>
+    ): Call<AdminObjectResponse>
 
     @DELETE("admin/logout")
-    fun logout(@Header("Authorization") token: String): Call<AdminResponse>
+    fun logout(@Header("Authorization") token: String): Call<AdminObjectResponse>
 
     @GET("admin/current")
-    fun getAdminCurrent(@Header("Authorization") token: String): Call<AdminResponse>
+    fun getAdminCurrent(@Header("Authorization") token: String): Call<AdminObjectResponse>
 
     @GET("admin/current/password")
-    fun getAdminPassword(@Header("Authorization") token: String): Call<AdminResponse>
+    fun getAdminPassword(@Header("Authorization") token: String): Call<AdminObjectResponse>
 
     @Multipart
     @POST("admin/current?_method=PATCH")
@@ -66,14 +67,62 @@ interface ApiService {
         @Part("nama_pengguna") username: RequestBody,
         @Part("nama") name: RequestBody,
         @Part("hapus_foto") deletePhoto: RequestBody,
-    ): Call<AdminResponse>
+    ): Call<AdminObjectResponse>
 
     @FormUrlEncoded
     @POST("admin/current/password?_method=PATCH")
     fun updateAdminCurrentPassword(
         @Header("Authorization") token: String,
         @Field("password") password: String,
-    ): Call<AdminResponse>
+    ): Call<AdminObjectResponse>
+
+
+    /** Admin */
+    @GET("admin")
+    suspend fun getAllAdmins(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<AdminData>
+
+    @GET("admin/search-sort")
+    suspend fun searchSortAdmins(
+        @Header("Authorization") token: String,
+        @Query("page") page: Int,
+        @Query("size") size: Int,
+        @Query("keyword") keyword: String?,
+        @Query("sort-by") sortBy: String?,
+        @Query("sort-dir") sortDir: String?,
+    ): PaginationResponse<AdminData>
+
+    @GET("admin/{id}")
+    suspend fun getAdminById(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<AdminObjectResponse>
+
+
+    @PUT("admin/{id}")
+    suspend fun updateAdmin(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+        @Body data: AdminData,
+    ): Response<AdminObjectResponse>
+
+    @POST("admin")
+    suspend fun addAdmin(
+        @Header("Authorization") token: String,
+        @Body data: AdminData,
+    ): Response<AdminObjectResponse>
+
+    @DELETE("admin/{id}")
+    suspend fun deleteAdmin(
+        @Header("Authorization") token: String,
+        @Path("id") id: String,
+    ): Response<AdminObjectResponse>
+
+
 
     @GET("identitas-pribadi/{penggunaType}/{penggunaId}")
     fun getIdentityPersonal(

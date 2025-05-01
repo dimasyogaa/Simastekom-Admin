@@ -173,7 +173,7 @@ class AdminEditOldActivity : AppCompatActivity(), OnOptionDialogListenerInterfac
                 }
                 failedToConnect(false)
 
-                if (it.logout) {
+                if (it.isLogout) {
                     authViewModel.saveUser(null, null, null)
                 }
 
