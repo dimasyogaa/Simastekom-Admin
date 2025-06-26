@@ -1,3 +1,5 @@
+import org.gradle.kotlin.dsl.implementation
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
@@ -19,14 +21,14 @@ android {
 
         buildConfigField("boolean", "DEBUG", "true")
 
-        buildConfigField("String", "BASE_URL", "\"http://192.168.69.106:8000\"")
+        buildConfigField("String", "BASE_URL", "\"http://192.168.94.106:8000\"")
         buildConfigField("String", "API", "\"/api/\"")
 
     }
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
@@ -53,12 +55,13 @@ android {
             pickFirsts.add("META-INF/LICENSE.md")
         }
     }
+    dynamicFeatures += setOf(":Simastekom_Mahasiswa")
 
 }
 
 dependencies {
+    implementation(project(":core"))
 
-    implementation(libs.koin.android)
 
 
     implementation(libs.androidx.paging.runtime.ktx)

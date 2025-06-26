@@ -21,4 +21,5 @@ dependencyResolutionManagement {
 
 rootProject.name = "Simastekom"
 include(":app")
- 
+include(":Simastekom_Mahasiswa")
+include(":core")

@@ -9,7 +9,7 @@
         android:id="@+id/imageView"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:src="@drawable/z_ic_failed_connect"
+        android:src="@drawable/z_ic_error_load_data_core"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

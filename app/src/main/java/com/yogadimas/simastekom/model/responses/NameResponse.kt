@@ -23,6 +23,9 @@ data class NameData(
     @field:SerializedName("nama")
     val name: String? = null,
 
+    @field:SerializedName("keterangan")
+    val information: String? = null,
+
     @field:SerializedName("is_added")
     val isAdded: Boolean = false,
 

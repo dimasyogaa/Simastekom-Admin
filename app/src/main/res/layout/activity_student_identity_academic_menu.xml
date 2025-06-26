@@ -65,6 +65,11 @@
             style="@style/CustomButtonTonalMenu"
             android:text="@string/text_campus"/>
 
+        <Button
+            android:id="@+id/btn_class_group"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_class_group"/>
+
 
     </LinearLayout>
 

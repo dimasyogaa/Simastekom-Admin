@@ -41,6 +41,10 @@ class LecturerMenuActivity : AppCompatActivity() {
                 navigateTo(AddressHomeActivity::class.java, Role.LECTURE.value)
             }
 
+            btnHeadOfStudyProgram.setOnClickListener {
+
+            }
+
         }
 
 

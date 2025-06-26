@@ -87,7 +87,7 @@ class StudentDegreeActivity : AppCompatActivity() {
 
             toolbar.setNavigationOnClickListener { finish() }
 
-            toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+            toolbar.menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
                 getAdminAndDegrees()
                 true
             }

@@ -136,7 +136,7 @@ class StudentIdentityAcademicActivity : AppCompatActivity() {
 
     private fun ActivityStudentIdentityAcademicBinding.setToolbar(token: String) {
         toolbar.setNavigationOnClickListener { finish() }
-        toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        toolbar.menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setObserveData(token)
             true
         }

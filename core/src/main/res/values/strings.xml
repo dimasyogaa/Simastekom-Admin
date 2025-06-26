@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="text_login_again">Login Ulang</string>
+    <string name="text_please_login_again">Silakan login kembali</string>
+
+    <string name="text_something_went_wrong">Terjadi kesalahan</string>
+    <string name="text_request_failed">Permintaan gagal diproses</string>
+
+    <string name="text_there_is_an_error_on_server">Terjadi kesalahan pada server</string>
+
+    <string name="text_ok">OK</string>
+    <string name="text_cancel">Batal</string>
+
+    <string name="text_error_load_data">Gagal memuat data</string>
+    <string name="text_no_data_yet">Belum ada data</string>
+
+    <string name="text_error_load_data_from_network">Gagal memuat data dari internet</string>
+    <string name="text_retry">Coba lagi</string>
+    <string name="text_reload">Muat ulang</string>
+    <string name="text_not_found_data">Data tidak ditemukan</string>
+    <string name="text_back_to_all_data">Kembali ke Semua Data</string>
+
+    <string name="text_add">Tambah</string>
+    <string name="text_change_or_delete">Ubah/Hapus</string>
+    <string name="text_delete">Hapus</string>
+
+    <string name="text_success">Berhasil</string>
+
+
+    <string name="text_dialog_added_successfully_format">Berhasil menambah %1$s</string>
+    <string name="text_dialog_updated_successfully_format">Berhasil mengubah %1$s</string>
+    <string name="text_dialog_deleted_successfully_format">Berhasil menghapus %1$s</string>
+
+
+    <string name="text_confirm_deletion">Anda ingin menghapusnya?</string>
+
+</resources>

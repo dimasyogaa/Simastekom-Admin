@@ -123,7 +123,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
         super.onStart()
         navViewDrawer.menu.findItem(R.id.passwordEditActivity).setVisible(false)
         navViewDrawer.menu.findItem(R.id.logoutMenu).setVisible(false)
-        navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(false)
+        navViewDrawer.menu.findItem(R.id.menu_refresh).setVisible(false)
         authAdmin()
     }
 
@@ -170,11 +170,11 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
                     // isVisibleAllView(false)
                     navViewDrawer.menu.findItem(R.id.passwordEditActivity).setVisible(false)
                     navViewDrawer.menu.findItem(R.id.logoutMenu).setVisible(false)
-                    navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(false)
+                    navViewDrawer.menu.findItem(R.id.menu_refresh).setVisible(false)
                 } else {
                     navViewDrawer.menu.findItem(R.id.passwordEditActivity).setVisible(true)
                     navViewDrawer.menu.findItem(R.id.logoutMenu).setVisible(true)
-                    navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(false)
+                    navViewDrawer.menu.findItem(R.id.menu_refresh).setVisible(false)
                 }
 
                 if (it.isLogout) {
@@ -201,7 +201,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
         adminViewModel.errors.observe(this) { eventError ->
             navViewDrawer.menu.findItem(R.id.passwordEditActivity).setVisible(true)
             navViewDrawer.menu.findItem(R.id.logoutMenu).setVisible(true)
-            navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(false)
+            navViewDrawer.menu.findItem(R.id.menu_refresh).setVisible(false)
             eventError.getContentIfNotHandled()?.let { data ->
                 if (data.errors != null) {
                     val listMessage = data.errors.message.orEmpty()
@@ -214,7 +214,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
 
         adminViewModel.errorsSnackbarText.observe(this) { eventString ->
 
-            navViewDrawer.menu.findItem(R.id.refreshMenu).setVisible(true)
+            navViewDrawer.menu.findItem(R.id.menu_refresh).setVisible(true)
             navViewDrawer.menu.findItem(R.id.passwordEditActivity).setVisible(false)
             navViewDrawer.menu.findItem(R.id.logoutMenu).setVisible(false)
 
@@ -307,7 +307,7 @@ class MainActivity : AppCompatActivity(), OnCallbackFromFragmentInterface {
             true
         }
 
-        navViewDrawer.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        navViewDrawer.menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
 
             authAdmin(true)
             drawerLayout.closeDrawer(GravityCompat.START)

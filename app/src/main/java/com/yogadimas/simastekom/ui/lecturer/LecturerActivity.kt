@@ -189,7 +189,7 @@ class LecturerActivity : AppCompatActivity() {
 
     private fun ActivityLecturerBinding.setToolbar(token: String) = toolbar.apply {
         setNavigationOnClickListener { finish() }
-        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setCollectData(token)
             true
         }

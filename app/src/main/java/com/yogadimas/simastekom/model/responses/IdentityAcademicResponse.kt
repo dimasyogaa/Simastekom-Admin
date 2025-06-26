@@ -28,6 +28,9 @@ data class IdentityAcademicData(
     @field:SerializedName("nama")
     var name: String? = null,
 
+    @field:SerializedName("keterangan")
+    var information: String? = null,
+
     @field:SerializedName("nim")
     var studentIdNumber: String? = null,
 

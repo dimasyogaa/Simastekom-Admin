@@ -129,7 +129,7 @@ class AddressHomeActivity : AppCompatActivity() {
         } else {
             getString(R.string.text_personal)
         }
-        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setObserveData(token, role)
             true
         }

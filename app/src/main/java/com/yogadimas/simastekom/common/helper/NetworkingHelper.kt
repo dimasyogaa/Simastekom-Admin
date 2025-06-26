@@ -18,14 +18,12 @@ suspend fun <T, R> handleApiCall(
     apiCall: suspend () -> Response<T>,
     extractData: (T?) -> R,
 ) {
-    Log.e("TAG", "handleApiCall: loading", )
     sharedFlow.emit(State.Loading)
     val response = runCatching { apiCall() }
 
     response.onSuccess { result ->
         if (result.isSuccessful) {
             val data = extractData(result.body())
-            Log.e("TAG", "handleApiCall: data", )
             sharedFlow.emit(State.Success(data))
         } else {
             val errorResponse = result.errorBody()?.string().orEmpty()

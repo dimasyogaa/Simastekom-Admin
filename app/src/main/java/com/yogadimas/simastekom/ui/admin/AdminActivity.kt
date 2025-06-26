@@ -31,6 +31,7 @@ import androidx.paging.LoadState
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yogadimas.simastekom.R
+import com.yogadimas.simastekom.core.R as CoreR
 import com.yogadimas.simastekom.adapter.admin.AdminManipulationAdapter
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
@@ -45,6 +46,7 @@ import com.yogadimas.simastekom.common.helper.goToLogin
 import com.yogadimas.simastekom.common.helper.showLoading
 import com.yogadimas.simastekom.common.interfaces.OnItemClickManipulationCallback
 import com.yogadimas.simastekom.common.paging.LoadingStateAdapter
+
 import com.yogadimas.simastekom.common.state.State
 import com.yogadimas.simastekom.databinding.ActivityAdminBinding
 import com.yogadimas.simastekom.model.responses.AdminData
@@ -111,7 +113,6 @@ class AdminActivity : AppCompatActivity() {
         collectAdminStateForDelete()
         setupMainContent()
     }
-
 
     private fun setupView() {
         binding = ActivityAdminBinding.inflate(layoutInflater)
@@ -209,7 +210,7 @@ class AdminActivity : AppCompatActivity() {
 
     private fun ActivityAdminBinding.setupToolbar(token: String) = toolbar.apply {
         setNavigationOnClickListener { finish() }
-        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setCollectData(token)
             true
         }

@@ -129,7 +129,7 @@ class StudentIdentityParentActivity : AppCompatActivity() {
 
     private fun setToolbar(token: String) = binding.toolbar.apply {
         setNavigationOnClickListener { finish() }
-        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setObserveData(token)
             true
         }

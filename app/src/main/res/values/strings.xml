@@ -128,6 +128,11 @@
     <string name="text_hint_choose_employment_status">Pilih status pekerjaan…</string>
     <string name="text_hint_employment_status">Masukkan status pekerjaan…</string>
 
+
+    <string name="text_label_information">Keterangan</string>
+    <string name="text_hint_information">Masukkan keterangan…</string>
+
+
     <string name="text_label_father_id_card_number">Nomor KTP Ayah</string>
     <string name="text_hint_father_id_card_number">Masukkan nomor KTP ayah anda…</string>
 
@@ -401,6 +406,16 @@
     <string name="text_other_admin">Admin Lain</string>
     <string name="text_other_student">Mahasiswa Lain</string>
     <string name="text_other_lecturer">Dosen Lain</string>
+    <string name="text_head_of_study_program">Kepala Program Studi</string>
+    <string name="text_class_group">Kelompok Kelas</string>
+    <string name="text_class_menu">Menu Kelas</string>
+    <string name="text_class_data">Data Kelas</string>
+    <string name="text_meeting">Pertemuan</string>
+    <string name="text_important_contact">Kontak Penting</string>
+    <string name="text_important_contact_data">Data Kontak Penting</string>
+    <string name="text_relation_important_contact_class_group">Atur Kelompok Kelas dengan Kontak Penting\n\nRelasi Kontak Penting dengan Kelompok Kelas</string>
+    <string name="text_important_contact_category">Kategori Kontak Penting</string>
+    <string name="title_simastekom_mahasiswa">Simastekom - Mahasiswa</string>
 
 
 </resources>

@@ -47,6 +47,12 @@ tools:context=".ui.lecturer.LecturerMenuActivity">
         style="@style/CustomButtonTonalMenu"
         android:text="@string/text_address_home_personal"/>
 
+
+    <Button
+        android:id="@+id/btn_head_of_study_program"
+        style="@style/CustomButtonTonalMenu"
+        android:text="@string/text_head_of_study_program"/>
+
 </LinearLayout>
 
 </ScrollView>

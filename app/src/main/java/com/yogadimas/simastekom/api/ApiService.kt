@@ -123,7 +123,6 @@ interface ApiService {
     ): Response<AdminObjectResponse>
 
 
-
     @GET("identitas-pribadi/{penggunaType}/{penggunaId}")
     fun getIdentityPersonal(
         @Header("Authorization") token: String,
@@ -247,7 +246,7 @@ interface ApiService {
         @Path("userType") userType: String,
         @Path("userId") userId: String,
         @Part profilePicture: MultipartBody.Part?,
-        @Query("is_deleted") isDeleted: Boolean
+        @Query("is_deleted") isDeleted: Boolean,
     ): Response<ProfilePictureObjectResponse>
 
 
@@ -634,6 +633,7 @@ interface ApiService {
         @Header("Authorization") token: String,
         @Field("kode") kode: String,
         @Field("nama") nama: String,
+        @Field("keterangan") keterangan: String? = null,
     ): Call<IdentityAcademicObjectResponse>
 
     @GET("levels")

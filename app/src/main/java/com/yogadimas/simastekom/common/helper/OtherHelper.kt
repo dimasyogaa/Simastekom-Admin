@@ -275,7 +275,7 @@ private fun sendEmail(
 
         val mailTo = Str.MAILTO.value
         val setSubject: (String, String) -> String =
-            { role, name -> "$simastekom ${role.uppercase()} - $name" }
+            { role, name -> "$simastekom | ${role.uppercase()} - $name" }
         val subject = when (senderRole) {
             Role.ADMIN -> setSubject(admin, senderName)
             Role.LECTURE -> setSubject(lecture, senderName)

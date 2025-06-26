@@ -20,11 +20,11 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ActivityClassSessionManipulationBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.helper.hideKeyboard
 import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.databinding.ActivityClassSessionManipulationBinding
 import com.yogadimas.simastekom.model.responses.NameData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -156,10 +156,11 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
 
                 binding.apply {
                     edtName.setText(it.name)
+                    edtClassSessionInformation.setText(it.information)
                     toolbar.setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.deleteMenu -> {
-                                delete(it.id,it.name ?: "")
+                                delete(it.id, it.name ?: "")
                                 true
                             }
 
@@ -236,6 +237,7 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
                     id,
                     NameData(
                         name = edtName.text.toString().trim(),
+                        information = edtClassSessionInformation.text.toString().trim(),
                     )
                 )
             } else {
@@ -243,6 +245,7 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
                     NameData(
                         id = id,
                         name = edtName.text.toString().trim(),
+                        information = edtClassSessionInformation.text.toString().trim(),
                     )
                 )
             }
@@ -265,6 +268,7 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
         fun clearFocus() {
             binding.apply {
                 inputLayoutName.editText?.clearFocus()
+                inputLayoutClassSessionInformation.editText?.clearFocus()
             }
         }
         hideKeyboard(currentFocus ?: View(this))
@@ -369,12 +373,15 @@ class ClassSessionManipulationActivity : AppCompatActivity() {
                 toolbar.visibility = View.VISIBLE
                 inputLayoutName.visibility = View.VISIBLE
                 edtName.visibility = View.VISIBLE
+                inputLayoutClassSessionInformation.visibility = View.VISIBLE
+                edtClassSessionInformation.visibility = View.VISIBLE
                 btnSave.visibility = View.VISIBLE
-
             } else {
                 toolbar.visibility = View.INVISIBLE
                 inputLayoutName.visibility = View.GONE
                 edtName.visibility = View.GONE
+                inputLayoutClassSessionInformation.visibility = View.GONE
+                edtClassSessionInformation.visibility = View.GONE
                 btnSave.visibility = View.GONE
             }
         }

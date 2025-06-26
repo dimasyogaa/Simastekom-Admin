@@ -2,7 +2,6 @@ package com.yogadimas.simastekom.ui.identity.personal
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
@@ -182,7 +181,7 @@ class IdentityPersonalActivity : AppCompatActivity(), OnCallbackFromFragmentInte
 
     private fun setToolbar(token: String, role: Role) = binding.toolbar.apply {
         setNavigationOnClickListener { finish() }
-        menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+        menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
             setObserveData(token, role)
             true
         }

@@ -1727,9 +1727,9 @@ class AdminViewModel(
 
 
     /** LEVEL */
-    fun addLevel(code: String, name: String) {
+    fun addLevel(code: String, name: String, information: String?) {
         _isLoading.value = true
-        val client = ApiConfig.getApiService().addLevel(token, code, name)
+        val client = ApiConfig.getApiService().addLevel(token, code, name, information)
         client.enqueue(object : Callback<IdentityAcademicObjectResponse> {
             override fun onResponse(
                 call: Call<IdentityAcademicObjectResponse>,

@@ -77,6 +77,10 @@ class StudentIdentityAcademicMenuActivity : AppCompatActivity() {
                 )
             }
 
+            btnClassGroup.setOnClickListener {
+
+            }
+
         }
 
     }

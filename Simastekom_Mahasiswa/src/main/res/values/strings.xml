@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="text_label_category">Kategori</string>
+    <string name="text_hint_choose_category">Pilih kategori…</string>
+
+
+    <string name="text_class_group">Kelompok Kelas</string>
+    <string name="text_class_menu">Menu Kelas</string>
+    <string name="text_class_data">Data Kelas</string>
+    <string name="text_meeting">Pertemuan</string>
+    <string name="text_important_contact">Kontak Penting</string>
+    <string name="text_important_contact_data">Data Kontak Penting</string>
+    <string name="text_relation_important_contact_class_group">Atur Kelompok Kelas dengan Kontak Penting\n\nRelasi Kontak Penting dengan Kelompok Kelas</string>
+    <string name="text_important_contact_category">Kategori Kontak Penting</string>
+    <string name="title_simastekom_mahasiswa">Simastekom - Mahasiswa</string>
+
+
+</resources>

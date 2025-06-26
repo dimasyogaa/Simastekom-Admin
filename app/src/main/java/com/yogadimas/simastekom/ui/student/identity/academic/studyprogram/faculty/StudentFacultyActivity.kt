@@ -86,7 +86,7 @@ class StudentFacultyActivity : AppCompatActivity() {
 
             toolbar.setNavigationOnClickListener { finish() }
 
-            toolbar.menu.findItem(R.id.refreshMenu).setOnMenuItemClickListener {
+            toolbar.menu.findItem(R.id.menu_refresh).setOnMenuItemClickListener {
                 getAdminAndFaculties()
                 true
             }

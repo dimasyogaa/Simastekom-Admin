@@ -31,7 +31,7 @@
     <item android:title="@string/text_refresh">
         <menu>
             <item
-                android:id="@+id/refreshMenu"
+                android:id="@+id/menu_refresh"
                 android:checkable="false"
                 android:icon="@drawable/z_ic_refresh"
                 android:title="@string/text_refresh"

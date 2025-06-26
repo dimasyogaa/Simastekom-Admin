@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!-- Custom - Rounded Style  -->
+    <style name="rounded">
+        <item name="cornerFamily">rounded</item>
+    </style>
+
+    <style name="rounded.circle">
+        <item name="cornerSize">50%</item>
+    </style>
+
+    <style name="rounded.custom">
+        <item name="cornerSizeBottomLeft">20%</item>
+        <item name="cornerSizeBottomRight">5%</item>
+        <item name="cornerSizeTopLeft">5%</item>
+        <item name="cornerSizeTopRight">20%</item>
+    </style>
+
+    <style name="rounded.custom5">
+        <item name="cornerSize">5%</item>
+    </style>
+
+    <style name="rounded.custom8">
+        <item name="cornerSize">8%</item>
+    </style>
+
+    <style name="rounded.custom14">
+        <item name="cornerSize">14%</item>
+    </style>
+
+    <style name="rounded.custom20">
+        <item name="cornerSize">20%</item>
+    </style>
+
+
+    <!-- Textview    -->
+    <style name="CustomTextView" parent="Widget.AppCompat.TextView">
+        <item name="android:textColor">@color/md_theme_onSurface</item>
+    </style>
+
+
+
+
+
+
+</resources>

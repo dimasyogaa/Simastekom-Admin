@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:dist="http://schemas.android.com/apk/distribution">
+
+    <dist:module
+        dist:instant="false"
+        dist:title="@string/title_simastekom_mahasiswa">
+        <dist:delivery>
+            <dist:install-time />
+        </dist:delivery>
+
+        <dist:fusing dist:include="true" />
+    </dist:module>
+
+    <application>
+        <activity
+            android:name=".ui.important_category.SMImportantContactCategoryManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.classgroup.SMClassGroupActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.important_category.SMImportantContactCategoryActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.important_contact.SMImportantContactManipulationActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.important_contact.SMImportantContactActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.important_contact.SMImportantContactMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.classes.SMClassesMenuActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.main.SMMainActivity"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+
+                <data
+                    android:host="simastekom_mahasiswa"
+                    android:scheme="simastekom" />
+            </intent-filter>
+        </activity>
+    </application>
+
+</manifest>

@@ -20,11 +20,11 @@ import androidx.core.graphics.drawable.DrawableCompat
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.snackbar.Snackbar
 import com.yogadimas.simastekom.R
-import com.yogadimas.simastekom.databinding.ActivityStudentLevelManipulationBinding
 import com.yogadimas.simastekom.common.datastore.ObjectDataStore.dataStore
 import com.yogadimas.simastekom.common.datastore.preferences.AuthPreferences
 import com.yogadimas.simastekom.common.helper.hideKeyboard
 import com.yogadimas.simastekom.common.helper.showLoading
+import com.yogadimas.simastekom.databinding.ActivityStudentLevelManipulationBinding
 import com.yogadimas.simastekom.model.responses.IdentityAcademicData
 import com.yogadimas.simastekom.ui.login.LoginActivity
 import com.yogadimas.simastekom.viewmodel.admin.AdminViewModel
@@ -161,6 +161,7 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                 binding.apply {
                     edtCode.setText(it.code)
                     edtName.setText(it.name)
+                    edtLevelInformation.setText(it.information)
                     toolbar.setOnMenuItemClickListener { menuItem ->
                         when (menuItem.itemId) {
                             R.id.deleteMenu -> {
@@ -241,11 +242,16 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                     id,
                     IdentityAcademicData(
                         code = edtCode.text.toString().trim(),
-                        name = edtName.text.toString().trim()
+                        name = edtName.text.toString().trim(),
+                        information = edtLevelInformation.text.toString().trim(),
                     )
                 )
             } else {
-                adminViewModel.addLevel(edtCode.text.toString(), edtName.text.toString())
+                adminViewModel.addLevel(
+                    edtCode.text.toString(),
+                    edtName.text.toString(),
+                    edtLevelInformation.text.toString()
+                )
             }
         }
     }
@@ -426,6 +432,8 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                 edtCode.visibility = View.VISIBLE
                 inputLayoutName.visibility = View.VISIBLE
                 edtName.visibility = View.VISIBLE
+                inputLayoutLevelInformation.visibility = View.VISIBLE
+                edtLevelInformation.visibility = View.VISIBLE
                 btnSave.visibility = View.VISIBLE
 
             } else {
@@ -434,6 +442,8 @@ class StudentLevelManipulationActivity : AppCompatActivity() {
                 edtCode.visibility = View.GONE
                 inputLayoutName.visibility = View.GONE
                 edtName.visibility = View.GONE
+                inputLayoutLevelInformation.visibility = View.GONE
+                edtLevelInformation.visibility = View.GONE
                 btnSave.visibility = View.GONE
             }
         }

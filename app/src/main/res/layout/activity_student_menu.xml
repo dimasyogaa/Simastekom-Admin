@@ -13,6 +13,7 @@
         android:orientation="vertical"
         android:paddingBottom="24dp">
 
+
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/appBarLayout"
             android:layout_width="match_parent"
@@ -31,6 +32,41 @@
                 app:title="@string/text_student_menu" />
 
         </com.google.android.material.appbar.AppBarLayout>
+
+        <com.google.android.material.card.MaterialCardView
+            android:id="@+id/btn_simastekom_mahasiswa"
+            android:layout_margin="24dp"
+            style="@style/CustomButtonCardView">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:weightSum="2"
+                android:paddingHorizontal="16dp"
+                android:background="@drawable/background_gradient">
+
+                <ImageView
+                    android:layout_weight="1"
+                    android:layout_width="110dp"
+                    android:layout_margin="8dp"
+
+                    app:tint="?attr/colorPrimary"
+                    android:layout_height="match_parent"
+                    android:src="@drawable/z_ic_class" />
+
+                <TextView
+                    android:layout_weight="1"
+                    android:textSize="24dp"
+                    android:layout_margin="8dp"
+                    android:layout_gravity="center"
+                    android:textStyle="bold"
+                    android:textColor="?attr/colorPrimary"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:text="Simastekom\nMahasiswa" />
+            </LinearLayout>
+
+        </com.google.android.material.card.MaterialCardView>
 
         <Button
             android:id="@+id/btn_student"
@@ -75,6 +111,12 @@
             android:id="@+id/btn_address_home_parent"
             style="@style/CustomButtonTonalMenu"
             android:text="@string/text_address_home_parent"/>
+
+
+
+
+
+
 
 
 

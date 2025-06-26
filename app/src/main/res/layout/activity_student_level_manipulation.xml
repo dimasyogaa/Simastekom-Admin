@@ -38,12 +38,12 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="16dp"
-            app:counterEnabled="true"
-            app:counterMaxLength="5"
-            app:helperText="@string/text_max_char_5"
             android:layout_marginTop="20dp"
             android:hint="@string/text_label_code"
-            app:expandedHintEnabled="false">
+            app:counterEnabled="true"
+            app:counterMaxLength="5"
+            app:expandedHintEnabled="false"
+            app:helperText="@string/text_max_char_5">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/edt_code"
@@ -51,7 +51,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/text_hint_code"
                 android:inputType="textCapCharacters"
-                android:maxLength="5"/>
+                android:maxLength="5" />
 
         </com.google.android.material.textfield.TextInputLayout>
 
@@ -71,6 +71,25 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/text_hint_name"
                 android:inputType="textCapCharacters" />
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:id="@+id/input_layout_level_information"
+            style="@style/Widget.Material3.TextInputLayout.OutlinedBox"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="20dp"
+            android:hint="@string/text_label_information"
+            app:expandedHintEnabled="false">
+
+            <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edt_level_information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:hint="@string/text_hint_information"
+                android:inputType="textCapWords" />
 
         </com.google.android.material.textfield.TextInputLayout>
 

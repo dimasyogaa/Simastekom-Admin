@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:scrollbars="none"
+    tools:context=".ui.important_contact.SMImportantContactMenuActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBarLayout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="24dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <com.google.android.material.appbar.MaterialToolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                app:navigationIcon="@drawable/z_ic_back"
+                app:title="@string/text_important_contact" />
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <Button
+            android:id="@+id/btn_important_contact"
+            style="@style/CustomButtonFilledMenu"
+            android:text="@string/text_important_contact_data" />
+
+        <Button
+            android:id="@+id/btn_relation_important_contact_class_group"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_relation_important_contact_class_group"
+            android:textColor="@color/md_theme_primary" />
+
+
+        <Button
+            android:id="@+id/btn_class_group"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_class_group" />
+
+
+        <Button
+            android:id="@+id/btn_important_contact_category"
+            style="@style/CustomButtonTonalMenu"
+            android:text="@string/text_important_contact_category" />
+
+
+    </LinearLayout>
+
+</ScrollView>
